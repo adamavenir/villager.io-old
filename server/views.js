@@ -1,24 +1,6 @@
-var levelup = require('levelup');
+var levelgraph = require('levelgraph');
 
-var db = levelup('./level.db', { valueEncoding: 'json' });
-
-console.log('hi from views');
-
-var people = [{
-        id: 1,
-        name: 'Pete Example',
-        email:    'pete@example.com',
-        twitter:  'pete_example,',
-        intro:    "Hey, I'm Pete."
-    },
-    {
-        id: 2,
-        name: 'Joe',
-        email:    'joe@example.com',
-        twitter:  'joe_example',
-        intro:    "Hey, I'm Joe."
-    }
-];
+var db = levelgraph('./levelgraph.db');
 
 exports.addPersonForm = function (request, reply) {
   reply.view('add', { foo: 'bar' });
@@ -40,31 +22,30 @@ exports.newPerson = function (request, reply) {
 
     var form = request.payload;
 
-    var person = {
-        id: people[people.length - 1].id + 1,
-        name:     form.name,
-        email:    form.email,
-        twitter:  form.twitter,
-        intro:    form.intro          
+    var emailTriple = { 
+      subject   : form.name, 
+      predicate : 'hasEmail',
+      object    : form.email
     };
 
-    var personKey = people[people.length - 1].id + 1
+    var twitterTriple = {
+      subject   : form.name,
+      predicate : 'hasTwitter',
+      object    : form.twitter
+    };
 
-    db.put(
-      personKey, 
-      {
-        name:     form.name,
-        email:    form.email,
-        twitter:  form.twitter,
-        intro:    form.intro          
-      }
-      , function (err) {
-          db.get(personKey, function (err, value) {
-            console.log(personKey, value)
-            db.close()
-          })
-        }
-    );
+    var bioTriple = {
+      subject   : form.name,
+      predicate : 'hasBio',
+      object    : form.hasBio
+    };
 
-    reply(person).code(201).header('Location', '/people/' + person.id);
+    var tripleSet = [ emailTriple, twitterTriple, bioTriple ];
+
+    db.put(tripleSet, function (err) {
+      if (err) return console.log('db error:', err);
+      console.log('triples:', emailTriple, twitterTriple, bioTriple);
+    });
+
+    reply(tripleSet).code(201).header('Location', '/people/' + form.name);
 };

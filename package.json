@@ -21,6 +21,7 @@
     "jade": "~1.1.4",
     "levelup": "~0.18.2",
     "leveldown": "~0.10.2",
-    "jquery": "~2.1.0-beta3"
+    "jquery": "~2.1.0-beta3",
+    "levelgraph": "~0.8.0"
   }
 }
