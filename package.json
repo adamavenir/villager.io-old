@@ -1,0 +1,26 @@
+{
+  "name": "triciti.es",
+  "version": "0.0.0",
+  "description": "the tricities underground directory",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/adambrault/triciti.es-hapi.git"
+  },
+  "author": "Adam Brault",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adambrault/triciti.es-hapi/issues"
+  },
+  "homepage": "https://github.com/adambrault/triciti.es-hapi",
+  "dependencies": {
+    "hapi": "~2.0.0-preview",
+    "jade": "~1.1.4",
+    "levelup": "~0.18.2",
+    "leveldown": "~0.10.2",
+    "jquery": "~2.1.0-beta3"
+  }
+}

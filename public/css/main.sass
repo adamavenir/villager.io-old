@@ -1,0 +1,47 @@
+@import 'foundation'
+
+body
+  font: 18px 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, sans-serif
+  color: rgb(50,50,50)
+  padding: 40px
+
+h1
+  +grid-column($columns:5, $center:true)
+  font-size: 24px
+  text-align: center
+
+h2
+  font-size: 20px
+
+h3, h4, h5, h6
+  font-size: 20px
+  font-weight: normal
+
+h3, h4, h5, h6
+  font-weight: normal
+
+p
+  margin-bottom: 1em
+  line-height: 130%
+
+  a
+    text-decoration: underline
+
+h2
+  margin-top: 20px
+
+form
+  +grid-column($columns:5, $center:true)
+  background-color: #fefefe
+  border: 1px solid #eee
+  padding: 20px
+
+textarea
+  height: 80px
+
+.pageTitle, .pageContent, .paginationWrap
+  +grid-column($columns:6, $offset:3)
+
+
+@media (max-width: 768px)
+
