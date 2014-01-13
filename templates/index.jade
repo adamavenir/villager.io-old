@@ -5,5 +5,7 @@ block body
     include in/header
 
     h1 People
+    for person in people
+      h2= person.value.name
     
     include in/footer

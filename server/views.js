@@ -44,14 +44,14 @@ exports.index = function (request, reply) {
   var read  = range(db, '%s', 'people!');
 
   var write = concat( function (data) { 
-    // if (data == undefined) {
-      // reply.view('empty');
-      // console.log('yep, undefined');
-    // }
-    // else {
-      console.log('data', data[0].value.name);
-      reply.view('index', data[0]);
-    // }
+    if (data.length === 0) {
+      reply.view('empty');
+    }
+    else {
+      console.log('data', data);
+      var people = data;
+      reply.view('index', people);
+    }
   });
 
   read.pipe(write);
