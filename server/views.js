@@ -22,7 +22,6 @@ exports.newPerson = function (request, reply) {
     var slug  = slugger(form.name);
     var key   = 'people!' + slug;
     var uri   = '/people/' + slug;
-
     var value = {
         'name'    : form.name,
         'email'   : form.email,
@@ -31,30 +30,20 @@ exports.newPerson = function (request, reply) {
         'twitter' : form.twitter,
         'bio'     : form.bio
     };
-
     addKeyValue(db, reply, key, value, uri);
   };
-
   buildData();
-
 };
 
 exports.deletePerson = function (request, reply) {
-
   var key = request.params.person;
-
   console.log('deleting', key);
-
   db.del('people!' + key, function(err, reply) {});
-  
   reply.view('deleted').redirect('/');
-
 };
 
 exports.index = function (request, reply) {
-
   var read  = range(db, '%s', 'people!');
-
   var write = concat( function (data) { 
     if (data.length === 0) {
       reply.view('empty');
@@ -64,17 +53,12 @@ exports.index = function (request, reply) {
       reply.view('index', { people: data });
     }
   });
-
   read.pipe(write);
-
 };
 
 exports.showPerson = function (request, reply) {
-
   var thisPerson = request.params.person;
-
   console.log('looking up', thisPerson);
-
   db.get('people!' + thisPerson, function(err, value) {
     if (err) {
       reply.view('404');
@@ -84,7 +68,6 @@ exports.showPerson = function (request, reply) {
       reply.view('person', value);  
     }
   });
-  
 };
 
 exports.notFound = function (request, reply) {
