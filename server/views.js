@@ -16,9 +16,15 @@ exports.index = function (request, reply) {
 
   var read  = range(db, '%s', 'people!')
 
-  var write = concat( function (data) { 
-    console.log('data', data[0].value.name);
-    reply.view('index', data[0]);
+  var write = concat( function (err, data) { 
+    console.log('data', data);
+    if (typeof data != 'undefined') {
+      console.log('data', data[0].value.name);
+      reply.view('index', data[0]);
+    }
+    else {
+      reply.view('empty');
+    }
   })
 
   read.pipe(write);
@@ -32,7 +38,10 @@ exports.showPerson = function (request, reply) {
   console.log('thisPerson:', thisPerson);
 
   db.get('people!' + thisPerson, function(err, value) {
-    if (err) return console.log('people!' + thisPerson, 'does not exist');
+    if (err) {
+      return console.log('people!' + thisPerson, 'does not exist');
+      reply.view('empty');
+    }
     reply.view('person', value);
   });
   
@@ -46,11 +55,14 @@ exports.newPerson = function (request, reply) {
 
     var form = request.payload;
 
-    var personKey = 'people!' + slugger(form.name);
+    var slug = slugger(form.name);
+
+    var personKey = 'people!' + slug;
 
     var personValue = {
         'name'    : form.name,
         'email'   : form.email,
+        'slug'    : slug,
         'twitter' : form.twitter,
         'bio'     : form.bio
     };
@@ -67,5 +79,5 @@ exports.newPerson = function (request, reply) {
         }
     );
 
-    reply(personKey + JSON.stringify(personValue)).code(201).header('Location', '/people/' + personKey.id);
+    reply(personKey + JSON.stringify(personValue)).code(201).redirect('/' + slug);
 };
