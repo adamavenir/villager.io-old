@@ -22,7 +22,10 @@
     "levelup": "~0.18.2",
     "leveldown": "~0.10.2",
     "jquery": "~2.1.0-beta3",
-    "levelgraph": "~0.8.0",
-    "gravatar": "~1.0.6"
+    "level-sublevel": "~5.2.0",
+    "level-mapped-index": "~0.3.2",
+    "level-range": "0.0.0",
+    "JSONStream": "~0.7.1",
+    "concat-stream": "~1.4.1"
   }
 }

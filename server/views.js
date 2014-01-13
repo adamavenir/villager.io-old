@@ -1,67 +1,71 @@
-var levelgraph  = require('levelgraph');
-var gravatar    = require('gravatar');
+var levelup     = require('levelup');
+var mappedIndex = require('level-mapped-index');
+var sublevel    = require('level-sublevel');
+var range       = require('level-range');
+var concat      = require('concat-stream');
+var routes      = require('./routes');
+var slugger     = require('slugger');
 
-var graphdb     = levelgraph('./levelgraph.db');
-
-var triple, list;
+db = levelup('./level.db', { valueEncoding: 'json' });
 
 exports.addPersonForm = function (request, reply) {
   reply.view('add', { foo: 'bar' });
 };
 
 exports.index = function (request, reply) {
-  reply.view('index', { foofoo: 'barbar' });
+
+  var read  = range(db, '%s', 'people!')
+
+  var write = concat( function (data) { 
+    console.log('data', data[0].value.name);
+    reply.view('index', data[0]);
+  })
+
+  read.pipe(write);
+
+};
+
+exports.showPerson = function (request, reply) {
+
+  var thisPerson = request.params.person;
+
+  console.log('thisPerson:', thisPerson);
+
+  db.get('people!' + thisPerson, function(err, value) {
+    if (err) return console.log('people!' + thisPerson, 'does not exist');
+    reply.view('person', value);
+  });
+  
 };
 
 exports.notFound = function (request, reply) {
-  reply.view('404');
+  reply('404');
 };
 
 exports.newPerson = function (request, reply) {
 
-    //console.log('howdy from newPerson');
-
-    //console.log(request.payload);
-
     var form = request.payload;
 
-    var img = gravatar.url(form.email, 100);
+    var personKey = 'people!' + slugger(form.name);
 
-    if (form.email) {
-      var emailTriple = { 
-        subject   : form.name, 
-        predicate : 'hasEmail',
-        object    : form.email
-      };
-      var gravatarTriple = {
-        subject   : form.name,
-        predicate : 'hasGravatar',
-        object    : img
-      }
+    var personValue = {
+        'name'    : form.name,
+        'email'   : form.email,
+        'twitter' : form.twitter,
+        'bio'     : form.bio
     };
 
-    if (form.twitter) {
-      var twitterTriple = {
-        subject   : form.name,
-        predicate : 'hasTwitter',
-        object    : form.twitter
-      };
-    };
-    
-    if (form.bio) {
-      var bioTriple = {
-        subject   : form.name,
-        predicate : 'hasBio',
-        object    : form.bio
-      };
-    }
+    console.log('personValue', personValue);
 
-    var tripleSet = [ emailTriple, twitterTriple, bioTriple, gravatarTriple ];
+    db.put(
+      personKey, 
+      personValue,
+      function (err) {
+          db.get(personKey, function (err, value) {
+            console.log(personKey, value)
+          })
+        }
+    );
 
-    graphdb.put(tripleSet, function (err) {
-      if (err) return console.log('levelgraph error:', err);
-      console.log('triples:', tripleSet);
-    });
-
-    reply(tripleSet).code(201).header('Location', '/people/' + form.name);
+    reply(personKey + JSON.stringify(personValue)).code(201).header('Location', '/people/' + personKey.id);
 };
