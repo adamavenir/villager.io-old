@@ -4313,7 +4313,8 @@ ul.people {
   ul.people li {
     width: 120px;
     list-style: none;
-    display: inline-block; }
+    display: inline-block;
+    margin-bottom: 20px; }
   ul.people h3 {
     font-size: 13px;
     font-weight: 500; }
