@@ -49,8 +49,7 @@ exports.index = function (request, reply) {
     }
     else {
       console.log('data', data);
-      var people = data;
-      reply.view('index', people);
+      reply.view('index', { people: data });
     }
   });
 
