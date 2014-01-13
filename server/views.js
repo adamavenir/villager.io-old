@@ -5,6 +5,7 @@ var range       = require('level-range');
 var concat      = require('concat-stream');
 var routes      = require('./routes');
 var slugger     = require('slugger');
+var gravatar    = require('gravatar');
 
 db = levelup('./level.db', { valueEncoding: 'json' });
 
@@ -14,18 +15,18 @@ exports.addPersonForm = function (request, reply) {
 
 exports.index = function (request, reply) {
 
-  var read  = range(db, '%s', 'people!')
+  var read  = range(db, '%s', 'people!');
 
-  var write = concat( function (err, data) { 
-    console.log('data', data);
-    if (typeof data != 'undefined') {
+  var write = concat( function (data) { 
+    // if (data == undefined) {
+      // reply.view('empty');
+      // console.log('yep, undefined');
+    // }
+    // else {
       console.log('data', data[0].value.name);
       reply.view('index', data[0]);
-    }
-    else {
-      reply.view('empty');
-    }
-  })
+    // }
+  });
 
   read.pipe(write);
 
@@ -35,14 +36,16 @@ exports.showPerson = function (request, reply) {
 
   var thisPerson = request.params.person;
 
-  console.log('thisPerson:', thisPerson);
+  console.log('looking for', thisPerson);
 
   db.get('people!' + thisPerson, function(err, value) {
     if (err) {
-      return console.log('people!' + thisPerson, 'does not exist');
-      reply.view('empty');
+      reply.view('404');
+      return console.log('people!' + thisPerson, 'does not exist')
     }
-    reply.view('person', value);
+    else {
+      reply.view('person', value);  
+    }
   });
   
 };
@@ -53,16 +56,16 @@ exports.notFound = function (request, reply) {
 
 exports.newPerson = function (request, reply) {
 
-    var form = request.payload;
-
-    var slug = slugger(form.name);
-
+    var form      = request.payload;
+    var slug      = slugger(form.name);
+    var gravatar  = gravatar(form.email, 100);
     var personKey = 'people!' + slug;
 
     var personValue = {
         'name'    : form.name,
         'email'   : form.email,
         'slug'    : slug,
+        'gravatar': gravatar,
         'twitter' : form.twitter,
         'bio'     : form.bio
     };
