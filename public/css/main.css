@@ -4247,7 +4247,7 @@ a.th {
 body {
   font: 18px "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: #323232;
-  padding: 40px; }
+  padding: 80px 0 0 0; }
 
 h1 {
   position: relative;
@@ -4258,11 +4258,17 @@ h1 {
   margin-right: auto;
   float: none !important;
   float: left;
-  font-size: 24px;
-  text-align: center; }
+  font-size: 32px;
+  text-align: center;
+  font-weight: 300;
+  border-bottom: 1px solid #eeeeee;
+  padding: 10px 0;
+  margin: 0 auto 20px auto;
+  display: block; }
 
 h2 {
-  font-size: 20px; }
+  font-size: 32px;
+  font-weight: 100; }
 
 h3, h4, h5, h6 {
   font-size: 20px;
@@ -4272,6 +4278,7 @@ h3, h4, h5, h6 {
   font-weight: normal; }
 
 p {
+  font-size: 14px;
   margin-bottom: 1em;
   line-height: 130%; }
   p a {
@@ -4279,6 +4286,44 @@ p {
 
 h2 {
   margin-top: 20px; }
+
+header {
+  background-color: #eeeeee;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  text-align: center; }
+  header a:link, header a:visited {
+    display: inline-block;
+    padding: 10px; }
+
+.person {
+  text-align: center;
+  width: 500px;
+  margin: 0 auto;
+  border: 1px solid #eeeeee;
+  padding: 40px;
+  box-shadow: rgba(0, 0, 0, 0.03) 0 0 10px; }
+
+ul.people {
+  text-align: center; }
+  ul.people li {
+    width: 120px;
+    list-style: none;
+    display: inline-block; }
+  ul.people h3 {
+    font-size: 13px;
+    font-weight: 500; }
+
+.grav {
+  border-radius: 100px;
+  display: block;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto; }
 
 form {
   position: relative;

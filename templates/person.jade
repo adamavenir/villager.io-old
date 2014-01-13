@@ -3,9 +3,13 @@ extends layout
 block body
   body
     include in/header
+    div.person
+      img.grav(src= gravatar)
+      h2= name
+       h3 
+        a(href= 'http://twitter.com/' + twitter) @#{twitter}
+      p= bio
 
-    h1= name
-    
     include in/footer
 
 
