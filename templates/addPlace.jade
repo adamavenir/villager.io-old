@@ -1,0 +1,18 @@
+extends layout
+
+block body
+  body
+    include in/header
+
+    h1 Add a place
+    p (Restaurant, company, coffee shop, venue, park)
+    form#addPlace(method="POST", action="/add/place", )
+      input#inputName(name="name", type="text", placeholder="Name of the place")
+      input#inputAddress(name="address", type="text", placeholder="112 Hundred Acre Wood")
+      input#inputCity(name="city", type="text", placeholder="West Richlascowickton City")
+      input#inputWebsite(name="website", type="text", placeholder="http://google.com")
+      input#inputPicUrl(name="picUrl", type="text", placeholder="link to an image")
+      textarea#inputAbout(name="about", type="text", maxlength="160", placeholder="Describe this place (160 characters max)")
+      button(name="submit", type="submit") Add this place
+
+    include in/footer

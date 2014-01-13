@@ -1,0 +1,14 @@
+extends layout
+
+block body
+  body
+    include in/header
+    div.place
+      a(href= website)
+        img.grav(src= image)
+        h2= name
+      p= about
+      p= address + ' ' + city
+      a.delete(href= '/delete/place/' + slug) Delete this place
+
+    include in/footer

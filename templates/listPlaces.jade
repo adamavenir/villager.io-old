@@ -1,0 +1,17 @@
+extends layout
+
+block body
+  body
+    include in/header
+
+    h1 Places
+    ul.places
+      for place in places
+        li
+          a(href= '/places/' + place.value.slug)
+            img.grav(src= place.value.image)
+            h3= place.value.name
+      li
+        a.andOne(href="/add/place") +
+
+    include in/footer

@@ -1,0 +1,15 @@
+extends layout
+
+block body
+  body
+    include in/header
+
+    h1 It's so lonely here.
+    p Maybe you could 
+      a(href="/add/person") add someone
+      |  to keep it warm.
+
+    p.empty
+      a.andOne(href="/add/person") +
+    
+    include in/footer

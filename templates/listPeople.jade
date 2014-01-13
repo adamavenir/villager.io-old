@@ -1,0 +1,18 @@
+extends layout
+
+block body
+  body
+    include in/header
+
+    h1 People
+    ul.people
+      for person in people
+        li
+          a(href= '/people/' + person.value.slug)
+            img.grav(src= person.value.gravatar)
+            h3= person.value.name
+
+      li
+        a.andOne(href="/add/place") +
+
+    include in/footer

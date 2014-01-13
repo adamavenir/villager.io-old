@@ -8,9 +8,14 @@ var addKeyValue = require('./addkeyValue');
 
 db = level('./level.db', { valueEncoding: 'json' });
 
+///////////////// INDEX
+
 exports.index = function (request, reply) {
   reply.view('index');
 };
+
+
+///////////////// PEOPLE
 
 exports.addPerson = function (request, reply) {
   reply.view('addPerson');
@@ -73,6 +78,75 @@ exports.getPerson = function (request, reply) {
     }
   });
 };
+
+
+///////////////// PLACES
+
+exports.addPlace = function (request, reply) {
+  reply.view('addPlace');
+};
+
+exports.savePlace = function (request, reply) {
+
+  var form = request.payload;
+
+  var buildData = function () {
+    var slug  = slugger(form.name);
+    if (slug = 'yet') { slug = '&yet' };
+    var key   = 'places!' + slug;
+    var uri   = '/places/' + slug;
+    var value = {
+        'name'    : form.name,
+        'address' : form.address,
+        'city'    : form.city,
+        'slug'    : slug,
+        'image'   : form.picUrl,
+        'website' : form.website,
+        'about'   : form.about
+    };
+    addKeyValue(db, reply, key, value, uri);
+  };
+  buildData();
+};
+
+exports.deletePlace = function (request, reply) {
+  var key = request.params.place;
+  console.log('deleting', key);
+  db.del('people!' + key, function(err, reply) {});
+  reply.view('deleted').redirect('/people/');
+};
+
+exports.listPlaces = function (request, reply) {
+  var read  = range(db, '%s', 'places!');
+  var write = concat( function (data) { 
+    if (data.length === 0) {
+      reply.view('noPlaces');
+    }
+    else {
+      console.log('data', data);
+      reply.view('listPlaces', { places: data });
+    }
+  });
+  read.pipe(write);
+};
+
+exports.getPlace = function (request, reply) {
+  var thisPlace = request.params.place;
+  console.log('looking up', thisPlace);
+  db.get('places!' + thisPlace, function(err, value) {
+    if (err) {
+      reply.view('404');
+      return console.log('places!' + thisPlace, 'does not exist')
+    }
+    else {
+      reply.view('place', value);  
+    }
+  });
+};
+
+
+
+///////////////// 404
 
 exports.notFound = function (request, reply) {
   reply('404');

@@ -8,10 +8,10 @@ This is the spiritual successor to [wecreate.tc](http://wecreate.tc), but it'll 
 
 ## TODO
 
-- Add companies / groups / locations / artists / projects
-- Ability to edit/delete entries
+- Add places, groups, events, projects
 - Moderation of submitted entries
 - <3s for favorite locations
 - Add list of interests
 - Ability to be a member of a group
 - Events, calendar, RSVPs
+- Relationships

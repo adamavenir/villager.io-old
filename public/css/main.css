@@ -4301,7 +4301,7 @@ header {
     display: inline-block;
     padding: 10px; }
 
-.person {
+.person, .place {
   text-align: center;
   width: 500px;
   margin: 0 auto;
@@ -4317,14 +4317,14 @@ a.delete {
   bottom: -30px;
   font-size: 13px; }
 
-ul.people {
+ul {
   text-align: center; }
-  ul.people li {
+  ul li {
     width: 120px;
     list-style: none;
     display: inline-block;
     margin-bottom: 20px; }
-  ul.people h3 {
+  ul h3 {
     font-size: 13px;
     font-weight: 500; }
 
@@ -4333,7 +4333,29 @@ ul.people {
   display: block;
   width: 80px;
   height: 80px;
-  margin: 0 auto; }
+  margin: 0 auto;
+  border: 1px solid #eeeeee; }
+
+a.andOne {
+  border: 1px solid #eeeeee;
+  width: 80px;
+  height: 80px;
+  border-radius: 100px;
+  display: inline-block;
+  background-color: #fefefe;
+  font-size: 80px;
+  line-height: 65px;
+  position: relative;
+  top: -33px;
+  margin-bottom: -13px;
+  font-weight: 1000;
+  text-decoration: none; }
+  a.andOne:hover {
+    color: white;
+    background-color: #2ba6cb; }
+
+p.empty {
+  margin-top: 60px; }
 
 form {
   position: relative;

@@ -52,7 +52,7 @@ header
     display: inline-block
     padding: 10px
 
-.person
+.person, .place
   text-align: center
   width: 500px 
   margin: 0 auto
@@ -68,7 +68,7 @@ a.delete
   bottom: -30px
   font-size: 13px
 
-ul.people 
+ul
   text-align: center
 
   li
@@ -87,6 +87,28 @@ ul.people
   width: 80px
   height: 80px
   margin: 0 auto
+  border: 1px solid #eee
+
+a.andOne
+  border: 1px solid #eee
+  width: 80px
+  height: 80px
+  border-radius: 100px
+  display: inline-block
+  background-color: #fefefe
+  font-size: 80px
+  line-height: 65px
+  position: relative
+  top: -33px
+  margin-bottom: -13px
+  font-weight: 1000
+  text-decoration: none
+  &:hover
+    color: #fff
+    background-color: #2ba6cb
+
+p.empty
+  margin-top: 60px
 
 form
   +grid-column($columns:5, $center:true)
