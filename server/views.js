@@ -8,11 +8,15 @@ var addKeyValue = require('./addkeyValue');
 
 db = level('./level.db', { valueEncoding: 'json' });
 
-exports.addPersonForm = function (request, reply) {
+exports.index = function (request, reply) {
+  reply.view('index');
+};
+
+exports.addPerson = function (request, reply) {
   reply.view('addPerson');
 };
 
-exports.newPerson = function (request, reply) {
+exports.savePerson = function (request, reply) {
 
   var form = request.payload;
   
@@ -39,24 +43,24 @@ exports.deletePerson = function (request, reply) {
   var key = request.params.person;
   console.log('deleting', key);
   db.del('people!' + key, function(err, reply) {});
-  reply.view('deleted').redirect('/');
+  reply.view('deleted').redirect('/people/');
 };
 
-exports.index = function (request, reply) {
+exports.listPeople = function (request, reply) {
   var read  = range(db, '%s', 'people!');
   var write = concat( function (data) { 
     if (data.length === 0) {
-      reply.view('empty');
+      reply.view('noPeople');
     }
     else {
       console.log('data', data);
-      reply.view('index', { people: data });
+      reply.view('listPeople', { people: data });
     }
   });
   read.pipe(write);
 };
 
-exports.showPerson = function (request, reply) {
+exports.getPerson = function (request, reply) {
   var thisPerson = request.params.person;
   console.log('looking up', thisPerson);
   db.get('people!' + thisPerson, function(err, value) {

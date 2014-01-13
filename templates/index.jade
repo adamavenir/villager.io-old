@@ -4,14 +4,7 @@ block body
   body
     include in/header
 
-    h1 People
-    ul.people
-      for person in people
-        li
-          a(href= '/people/' + person.value.slug)
-            img.grav(src= person.value.gravatar)
-            h3= person.value.name
+    h1 Welcome
+    p Howdy and stuff.
 
-
-    
     include in/footer
