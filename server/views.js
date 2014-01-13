@@ -14,28 +14,40 @@ exports.addPersonForm = function (request, reply) {
 
 exports.newPerson = function (request, reply) {
 
-    var form = request.payload;
-    
-    var pic = gravatar.url(form.email, 100);
+  var form = request.payload;
+  
+  var pic = gravatar.url(form.email, 100);
 
-    var buildData = function () {
-      var slug  = slugger(form.name);
-      var key   = 'people!' + slug;
-      var uri   = '/people/' + slug;
+  var buildData = function () {
+    var slug  = slugger(form.name);
+    var key   = 'people!' + slug;
+    var uri   = '/people/' + slug;
 
-      var value = {
-          'name'    : form.name,
-          'email'   : form.email,
-          'slug'    : slug,
-          'gravatar': pic,
-          'twitter' : form.twitter,
-          'bio'     : form.bio
-      };
-
-      addKeyValue(db, reply, key, value, uri);
+    var value = {
+        'name'    : form.name,
+        'email'   : form.email,
+        'slug'    : slug,
+        'gravatar': pic,
+        'twitter' : form.twitter,
+        'bio'     : form.bio
     };
 
-    buildData();
+    addKeyValue(db, reply, key, value, uri);
+  };
+
+  buildData();
+
+};
+
+exports.deletePerson = function (request, reply) {
+
+  var key = request.params.person;
+
+  console.log('deleting', key);
+
+  db.del('people!' + key, function(err, reply) {});
+  
+  reply.view('deleted').redirect('/');
 
 };
 

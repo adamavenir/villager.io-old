@@ -4247,7 +4247,8 @@ a.th {
 body {
   font: 18px "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: #323232;
-  padding: 80px 0 0 0; }
+  padding: 80px 0 0 0;
+  text-align: center; }
 
 h1 {
   position: relative;
@@ -4306,7 +4307,15 @@ header {
   margin: 0 auto;
   border: 1px solid #eeeeee;
   padding: 40px;
-  box-shadow: rgba(0, 0, 0, 0.03) 0 0 10px; }
+  box-shadow: rgba(0, 0, 0, 0.03) 0 0 10px;
+  position: relative; }
+
+a.delete {
+  color: #aaaaaa;
+  position: absolute;
+  right: 0;
+  bottom: -30px;
+  font-size: 13px; }
 
 ul.people {
   text-align: center; }

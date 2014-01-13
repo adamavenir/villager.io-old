@@ -4,6 +4,7 @@ body
   font: 18px 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, sans-serif
   color: rgb(50,50,50)
   padding: 80px 0 0 0
+  text-align: center
 
 h1
   +grid-column($columns:5, $center:true)
@@ -58,6 +59,14 @@ header
   border: 1px solid #eee
   padding: 40px
   box-shadow: rgba(0,0,0,.03) 0 0 10px
+  position: relative
+
+a.delete
+  color: #aaa
+  position: absolute
+  right: 0
+  bottom: -30px
+  font-size: 13px
 
 ul.people 
   text-align: center
