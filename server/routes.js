@@ -16,8 +16,8 @@ module.exports = [
 
   // GET ROUTES
 
-  { method: 'GET',  path: '/',          handler: views.index },
-  { method: 'GET',  path: '/{person}',  handler: views.showPerson },
+  { method: 'GET',  path: '/', handler: views.index },
+  { method: 'GET',  path: '/people/{person}', handler: views.showPerson },
   { method: 'GET',  path: '/addperson', handler: views.addPersonForm },
 
   // POST ROUTES

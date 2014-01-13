@@ -26,6 +26,9 @@
     "level-mapped-index": "~0.3.2",
     "level-range": "0.0.0",
     "JSONStream": "~0.7.1",
-    "concat-stream": "~1.4.1"
+    "concat-stream": "~1.4.1",
+    "level": "~0.18.0",
+    "slugger": "0.0.3",
+    "gravatar": "~1.0.6"
   }
 }
