@@ -144,8 +144,6 @@ exports.getPlace = function (request, reply) {
   });
 };
 
-
-
 ///////////////// 404
 
 exports.notFound = function (request, reply) {
