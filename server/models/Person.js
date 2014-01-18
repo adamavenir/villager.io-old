@@ -16,7 +16,8 @@ var Person = new VeryLevelModel(
     title: {},
     key: { derive: function () {
       return slugger(this.full_name);
-    }},
+    }, private: false
+  },
   }, 
   { 
     db: db,

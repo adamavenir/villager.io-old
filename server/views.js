@@ -23,7 +23,7 @@ exports.createPerson = function (request, reply) {
     last_name   : form.last_name
   });
 
-  console.log('p to JSON', p.first_name);
+  console.log('p to JSON', p.toJSON({withPrivate:true}));
 
   p.save(function (err) {
     Person.load(p.key, function (err, person) {
