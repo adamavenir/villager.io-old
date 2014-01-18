@@ -17,18 +17,18 @@ module.exports = [
   { method: 'GET',  path: '/', handler: views.index },
 
   // PEOPLE
-  { method: 'GET',  path: '/people', handler: views.listPeople },
-  { method: 'GET',  path: '/people/{person}', handler: views.getPerson },
-  { method: 'GET',  path: '/add/person', handler: views.addPerson },
-  { method: 'POST', path: '/add/person', handler: views.savePerson },
-  { method: 'POST',  path: '/delete/person/{person}', handler: views.deletePerson },
+  // { method: 'GET',  path: '/people', handler: views.listPeople },
+  // { method: 'GET',  path: '/people/{person}', handler: views.getPerson },
+  { method: 'GET',  path: '/people/add', handler: views.formPerson },
+  { method: 'POST', path: '/people/add', handler: views.createPerson },
+  // { method: 'POST',  path: '/people/delete/{person}', handler: views.deletePerson },
 
 
   // PLACES
-  { method: 'GET',  path: '/places', handler: views.listPlaces },
-  { method: 'GET',  path: '/places/{place}', handler: views.getPlace },
-  { method: 'GET',  path: '/add/place', handler: views.addPlace },
-  { method: 'POST', path: '/add/place', handler: views.savePlace },
-  { method: 'POST',  path: '/delete/place/{place}', handler: views.deletePlace },  
+  // { method: 'GET',  path: '/places', handler: views.listPlaces },
+  // { method: 'GET',  path: '/places/{place}', handler: views.getPlace },
+  // { method: 'GET',  path: '/places/add', handler: views.formPlace },
+  // { method: 'POST', path: '/places/add', handler: views.createPlace },
+  // { method: 'POST',  path: '/places/delete/{place}', handler: views.deletePlace },  
 
 ];

@@ -1,0 +1,16 @@
+extends layout
+
+block body
+  body
+    include in/header
+
+    h1 Add someone
+    form#addPerson(method="POST", action="/people/add", )
+      input#inputFirstName(name="firstName", type="text", placeholder="Firsty")
+      input#inputLastName(name="lastName", type="text", placeholder="Lasterton")
+      //- input#inputEmail(name="email", type="text", placeholder="you@reaweso.me")
+      //- input#inputTwitter(name="twitter", type="text", placeholder="Twitter username")
+      //- textarea#inputBio(name="bio", type="text", maxlength="160", placeholder="Introduce yourself (160 characters max)")
+      button(name="submit", type="submit") Add yourself
+
+    include in/footer

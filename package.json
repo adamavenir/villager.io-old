@@ -31,6 +31,7 @@
     "slugger": "0.0.3",
     "gravatar": "~1.0.6",
     "through": "~2.3.4",
-    "liver": "~0.1.0"
+    "liver": "~0.1.0",
+    "verymodel-level": "~1.0.0"
   }
 }
