@@ -39,6 +39,7 @@ exports.getPerson = function (request, reply) {
   var thisPerson = request.params.person;
   console.log('Looking up key: "people!' + thisPerson + '"');
   Person.load('people!' + thisPerson, function(err, value) {
+    reply.view('person', value);
     if (err) {
       console.log('get err:', err);
       console.log('get val:', value);
