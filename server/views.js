@@ -37,14 +37,13 @@ exports.createPerson = function (request, reply) {
 
 exports.getPerson = function (request, reply) {
   var thisPerson = request.params.person;
-  console.log('Looking up key: "people!' + thisPerson + '"');
-  Person.load('people!' + thisPerson, function(err, value) {
-    reply.view('person', value);
+  console.log('Looking up key: "' + Person.options.prefix + thisPerson + '"');
+  Person.load(Person.options.prefix + thisPerson, function(err, value) {
     if (err) {
       console.log('get err:', err);
       console.log('get val:', value);
       reply.view('404');
-      console.log('The key "people!' + thisPerson + '" does not exist.')
+      console.log('The key "' + Person.options.prefix + thisPerson + '" does not exist.')
     }
     else {
       reply.view('person', value);
@@ -56,6 +55,8 @@ exports.listPeople = function (request, reply) {
   Person.all(function(err, data) {
     if(err) {
       console.log('listPeople err:', err);
+    }
+    if(data.length === 0) {
       reply.view('noPeople');
     }
     else {
@@ -65,11 +66,11 @@ exports.listPeople = function (request, reply) {
   });
 };
 
-exports.deletePerson = function (request, reply) {
-  var p = request.params.person;
+exports.delete = function (request, reply) {
+  var key = request.params.prefix + '!' + request.params.person;
   console.log('deleting', key);
-  Person.delete(p, callback);
-  var callback = reply.view('deleted').redirect('/people/');
+  Person.delete(key, callback);
+  var callback = reply.view('deleted').redirect('/' + request.params.prefix);
 };
 
 

@@ -21,7 +21,9 @@ module.exports = [
   { method: 'GET',  path: '/people/{person}', handler: views.getPerson },
   { method: 'GET',  path: '/people/add', handler: views.formPerson },
   { method: 'POST', path: '/people/add', handler: views.createPerson },
-  { method: 'POST',  path: '/people/delete/{person}', handler: views.deletePerson },
+
+  // DELETE
+  { method: 'GET', path: '/{prefix}/delete/{person}', handler: views.delete },
 
 
   // PLACES
