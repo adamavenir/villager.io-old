@@ -28,9 +28,9 @@ exports.createPerson = function (request, reply) {
   });
   p.save(function (err) {
     Person.load(p.key, function (err, person) {
-      console.log('person value:', person.toJSON());
-      console.log('person key', person.key);
-      reply(person.key + person.toJSON()).code(201).redirect('/people/' + p.slug);
+      // console.log('person value:', person.toJSON());
+      // console.log('person key', person.key);
+      reply(p.key + JSON.stringify(person)).code(201).redirect('/people/' + p.slug);
     })
   });
 };
@@ -40,10 +40,10 @@ exports.getPerson = function (request, reply) {
   console.log('Looking up key: "people!' + thisPerson + '"');
   Person.load('people!' + thisPerson, function(err, value) {
     if (err) {
-      console.log(err);
-      console.log(value);
+      console.log('get err:', err);
+      console.log('get val:', value);
       reply.view('404');
-      return console.log('The key "people!' + thisPerson + '" does not exist.')
+      console.log('The key "people!' + thisPerson + '" does not exist.')
     }
     else {
       reply.view('person', value);
@@ -54,12 +54,12 @@ exports.getPerson = function (request, reply) {
 exports.listPeople = function (request, reply) {
   Person.all(function(err, data) {
     if(err) {
-      console.log(err);
+      console.log('listPeople err:', err);
       reply.view('noPeople');
     }
     else {
-      console.log(data)
-      reply.view.view('listPeople', { people : data});  
+      console.log('listPeople data', JSON.stringify(data));
+      reply.view('listPeople', { people : data});  
     }
   });
 };

@@ -54,7 +54,7 @@ var Person = new VeryLevelModel(
     }
   }, 
   { 
-    db: db
+    db: db, prefix: ''
   }
 );
 

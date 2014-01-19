@@ -8,9 +8,9 @@ block body
     ul.people
       for person in people
         li
-          a(href= '/people/' + person.value.slug)
-            img.grav(src= person.value.gravatar)
-            h3= person.value.name
+          a(href= '/people/' + person.slug)
+            img.grav(src= person.gravatar)
+            h3= person.fullName
 
       li
         a.andOne(href="/add/person") +
