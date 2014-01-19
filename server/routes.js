@@ -22,15 +22,14 @@ module.exports = [
   { method: 'GET',  path: '/people/add', handler: views.formPerson },
   { method: 'POST', path: '/people/add', handler: views.createPerson },
 
-  // DELETE
-  { method: 'GET', path: '/{prefix}/delete/{person}', handler: views.delete },
-
-
   // PLACES
   // { method: 'GET',  path: '/places', handler: views.listPlaces },
   // { method: 'GET',  path: '/places/{place}', handler: views.getPlace },
   // { method: 'GET',  path: '/places/add', handler: views.formPlace },
   // { method: 'POST', path: '/places/add', handler: views.createPlace },
   // { method: 'POST',  path: '/places/delete/{place}', handler: views.deletePlace },  
+
+  // DELETE
+  { method: 'GET', path: '/{prefix}/delete/{person}', handler: views.delete },
 
 ];

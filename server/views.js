@@ -1,5 +1,5 @@
 var Person      = require('./models/Person');
-var slugger     = require('slugger');
+
 
 ///////////////// INDEX
 
