@@ -6,11 +6,30 @@ block body
 
     h1 Add someone
     form#addPerson(method="POST", action="/people/add", )
-      input#inputFirstName(name="firstName", type="text", placeholder="Firsty")
-      input#inputLastName(name="lastName", type="text", placeholder="Lasterton")
-      //- input#inputEmail(name="email", type="text", placeholder="you@reaweso.me")
-      //- input#inputTwitter(name="twitter", type="text", placeholder="Twitter username")
-      //- textarea#inputBio(name="bio", type="text", maxlength="160", placeholder="Introduce yourself (160 characters max)")
+      input#inputFirstName(name="firstName", type="text", placeholder="First name")
+      input#inputLastName(name="lastName", type="text", placeholder="Last name")
+      input#inputEmail(name="email", type="text", placeholder="Email address")
+      input#inputTwitter(name="twitter", type="text", placeholder="Twitter username")
+      input#inputSite(name="site", type="text", placeholder="Website")
+      input#inputCompany(name="company", type="text", placeholder="Company")
+      textarea#inputBio(name="bio", type="text", maxlength="160", placeholder="Introduce yourself (160 characters max)")
+      label(for="interests") What are you interested in?
+      ul.pickInterests
+        li 
+          input#inputInterests(name="interests", type="checkbox", value="fishing") 
+          | fishing
+        li
+          input#inputInterests(name="interests", type="checkbox", value="pizza") 
+          | pizza
+        li
+          input#inputInterests(name="interests", type="checkbox", value="hopscotch") 
+          | hopscotch
+        li
+          input#inputInterests(name="interests", type="checkbox", value="dancing") 
+          | dancing
+        li
+          input#inputInterests(name="interests", type="checkbox", value="prancing") 
+          | prancing
       button(name="submit", type="submit") Add yourself
 
     include in/footer

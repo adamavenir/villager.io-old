@@ -1,88 +1,61 @@
-var VeryLevelModel = require('verymodel-level');
+var sugar = require('sugar');
 var slugger = require('slugger');
 var gravatar = require('gravatar');
+var VeryLevelModel = require('verymodel-level');
+var verymodel = require('verymodel');
 var level = require('level');
 var db = level('./level.db', { valueEncoding: 'json' });
 
 var Person = new VeryLevelModel(
   {
-    first_name: {},
-    last_name: {},
-    full_name: {derive: function () {
-      return this.first_name + ' ' + this.last_name;
+    firstName: {},
+    lastName: {},
+    fullName: {derive: function () {
+      return this.firstName + ' ' + this.lastName;
       }, private: false
     },
     experience: {},
     title: {},
-    key: { derive: function () {
-      return slugger(this.full_name);
-    }, private: false
-  },
+    slug: { derive: function () {
+      return slugger(this.fullName);
+      }, private: false 
+    },
+    key: { derive: function() {
+      return 'person!' + this.slug 
+      }, private: false 
+    },
+    email: {
+      required: true,
+      type: new verymodel.VeryType().isEmail()
+    },
+    gravatar: {
+      derive: function() {
+        return gravatar.url(this.email, 100);
+      }
+    },
+    twitter: {
+      type: new verymodel.VeryType().isAlphanumeric().len(1,16)
+    },
+    site: {
+      required: true,
+      type: new verymodel.VeryType().isUrl()
+    },
+    company: {
+      required: false,
+      type: new verymodel.VeryType().isAlphanumeric()
+    },
+    bio: {
+      required: false,
+      type: new verymodel.VeryType().isAlphanumeric().len(0,160)
+    },
+    interests: {
+      required: false,
+      type: new verymodel.VeryType().isIn('fishing', 'pizza', 'hopscotch', 'dancing', 'prancing')
+    }
   }, 
   { 
-    db: db,
-    prefix: 'person!'
+    db: db
   }
 );
-
-// var Person = new VeryLevelModel ({
-//   first_name: {
-//     required: true,
-//     // type: new VeryType().isAlphanumeric()
-//   },
-//   last_name: {
-//     required: true,
-//     // type: new VeryType().isAlphanumeric()
-//   },
-//   full_name: {
-//     // type: new VeryType().isAlphanumeric(),
-//     derive: function() { 
-//       return this.first_name + ' ' + this.last_name;
-//     }
-//   },
-//   email: {
-//     required: true,
-//     type: VeryType().isEmail()
-//   },
-//   slug: {
-//     derive: function() {
-//       return slugger(form.name);
-//     }
-//   },
-//   gravatar: {
-//     derive: function() {
-//       return gravatar.url(email, 100);
-//     }
-//   },
-//   twitter: {
-//     type: VeryType().isAlphanumeric().len(1,16)
-//     derive: function() {
-//       // TODO: normalize the twitter handle
-//       var handle = twitter;
-//       return handle;
-//     },
-//   },
-//   site: {
-//     required: true,
-//     type: VeryType().isURL()
-//   },
-//   company: {
-//     required: false,
-//     type: VeryType().isAlphanumeric()
-//   },
-//   bio: {
-//     required: false,
-//     type: VeryType().isAlphanumeric().len(0,160)
-//   },
-//   interests: {
-//     required: false,
-//     type: VeryType().isIn('fishing', 'dancing', 'pizza', 'hopscotch', 'dancing', 'prancing')
-//   },
-//   key: { 
-//     private: true
-//     }
-//   }, 
-//   { db: db, prefix: 'person!'}
-// );
 
 module.exports = Person;

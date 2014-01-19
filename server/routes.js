@@ -17,11 +17,11 @@ module.exports = [
   { method: 'GET',  path: '/', handler: views.index },
 
   // PEOPLE
-  // { method: 'GET',  path: '/people', handler: views.listPeople },
-  // { method: 'GET',  path: '/people/{person}', handler: views.getPerson },
+  { method: 'GET',  path: '/people', handler: views.listPeople },
+  { method: 'GET',  path: '/people/{person}', handler: views.getPerson },
   { method: 'GET',  path: '/people/add', handler: views.formPerson },
   { method: 'POST', path: '/people/add', handler: views.createPerson },
-  // { method: 'POST',  path: '/people/delete/{person}', handler: views.deletePerson },
+  { method: 'POST',  path: '/people/delete/{person}', handler: views.deletePerson },
 
 
   // PLACES
