@@ -1,9 +1,10 @@
-var VeryModel = require('verymodel');
-var slugger = require('slugger');
-var gravatar = require('gravatar');
+var VeryLevelModel = require('verymodel-level');
+var verymodel = require('verymodel');
 var level = require('level');
+// var config = require('getconfig');
+var db = level('./db', { valueEncoding: 'json' });
 
-var Place = new VeryModel ({
+var Place = new VeryLevelModel ({
   type: {
     type: VeryType().isIn('Restaurant', 'Coffee shop', 'Bar', 'Winery', 'Store', 'Company', 'Nonprofit', 'Venue', 'Public')
   },
@@ -12,31 +13,44 @@ var Place = new VeryModel ({
     type: VeryType().isAlphanumeric()
   },
   address: {
-    required: true,
+    required: false,
     type: VeryType().isAlphanumeric()
   },
   city: {
-    required: true,
+    required: false,
     type: VeryType().isAlphanumeric()
   },
   map: {
-    type: VeryType().isURL(),
-    // TODO get Google Maps URL
-    derive: function() {
-      return mapURL
-    }
+    processIn: function(map) {
+      if (map.length > 0) {
+        return 'http://maps.google.com/?q=' + map;
+        console.log('http://maps.google.com/?q=' + map);
+      }
+      else {
+        return "";
+        console.log('map blank');        
+      }
+    },
+    type: VeryType().isUrl(),
   },
   image: {
     required: true,
     type: VeryType().isURL()
   },
+  website: {
+    type: new type().isUrl(),
+    required: true
+  },
   twitter: {
-    type: VeryType().isAlphanumeric().len(1,16)
-    derive: function() {
-      // TODO: normalize the twitter handle
-      var handle = twitter;
-      return handle;
+    processIn: function(twitter) {
+      return twitter
+        .remove('@')
+        .remove('http://twitter.com/')
+        .remove('https://twitter.com/')
+        .remove('twitter.com/');
+      console.log(twitter);
     },
+    type: new type().isAlphanumeric().len(1,16)
   },
   about: {
     required: false,
@@ -45,7 +59,7 @@ var Place = new VeryModel ({
   key: { 
     private: true,
     derive: function () {
-      return 'people!' + slug;
+      return 'places!' + slug;
     }
   },
 });

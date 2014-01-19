@@ -1,4 +1,4 @@
-extends layout
+`extends layout
 
 block body
   body
@@ -6,12 +6,23 @@ block body
 
     h1 Add a place
     p (Restaurant, company, coffee shop, venue, park)
-    form#addPlace(method="POST", action="/add/place", )
+    form#addPlace(method="POST", action="/add/place")
+      label(for="type") Type of place:
+      select#inputType(name="type")
+        option(value="Restaurant") Restaurant
+        option(value="Coffee shop") Coffee shop
+        option(value="Bar") Bar
+        option(value="Winery") Winery
+        option(value="Store") Story
+        option(value="Company") Company
+        option(value="Nonprofit") Nonprofit
+        option(value="Venue") Venue
+        option(value="Public") Public
       input#inputName(name="name", type="text", placeholder="Name of the place")
       input#inputAddress(name="address", type="text", placeholder="112 Hundred Acre Wood")
       input#inputCity(name="city", type="text", placeholder="West Richlascowickton City")
-      input#inputWebsite(name="website", type="text", placeholder="http://google.com")
-      input#inputPicUrl(name="picUrl", type="text", placeholder="link to an image")
+      input#inputWebsite(name="website", type="text", placeholder="http://placewebsite.com")
+      input#inputImage(name="image", type="text", placeholder="link to an image")
       textarea#inputAbout(name="about", type="text", maxlength="160", placeholder="Describe this place (160 characters max)")
       button(name="submit", type="submit") Add this place
 

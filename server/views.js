@@ -56,10 +56,65 @@ exports.listPeople = function (request, reply) {
   });
 };
 
-exports.delete = function (request, reply) {
-  var key = request.params.prefix + '!' + request.params.person;
+exports.deletePerson = function (request, reply) {
+  var key = 'people!' + request.params.person;
   Person.delete(key, callback);
-  var callback = reply.view('deleted').redirect('/' + request.params.prefix);
+  var callback = reply.view('deleted').redirect('/people');
+};
+
+
+///////////////// PLACES
+
+exports.formPlace = function (request, reply) {
+  reply.view('formPlace');
+};
+
+exports.createPlace = function (request, reply) {
+  var form = request.payload;
+  var p = Place.create({
+    type    : form.type,
+    name    : form.name,
+    address : form.address,
+    city    : form.city,
+    image   : form.image,
+    twitter : form.twitter,
+    website : form.website,
+    about   : form.about
+  });
+  p.save(function (err) {
+    Place.load(p.key, function (err, place) {
+      reply().code(201).redirect('/places/' + p.slug);
+    })
+  });
+};
+
+exports.getPlace = function (request, reply) {
+  var thisPlace = request.params.place;
+  Place.load(Place.options.prefix + thisPlace, function(err, value) {
+    if (err) {
+      reply.view('404');
+    }
+    else {
+      reply.view('place', value);
+    }
+  });
+};
+
+exports.listPlaces = function (request, reply) {
+  Places.all(function(err, data) {
+    if(data.length === 0) {
+      reply.view('noPlaces');
+    }
+    else {
+      reply.view('listPlaces', { places : data});  
+    }
+  });
+};
+
+exports.deletePlace = function (request, reply) {
+  var key = 'places!' + request.params.place;
+  Place.delete(key, callback);
+  var callback = reply.view('deleted').redirect('/places');
 };
 
 

@@ -33,6 +33,8 @@
     "through": "~2.3.4",
     "liver": "~0.1.0",
     "verymodel-level": "~1.0.0",
-    "sugar": "~1.4.1"
+    "sugar": "~1.4.1",
+    "getconfig": "~0.2.1",
+    "verymodel": "~1.5.1"
   }
 }

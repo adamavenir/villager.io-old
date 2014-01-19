@@ -8,9 +8,9 @@ block body
     ul.places
       for place in places
         li
-          a(href= '/places/' + place.value.slug)
-            img.grav(src= place.value.image)
-            h3= place.value.name
+          a(href= '/places/' + place.slug)
+            img.grav(src= place.image)
+            h3= place.name
       li
         a.andOne(href="/places/add") +
 
