@@ -10,62 +10,64 @@ var type = verymodel.VeryType;
 
 var Person = new VeryLevelModel(
   {
-    firstName: {},
-    lastName: {},
-    fullName: {derive: function () {
-      return this.firstName + ' ' + this.lastName;
-      }, private: false
+    firstName: {
+      type: new type().isAlphanumeric().len(1,80),
+      required: true
     },
-    experience: {},
-    title: {},
-    slug: { derive: function () {
-      return slugger(this.fullName);
-      }, private: false 
+    lastName: {
+      type: new type().isAlphanumeric().len(1,80),
+      required: true
     },
-    key: { derive: function() {
-      return Person.options.prefix + this.slug 
-      }, private: false 
+    fullName: {
+      derive: function () {
+        return this.firstName + ' ' + this.lastName;
+      }, 
+      private: false
+    },
+    slug: { 
+      derive: function () {
+        return slugger(this.fullName);
+      }, 
+      private: false 
+    },
+    key: { 
+      derive: function() {
+        return Person.options.prefix + this.slug 
+      }, 
+      private: false 
     },
     email: {
-      required: true,
-      type: new type().isEmail()
+      type: new type().isEmail(),
+      required: true
     },
-    gravatar: {
+    gravatar: { 
       derive: function() {
         return gravatar.url(this.email, 100);
       }
     },
     twitter: {
-      required: true,
-      type: new type().is
+      processIn: function(twitter) {
+        return twitter
+          .remove('@')
+          .remove('http://twitter.com/')
+          .remove('https://twitter.com/')
+          .remove('twitter.com/');
+        console.log(twitter);
+      },
+      type: new type().isAlphanumeric().len(1,16)
     },
-    // twitter: {
-    //   derive: function() {
-    //     if (this.twitter.startsWith('@')) {
-    //       var handle = this.twitter.remove('@');
-    //     }
-    //     else {
-    //       var handle = this.twitter;
-    //     }
-    //     return handle;
-    //   },
-    //   type: new type().isAlphanumeric().len(1,16)
-    // },
     site: {
-      required: true,
-      type: new type().isUrl()
+      type: new type().isUrl(),
+      required: true
     },
     company: {
-      required: false,
-      type: new type().isAlphanumeric()
+      type: new type().isAlphanumeric(),
     },
     bio: {
-      required: false,
-      type: new type().isAlphanumeric().len(0,160)
+      type: new type().isAlphanumeric().len(0,160),
     },
     interests: {
-      required: false,
-      type: new type().isIn('fishing', 'pizza', 'hopscotch', 'dancing', 'prancing')
+      type: new type().isIn('fishing', 'pizza', 'hopscotch', 'dancing', 'prancing'),
     }
   }, 
   { 
