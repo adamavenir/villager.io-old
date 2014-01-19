@@ -1,5 +1,5 @@
-var Person      = require('./models/Person');
-
+var Person = require('./models/Person');
+var Places = require('./models/Place');
 
 ///////////////// INDEX
 

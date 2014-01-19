@@ -4,21 +4,23 @@ var level = require('level');
 // var config = require('getconfig');
 var db = level('./db', { valueEncoding: 'json' });
 
+var type = verymodel.VeryType;
+
 var Place = new VeryLevelModel ({
   type: {
-    type: VeryType().isIn('Restaurant', 'Coffee shop', 'Bar', 'Winery', 'Store', 'Company', 'Nonprofit', 'Venue', 'Public')
+    type: type().isIn('Restaurant', 'Coffee shop', 'Bar', 'Winery', 'Store', 'Company', 'Nonprofit', 'Venue', 'Public')
   },
   name: {
     required: true,
-    type: VeryType().isAlphanumeric()
+    type: type().isAlphanumeric()
   },
   address: {
     required: false,
-    type: VeryType().isAlphanumeric()
+    type: type().isAlphanumeric()
   },
   city: {
     required: false,
-    type: VeryType().isAlphanumeric()
+    type: type().isAlphanumeric()
   },
   map: {
     processIn: function(map) {
@@ -31,11 +33,11 @@ var Place = new VeryLevelModel ({
         console.log('map blank');        
       }
     },
-    type: VeryType().isUrl(),
+    type: type().isUrl(),
   },
   image: {
     required: true,
-    type: VeryType().isURL()
+    type: type().isUrl()
   },
   website: {
     type: new type().isUrl(),
@@ -54,7 +56,7 @@ var Place = new VeryLevelModel ({
   },
   about: {
     required: false,
-    type: VeryType().isAlphanumeric().len(0,160)
+    type: type().isAlphanumeric().len(0,160)
   },
   key: { 
     private: true,
