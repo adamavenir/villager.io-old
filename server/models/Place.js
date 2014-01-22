@@ -1,6 +1,7 @@
 var VeryLevelModel = require('verymodel-level');
 var verymodel = require('verymodel');
 var level = require('level');
+var slugger = require('slugger');
 
 var type = verymodel.VeryType;
 
@@ -12,6 +13,12 @@ var Place = new VeryLevelModel ({
     required: true,
     type: type().isAlphanumeric()
   },
+  slug: { 
+    derive: function () {
+      return slugger(this.name);
+    }, 
+    private: false 
+  },
   address: {
     required: false,
     type: type().isAlphanumeric()
@@ -21,10 +28,10 @@ var Place = new VeryLevelModel ({
     type: type().isAlphanumeric()
   },
   map: {
-    processIn: function(map) {
-      if (map.length > 0) {
-        return 'http://maps.google.com/?q=' + map;
-        console.log('http://maps.google.com/?q=' + map);
+    processIn: function() {
+      if (this.address.length > 0) {
+        return 'http://maps.google.com/?q=' + this.address + ' ' + this.city;
+        console.log('http://maps.google.com/?q=' + this.address + ' ' + this.city);
       }
       else {
         return "";
@@ -41,17 +48,6 @@ var Place = new VeryLevelModel ({
     type: new type().isUrl(),
     required: true
   },
-  twitter: {
-    processIn: function(twitter) {
-      return twitter
-        .remove('@')
-        .remove('http://twitter.com/')
-        .remove('https://twitter.com/')
-        .remove('twitter.com/');
-      console.log(twitter);
-    },
-    type: new type().isAlphanumeric().len(1,16)
-  },
   about: {
     required: false,
     type: type().isAlphanumeric().len(0,160)
@@ -59,7 +55,7 @@ var Place = new VeryLevelModel ({
   key: { 
     private: true,
     derive: function () {
-      return 'places!' + slug;
+      return 'places!' + this.slug;
     }
   },
 }, {prefix: 'places!'});
