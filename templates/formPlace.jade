@@ -1,4 +1,4 @@
-`extends layout
+extends layout
 
 block body
   body
@@ -6,7 +6,7 @@ block body
 
     h1 Add a place
     p (Restaurant, company, coffee shop, venue, park)
-    form#addPlace(method="POST", action="/add/place")
+    form#addPlace(method="POST", action="/places/add")
       label(for="type") Type of place:
       select#inputType(name="type")
         option(value="Restaurant") Restaurant

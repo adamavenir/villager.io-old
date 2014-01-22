@@ -1,8 +1,6 @@
 var VeryLevelModel = require('verymodel-level');
 var verymodel = require('verymodel');
 var level = require('level');
-// var config = require('getconfig');
-var db = level('./db', { valueEncoding: 'json' });
 
 var type = verymodel.VeryType;
 
@@ -64,4 +62,6 @@ var Place = new VeryLevelModel ({
       return 'places!' + slug;
     }
   },
-});
+}, {prefix: 'places!'});
+
+module.exports = Place;

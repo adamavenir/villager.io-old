@@ -3,8 +3,6 @@ var slugger = require('slugger');
 var gravatar = require('gravatar');
 var VeryLevelModel = require('verymodel-level');
 var verymodel = require('verymodel');
-var level = require('level');
-var db = level('./db', { valueEncoding: 'json' });
 
 var type = verymodel.VeryType;
 
@@ -71,7 +69,7 @@ var Person = new VeryLevelModel(
     }
   }, 
   { 
-    db: db, prefix: 'people!'
+    prefix: 'people!'
   }
 );
 

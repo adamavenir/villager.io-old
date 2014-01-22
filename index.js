@@ -1,6 +1,11 @@
-var Hapi      = require('hapi');
-var jade      = require('jade');
-var routes    = require('./server/routes');
+var Hapi    = require('hapi');
+var jade    = require('jade');
+var routes  = require('./server/routes');
+var level   = require('level');
+var db      = level('./db', { valueEncoding: 'json' });
+var models = require('./server/models')
+
+models.attachDB(db);
 
 var serverOptions = {
     views: {

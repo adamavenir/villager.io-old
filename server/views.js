@@ -1,7 +1,5 @@
-var models = require('./models/index');
-
-var Person = models.Person;
-var Place = models.Place;
+var Person = require('./models/Person');
+var Place = require('./models/Place');
 
 ///////////////// INDEX
 
