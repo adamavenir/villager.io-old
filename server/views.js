@@ -1,5 +1,7 @@
-var Person = require('./models/Person');
-var Places = require('./models/Place');
+var models = require('./models/index');
+
+var Person = models.Person;
+var Place = models.Place;
 
 ///////////////// INDEX
 
@@ -101,7 +103,7 @@ exports.getPlace = function (request, reply) {
 };
 
 exports.listPlaces = function (request, reply) {
-  Places.all(function(err, data) {
+  Place.all(function(err, data) {
     if(data.length === 0) {
       reply.view('noPlaces');
     }
