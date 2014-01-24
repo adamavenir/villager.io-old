@@ -35,6 +35,7 @@
     "verymodel-level": "~1.0.0",
     "sugar": "~1.4.1",
     "getconfig": "~0.2.1",
-    "verymodel": "~1.5.1"
+    "verymodel": "~1.5.1",
+    "passport-twitter": "~1.0.2"
   }
 }

@@ -15,7 +15,7 @@ var plugins = {
             isSecure: false
         }
     },
-    travelogue: '../../' // use '../../' instead of travelogue if testing this repo locally
+    travelogue: config // use '../../' instead of travelogue if testing this repo locally
 };
 
 models.attachDB(db);
@@ -28,13 +28,15 @@ var serverOptions = {
 };
 
 var server = new Hapi.Server(config.hostname, config.port, serverOptions);
+
 server.pack.require(plugins, function(err) {
   if (err) {
-    throw err;
+    console.log('shit broke: ', err);
   }
 });
 
 var Passport = server.plugins.travelogue.passport;
+
 Passport.use(new TwitterStrategy(config.twitter, function(accessToken, refreshToken, profile, done) {
 
   // TODO find or create user here..
@@ -52,7 +54,7 @@ Passport.deserializeUser(function(obj, done) {
 
 if (process.env.DEBUG) {
     server.on('internalError', function (event) {
-        console.log(event)
+        console.log('um', event)
     });
 };
 
