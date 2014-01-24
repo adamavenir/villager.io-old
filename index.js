@@ -1,6 +1,6 @@
 var Hapi    = require('hapi');
 var jade    = require('jade');
-// var routes  = require('./server/routes');
+var routes  = require('./server/routes');
 var views     = require('./server/views');
 var level   = require('level');
 var db      = level('./db', { valueEncoding: 'json' });
@@ -60,85 +60,7 @@ if (process.env.DEBUG) {
     });
 };
 
-
-var routes = [
-
-  // GET STATIC FILES
-  { method: 'GET',  path: '/{path*}',   
-    handler: {
-      directory: { 
-        path: './public', 
-        listing: false, 
-        index: true 
-      }
-    }  
-  },
-
-  { method: 'GET',  path: '/', handler: views.index },
-
-  // PEOPLE
-  { method: 'GET',  path: '/people', handler: views.listPeople },
-  { method: 'GET',  path: '/people/{person}', handler: views.getPerson },
-  { method: 'GET',  path: '/people/add', handler: views.formPerson },
-  { method: 'POST', path: '/people/add', handler: views.createPerson },
-  { method: 'GET', path: '/people/delete/{person}', handler: views.deletePerson },
-
-  // PLACES
-  { method: 'GET',  path: '/places', handler: views.listPlaces },
-  { method: 'GET',  path: '/places/{place}', handler: views.getPlace },
-  { method: 'GET',  path: '/places/add', handler: views.formPlace },
-  { method: 'POST', path: '/places/add', handler: views.createPlace },
-  { method: 'POST',  path: '/places/delete/{place}', handler: views.deletePlace },  
-
-  // AUTH
-
-  { method: 'GET', path: '/login',
-    config: {
-      handler: function (request, reply) {
-        Passport.authenticate('twitter')(request, reply);
-        var html = '<a href="/auth/twitter">Login with Twitter</a>';
-        if (request.session) {
-          html += "<br/><br/><pre><span style='background-color: #eee'>session: " + JSON.stringify(request.session, null, 2) + "</span></pre>";
-        }
-        reply(html);
-      }
-    }
-  },
-
-  { method: 'GET', path: '/auth/twitter',
-    config: {
-      handler: function (request, reply) {
-        Passport.authenticate('twitter')(request, reply);
-      }
-    }
-  },  
-
-  { method: 'GET', path: '/auth/twitter/callback',
-    config: {
-      handler: function (request, reply) {
-        Passport.authenticate('twitter', {
-          failureRedirect: '/login',
-          successRedirect: '/',
-          failureFlash: true
-        })(request, reply, function () {
-          reply().redirect('/');
-        });
-      }
-    }
-  },
-
-  { method: 'GET', path: '/logout',
-    config: {
-      handler: function (request, reply) {
-        request.session_logout();
-      }
-    }
-
-  }
-
-];
-
-server.route(routes);
+server.route(routes(server));
 
 console.log('hapi listening on ', config.port);
 
