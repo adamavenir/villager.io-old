@@ -11,11 +11,11 @@ var TwitterStrategy = require('passport-twitter').Strategy;
 var plugins = {
     yar: {
         cookieOptions: {
-            password: 'worldofwalmart',
+            password: 'zoopitydoobeepityboop',
             isSecure: false
         }
     },
-    travelogue: config // use '../../' instead of travelogue if testing this repo locally
+    travelogue: config
 };
 
 models.attachDB(db);
