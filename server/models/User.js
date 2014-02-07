@@ -57,42 +57,18 @@ var User = new VeryLevelModel(
       type: new type().isAlphanumeric().len(0,160),
     },
     approved: {
-      derive: function (val) {
-        if (this.twitterId === 1568) {
-          return true
-        }
-        else {
-          return false
-        }
-      },
       default: false,
       type: 'boolean',
       required: true,
       index: true
     },
     moderator: {
-      derive: function (val) {
-        if (this.twitterId === 1568) {
-          return true
-        }
-        else {
-          return false;
-        }
-      },
       default: false,
       type: 'boolean',
       required: true,
       index: true
     },
     admin: {
-      derive: function (val) {
-        if (this.twitterId === 1568) {
-          return true
-        }
-        else {
-          return false;
-        }
-      },
       default: false,
       type: 'boolean',
       required: true,

@@ -9,8 +9,7 @@ block body
        h3 
         a(href= 'http://twitter.com/' + person.twitter) @#{twitter}
       p= bio
-      if user
-        if user.moderator
-          a.delete(href= '/people/delete/' + person.key) Delete this person
+      if moderator
+        a.delete(href= '/people/delete/' + person.key) Delete this person
 
     include in/footer

@@ -8,7 +8,7 @@ module.exports = function views(server) {
   ///////////////// INDEX
 
   index = function (request, reply) {
-    reply.view('index');
+    reply.view('index', { user : request.session.user, moderator : request.session.moderator, admin : request.session.admin });
   };
 
   ///////////////// AUTH
@@ -27,25 +27,38 @@ module.exports = function views(server) {
       if (err) {
         console.log('err', err)
       }
+      // if this user exists, log in
       if (user) {
         session.admin
         console.log(user.__verymeta.data.key, 'user exists, logging in...');
         request.session.userid = user.__verymeta.data.key;
-        request.session.user.admin = user.__verymeta.data.admin;
-        request.session.user.moderator = user.__verymeta.data.moderator;
+        request.session.admin = user.__verymeta.data.admin;
+        request.session.moderator = user.__verymeta.data.moderator;
         reply().code(201).redirect('/people');
       }
+      // otherwise, create a new user
       else {
+        if (request.session.user.id === '1568') {
+          console.log('you are 1568');
+          var access = true;
+        }
+        else {
+          var access = false;
+        }
         var u = User.create({
           fullName : request.session.user.displayName,
           twitterId : request.session.user.id,
           twitter : request.session.user.username,
-          avatar: request.session.user._json.profile_image_url
+          avatar: request.session.user._json.profile_image_url,
+          approved : access,
+          admin : access,
+          moderator : access,
         });
         u.save(function (err) {
           console.log('saved', u.__verymeta.data.fullName);
           reply().code(201).redirect('/people');
           request.session.userid = u.__verymeta.data.key;
+          request.session.admin = request.session.moderator = access;
         });
       }
     })
@@ -53,6 +66,7 @@ module.exports = function views(server) {
 
   logout = function (request, reply) {
     request.session._logOut();
+    request.session.admin = request.session.moderator = "";
     reply().redirect('/');
   };
 
@@ -83,7 +97,7 @@ module.exports = function views(server) {
   ///////////////// PEOPLE
 
   formPerson = function (request, reply) {
-    reply.view('formPerson', { user : request.session.user });
+    reply.view('formPerson', { user : request.session.user, moderator : request.session.moderator, admin : request.session.admin});
   };
 
   createPerson = function (request, reply) {
@@ -111,7 +125,7 @@ module.exports = function views(server) {
         reply.view('404');
       }
       else {
-        reply.view('person', { person : value, user : request.session.user });
+        reply.view('person', { person : value, user : request.session.user, moderator : request.session.moderator, admin : request.session.admin });
       }
     });
   };
@@ -122,7 +136,7 @@ module.exports = function views(server) {
         reply.view('noPeople');
       }
       else {
-        reply.view('listPeople', { people : data, user : request.session.user });  
+        reply.view('listPeople', { people : data, user : request.session.user, moderator : request.session.moderator, admin : request.session.admin });  
       }
     });
   };
