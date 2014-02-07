@@ -1,0 +1,37 @@
+extends layout
+
+block body
+  body
+    include in/header
+
+    h1 Pending people
+    ul.people
+      for person in people
+        li(class= person.approved)
+          a(href= '/people/' + person.slug)
+            img.grav(src= person.avatar)
+          h3= person.fullName
+          p
+            if !person.approved
+              | Pending
+            if person.approved
+              | √  
+            if person.moderator
+              | M 
+            if person.admin 
+              | A
+          a(href="/people/approve/" + person.key)
+            button Approve
+          a(href="/people/moderator/" + person.key)
+            button Moderator`
+    h1 Pending places
+    ul.places
+      for place in places
+        li
+          a(href= '/places/' + place.slug)
+            img.grav(src= place.image)
+          h3= place.name              
+          a(href="/places/approve/" + place.key)
+            button Approve
+
+    include in/footer

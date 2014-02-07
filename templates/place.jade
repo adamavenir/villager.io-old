@@ -4,11 +4,13 @@ block body
   body
     include in/header
     div.place
-      a(href= website)
-        img.grav(src= image)
-        h2= name
-      p= about
-      p= address + ' ' + city
-      a.delete(href= '/places/delete/' + slug) Delete this place
+      a(href= place.website)
+        img.grav(src= place.image)
+        h2= place.name
+      p= place.about
+      p
+        a(href= place.map)
+          span= place.address + ' ' + place.city
+      a.delete(href= '/places/delete/' + place.key) Delete this place
 
     include in/footer

@@ -8,7 +8,7 @@ block body
       h2= person.name
        h3 
         a(href= 'http://twitter.com/' + person.twitter) @#{twitter}
-      p= bio
+      p= person.bio
       if moderator
         a.delete(href= '/people/delete/' + person.key) Delete this person
 

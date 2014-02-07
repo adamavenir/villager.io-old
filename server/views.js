@@ -1,5 +1,6 @@
 var Place = require('./models/Place');
 var User = require('./models/User');
+var _ = require('underscore');
 
 module.exports = function views(server) {
 
@@ -147,31 +148,39 @@ module.exports = function views(server) {
     var callback = reply.view('deleted').redirect('/people');
   };
 
-adminifyPerson = function (request, reply) {
-    User.load(request.session.userid, function (err, user) {
-      if (err) { console.log('err', err)}
-      if (user.admin) {
-        User.load(request.params.person, function (err, person) {
-          if (err) { console.log('err', err) }
-          else {
-            var p = user.createChild(Person, {
-              firstName : person.firstName,
-              lastName  : person.lastName,
-              email     : person.email,
-              when      : "now"
-            });
+  approveItem = function (request, reply) {
 
-            p.save(function (err) {
-              console.log('adminify', p.__verymeta.data.fullName)
-              reply().code(201).redirect('/people');
-              User.delete(request.params.person, callback);
-              var callback = console.log('deleted', request.params.person)
-            });
-          }
-        })
-      }
-      else { reply().code(401).redirect('/'); }
-    })
+  };
+
+  adminPerson = function (request, reply) {
+      User.load(request.session.userid, function (err, user) {
+        if (err) { console.log('err', err)}
+        if (user.admin) {
+          User.load(request.params.person, function (err, person) {
+            if (err) { console.log('err', err) }
+            else {
+              var p = user.createChild(Person, {
+                firstName : person.firstName,
+                lastName  : person.lastName,
+                email     : person.email,
+                when      : "now"
+              });
+
+              p.save(function (err) {
+                console.log('adminify', p.__verymeta.data.fullName)
+                reply().code(201).redirect('/people');
+                User.delete(request.params.person, callback);
+                var callback = console.log('deleted', request.params.person)
+              });
+            }
+          })
+        }
+        else { reply().code(401).redirect('/'); }
+      })
+    };
+
+  moderatorPerson = function (request, reply) {
+
   };
 
 
@@ -201,13 +210,14 @@ adminifyPerson = function (request, reply) {
   };
 
   getPlace = function (request, reply) {
-    var thisPlace = request.params.place;
-    Place.load(Place.options.prefix + thisPlace, function(err, value) {
+    Place.getByIndex('slug', request.params.place, function(err, value) {
+      console.log(request.params.place);
       if (err) {
+        console.log('err', err);
         reply.view('404');
       }
       else {
-        reply.view('place', value);
+        reply.view('place', { place : value, user : request.session.user, moderator : request.session.moderator, admin : request.session.admin });
       }
     });
   };
@@ -223,9 +233,29 @@ adminifyPerson = function (request, reply) {
     });
   };
 
+
+
+  listPending = function (request, reply) {
+
+    User.all(function(err, people) {
+      var pendingPeople = _.where(people, {approved: false });
+      
+      Place.all(function(err, places) {
+        var pendingPlaces = _.where(places, { approved: false });
+
+        console.log('pending:' + pendingPeople + pendingPlaces);
+        if(pendingPeople.length + pendingPlaces.length === 0) {
+          reply.view('noPending');
+        }
+        else {
+          reply.view('listPending', { people : pendingPeople, places : pendingPlaces, user : request.session.user, moderator : request.session.moderator, admin : request.session.admin });
+        }
+      });
+    });
+  };    
+
   deletePlace = function (request, reply) {
-    var key = 'places!' + request.params.place;
-    Place.de8lete(key, callback);
+    Place.delete(request.params.place, callback);
     var callback = reply.view('deleted').redirect('/places');
   };
 

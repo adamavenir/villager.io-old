@@ -37,6 +37,7 @@
     "verymodel": "~1.5.1",
     "passport-twitter": "~1.0.2",
     "string": "~1.8.0",
-    "slugger": "~0.1.0"
+    "slugger": "~0.1.0",
+    "underscore": "~1.5.2"
   }
 }

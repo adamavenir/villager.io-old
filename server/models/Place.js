@@ -17,6 +17,7 @@ var Place = new VeryLevelModel ({
     derive: function () {
       return slugger(this.name, {alsoAllow: "&"});
     }, 
+    index: true,
     private: false 
   },
   address: {
@@ -52,12 +53,12 @@ var Place = new VeryLevelModel ({
     required: false,
     type: type().isAlphanumeric().len(0,160)
   },
-  key: { 
-    private: true,
-    derive: function () {
-      return 'places!' + this.slug;
-    }
-  },
+  approved: {
+    default: false,
+    type: 'boolean',
+    required: true,
+    index: true
+  }
 }, {prefix: 'places!'});
 
 module.exports = Place;

@@ -5,6 +5,8 @@ header
     //- a(href="/groups") Groups
     //- a(href="/events") Events
     //- a(href="/projects") Projects
+    if (moderator)
+      a(href="/pending") Pending
     if (user)
       a(href="/logout") Log out
     if (!user)

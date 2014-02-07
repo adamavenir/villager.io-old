@@ -48,7 +48,6 @@ module.exports = function _routes(server, views) {
       handler: this.deletePerson 
     },
 
-
     // PLACES
     { method: 'GET',  
       path: '/places', 
@@ -72,6 +71,28 @@ module.exports = function _routes(server, views) {
       path: '/places/delete/{place}', 
       config: { auth: 'passport' }, 
       handler: this.deletePlace
+    },
+
+    // MODERATION
+    { method: 'GET',  
+      path: '/pending', 
+      config: { auth: 'passport' },
+      handler: this.listPending 
+    },
+    { method: 'GET', 
+      path: '/pending/approve/{item}', 
+      config: { auth: 'passport' }, 
+      handler: this.approveItem
+    },
+    { method: 'GET', 
+      path: '/people/moderator/{person}', 
+      config: { auth: 'passport' }, 
+      handler: this.moderatorPerson 
+    },
+    { method: 'GET', 
+      path: '/people/admin/{person}', 
+      config: { auth: 'passport' }, 
+      handler: this.adminPerson 
     },
 
     // AUTH
