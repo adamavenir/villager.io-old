@@ -15,7 +15,7 @@ var Place = new VeryLevelModel ({
   },
   slug: { 
     derive: function () {
-      return slugger(this.name);
+      return slugger(this.name, {alsoAllow: "&"});
     }, 
     private: false 
   },

@@ -28,14 +28,15 @@
     "JSONStream": "~0.7.1",
     "concat-stream": "~1.4.1",
     "level": "~0.18.0",
-    "slugger": "0.0.3",
     "gravatar": "~1.0.6",
     "through": "~2.3.4",
     "liver": "~0.1.0",
-    "verymodel-level": "~1.0.0",
+    "verymodel-level": "~1.0.1",
     "sugar": "~1.4.1",
     "getconfig": "~0.2.1",
     "verymodel": "~1.5.1",
-    "passport-twitter": "~1.0.2"
+    "passport-twitter": "~1.0.2",
+    "string": "~1.8.0",
+    "slugger": "~0.1.0"
   }
 }

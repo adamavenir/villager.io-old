@@ -1,7 +1,7 @@
 var Hapi    = require('hapi');
 var jade    = require('jade');
 var routes  = require('./server/routes');
-var views     = require('./server/views');
+var views   = require('./server/views');
 var level   = require('level');
 var db      = level('./db', { valueEncoding: 'json' });
 var models = require('./server/models')
@@ -9,13 +9,8 @@ var config = require('getconfig');
 var TwitterStrategy = require('passport-twitter').Strategy;
 
 var plugins = {
-    yar: {
-        cookieOptions: {
-            password: 'zoopitydoobeepityboop',
-            isSecure: false
-        }
-    },
-    travelogue: config
+    yar: config.session,
+    travelogue: config.auth
 };
 
 models.attachDB(db);
@@ -35,13 +30,10 @@ server.pack.require(plugins, function(err) {
   }
 });
 
-
 var Passport = server.plugins.travelogue.passport;
 
-Passport.use(new TwitterStrategy(config.twitter, function(accessToken, refreshToken, profile, done) {
-
-  // TODO find or create user here..
-
+Passport.use(new TwitterStrategy(config.auth.twitter, function(accessToken, refreshToken, profile, done) {
+    
   return done(null, profile);
 }));
 
@@ -60,7 +52,7 @@ if (process.env.DEBUG) {
     });
 };
 
-server.route(routes(server));
+server.route(routes(server, views(server)));
 
 console.log('hapi listening on ', config.port);
 

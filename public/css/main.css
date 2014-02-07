@@ -4301,6 +4301,17 @@ header {
   header a:link, header a:visited {
     display: inline-block;
     padding: 10px; }
+  header .user {
+    position: absolute;
+    top: 3px;
+    right: 10px;
+    padding-top: 5px; }
+  header img {
+    width: 24px;
+    height: 24px;
+    border-radius: 100px;
+    margin-top: 0px;
+    margin-left: 10px; }
 
 .person, .place {
   text-align: center;

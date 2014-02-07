@@ -7,12 +7,26 @@ block body
     h1 People
     ul.people
       for person in people
-        li
+        li(class= person.approved)
           a(href= '/people/' + person.slug)
-            img.grav(src= person.gravatar)
+            img.grav(src= person.avatar)
             h3= person.fullName
+            p
+              if !person.approved
+                | Pending
+              if person.approved
+                | √  
+              if person.moderator
+                | M 
+              if person.admin 
+                | A
 
-      li
-        a.andOne(href="/people/add") +
+      if (user)
+        li
+          a.andOne(href="/people/add") +
+      else
+        li
+          a(href="/auth/twitter") 
+            button Add yourself
 
     include in/footer

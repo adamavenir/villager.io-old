@@ -5,3 +5,10 @@ header
     //- a(href="/groups") Groups
     //- a(href="/events") Events
     //- a(href="/projects") Projects
+    if (user)
+      a(href="/logout") Log out
+    if (!user)
+      a(href="/auth/twitter") Log in
+  if (user)
+    span.user= user.displayName
+      img(src= user._json.profile_image_url)

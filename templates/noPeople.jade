@@ -10,6 +10,10 @@ block body
       |  to keep it warm.
 
     p.empty
-      a.andOne(href="/people/add") +
+      if (user)
+        a.andOne(href="/people/add") +
+      else
+        a(href="/auth/twitter") 
+            button Add yourself
     
     include in/footer

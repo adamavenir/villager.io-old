@@ -2,7 +2,8 @@
 // exports.Group = require('./Group');
 var models = {
   Person: require('./Person'),
-  Place: require('./Place')
+  Place: require('./Place'),
+  User: require('./User')
 };
 
 function attachDB(db) {

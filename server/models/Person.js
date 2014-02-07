@@ -63,9 +63,6 @@ var Person = new VeryLevelModel(
     },
     bio: {
       type: new type().isAlphanumeric().len(0,160),
-    },
-    interests: {
-      type: new type().isIn('fishing', 'pizza', 'hopscotch', 'dancing', 'prancing'),
     }
   }, 
   { 

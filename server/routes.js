@@ -1,7 +1,7 @@
 var views     = require('./views');
 var Types     = require('hapi').types;
 
-module.exports = function _routes(server) {
+module.exports = function _routes(server, views) {
 
   var Passport = server.plugins.travelogue.passport;
 
@@ -18,71 +18,74 @@ module.exports = function _routes(server) {
       }  
     },
 
-    { method: 'GET',  path: '/', handler: views.index },
+    { method: 'GET',  
+      path: '/', 
+      handler: this.index 
+    },
 
     // PEOPLE
-    { method: 'GET',  path: '/people', handler: views.listPeople },
-    { method: 'GET',  path: '/people/{person}', handler: views.getPerson },
-    { method: 'GET',  path: '/people/add', handler: views.formPerson },
-    { method: 'POST', path: '/people/add', handler: views.createPerson },
-    { method: 'GET', path: '/people/delete/{person}', handler: views.deletePerson },
+    { method: 'GET',  
+      path: '/people', 
+      handler: this.listPeople 
+    },
+    { method: 'GET',
+      path: '/people/{person}',
+      handler: this.getPerson 
+    },
+    { method: 'GET',  
+      path: '/people/add', 
+      config: { auth: 'passport' }, 
+      handler: this.formPerson 
+    },
+    { method: 'POST', 
+      path: '/people/add', 
+      config: { auth: 'passport' }, 
+      handler: this.createPerson 
+    },
+    { method: 'GET', 
+      path: '/people/delete/{person}', 
+      config: { auth: 'passport' }, 
+      handler: this.deletePerson 
+    },
+
 
     // PLACES
-    { method: 'GET',  path: '/places', handler: views.listPlaces },
-    { method: 'GET',  path: '/places/{place}', handler: views.getPlace },
-    { method: 'GET',  path: '/places/add', handler: views.formPlace },
-    { method: 'POST', path: '/places/add', handler: views.createPlace },
-    { method: 'POST',  path: '/places/delete/{place}', handler: views.deletePlace },  
+    { method: 'GET',  
+      path: '/places', 
+      handler: this.listPlaces
+    },
+    { method: 'GET',
+      path: '/places/{place}', 
+      handler: this.getPlace 
+    },
+    { method: 'GET',  
+      path: '/places/add', 
+      config: { auth: 'passport' }, 
+      handler: this.formPlace 
+    },
+    { method: 'POST', 
+      path: '/places/add', 
+      config: { auth: 'passport' }, 
+      handler: this.createPlace 
+    },
+    { method: 'GET', 
+      path: '/places/delete/{place}', 
+      config: { auth: 'passport' }, 
+      handler: this.deletePlace
+    },
 
     // AUTH
 
-    { method: 'GET', path: '/login',
-      config: {
-        handler: function (request, reply) {
-          Passport.authenticate('twitter')(request, reply);
-          var html = '<a href="/auth/twitter">Login with Twitter</a>';
-          if (request.session) {
-            html += "<br/><br/><pre><span style='background-color: #eee'>session: " + JSON.stringify(request.session, null, 2) + "</span></pre>";
-          }
-          reply(html);
-        }
-      }
-    },
-
-    { method: 'GET', path: '/auth/twitter',
-      config: {
-        handler: function (request, reply) {
-          Passport.authenticate('twitter')(request, reply);
-        }
-      }
-    },  
-
-    { method: 'GET', path: '/auth/twitter/callback',
-      config: {
-        handler: function (request, reply) {
-          Passport.authenticate('twitter', {
-            failureRedirect: '/login',
-            successRedirect: '/',
-            failureFlash: true
-          })(request, reply, function () {
-            reply().redirect('/');
-          });
-        }
-      }
-    },
-
-    { method: 'GET', path: '/logout',
-      config: {
-        handler: function (request, reply) {
-          request.session_logout();
-        }
-      }
-
-    }
+    { method: 'GET', path: '/login', handler: this.login },
+    { method: 'GET', path: '/authenticated', handler: this.authenticated },
+    { method: 'GET', path: '/session', handler: this.session },
+    { method: 'GET', path: '/auth/twitter', handler: this.twitterAuth },
+    { method: 'GET', path: '/auth/twitter/callback', handler: this.twitterCallback },
+    { method: 'GET', path: '/logout', handler: this.logout }
 
   ];
 
   return routes;
 
-
 }
+

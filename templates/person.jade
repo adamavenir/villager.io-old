@@ -4,11 +4,13 @@ block body
   body
     include in/header
     div.person
-      img.grav(src= gravatar)
-      h2= name
+      img.grav(src= person.avatar)
+      h2= person.name
        h3 
-        a(href= 'http://twitter.com/' + twitter) @#{twitter}
+        a(href= 'http://twitter.com/' + person.twitter) @#{twitter}
       p= bio
-      a.delete(href= '/people/delete/' + slug) Delete this person
+      if user
+        if user.moderator
+          a.delete(href= '/people/delete/' + person.key) Delete this person
 
     include in/footer
