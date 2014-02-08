@@ -52,24 +52,6 @@ module.exports = function places(server) {
     });
   };
 
-  listPending = function (request, reply) {
-
-    User.all(function(err, people) {
-      var pendingPeople = _.where(people, { approved: false });
-      
-      Place.all(function(err, places) {
-        var pendingPlaces = _.where(places, { approved: false });
-
-        if(pendingPeople.length + pendingPlaces.length === 0) {
-          reply.view('noPending', { user : request.session.user, moderator : request.session.moderator, admin : request.session.admin });
-        }
-        else {
-          reply.view('listPending', { people : pendingPeople, places : pendingPlaces, user : request.session.user, moderator : request.session.moderator, admin : request.session.admin });
-        }
-      });
-    });
-  };    
-
   deletePlace = function (request, reply) {
     Place.delete(request.params.place, callback);
     var callback = reply.view('deleted').redirect('/places');
