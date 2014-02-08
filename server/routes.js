@@ -3,6 +3,8 @@ var Types     = require('hapi').types;
 
 module.exports = function _routes(server, views) {
 
+  console.log(this);
+
   var Passport = server.plugins.travelogue.passport;
 
   var routes = [
@@ -26,7 +28,7 @@ module.exports = function _routes(server, views) {
     // PEOPLE
     { method: 'GET',  
       path: '/people', 
-      handler: this.listPeople 
+      handler: this.people.listPeople 
     },
     { method: 'GET',
       path: '/people/{person}',

@@ -1,10 +1,10 @@
 var Hapi    = require('hapi');
 var jade    = require('jade');
-var routes  = require('./server/routes');
+var models = require('./server/models')
 var views   = require('./server/views');
+var routes  = require('./server/routes');
 var level   = require('level');
 var db      = level('./db', { valueEncoding: 'json' });
-var models = require('./server/models')
 var config = require('getconfig');
 var TwitterStrategy = require('passport-twitter').Strategy;
 
@@ -44,7 +44,6 @@ Passport.serializeUser(function(user, done) {
 Passport.deserializeUser(function(obj, done) {
     done(null, obj);
 });
-
 
 if (process.env.DEBUG) {
     server.on('internalError', function (event) {
