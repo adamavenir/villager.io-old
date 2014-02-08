@@ -80,10 +80,15 @@ module.exports = function _routes(server, views) {
       handler: this.listPending 
     },
     { method: 'GET', 
-      path: '/pending/approve/{item}', 
+      path: '/people/approve/{person}', 
       config: { auth: 'passport' }, 
-      handler: this.approveItem
+      handler: this.approvePerson
     },
+    { method: 'GET', 
+      path: '/places/approve/{place}', 
+      config: { auth: 'passport' }, 
+      handler: this.approvePlace
+    },    
     { method: 'GET', 
       path: '/people/moderator/{person}', 
       config: { auth: 'passport' }, 

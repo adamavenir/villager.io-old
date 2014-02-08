@@ -8,8 +8,19 @@ block body
       h2= person.name
        h3 
         a(href= 'http://twitter.com/' + person.twitter) @#{twitter}
+      p
+        if !person.approved
+          | Pending
+        if person.approved
+          | √  
+        if person.moderator
+          | M 
+        if person.admin 
+          | A
       p= person.bio
       if moderator
         a.delete(href= '/people/delete/' + person.key) Delete this person
+        if !person.moderator
+          a.moderator(href= '/people/moderator/' + person.key) Make moderator
 
     include in/footer
