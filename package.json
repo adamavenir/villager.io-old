@@ -1,43 +1,44 @@
 {
   "name": "triciti.es",
-  "version": "0.0.0",
   "description": "the tricities underground directory",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "version": "0.0.0",
+  "author": "Adam Brault",
+  "bugs": {
+    "url": "https://github.com/adambrault/triciti.es-hapi/issues"
   },
+  "dependencies": {
+    "JSONStream": "~0.7.1",
+    "concat-stream": "~1.4.1",
+    "getconfig": "~0.2.1",
+    "gravatar": "~1.0.6",
+    "hapi": "~2.0.0-preview",
+    "jade": "~1.1.4",
+    "jquery": "~2.1.0-beta3",
+    "level": "~0.18.0",
+    "level-mapped-index": "~0.3.2",
+    "level-range": "0.0.0",
+    "level-sublevel": "~5.2.0",
+    "leveldown": "~0.10.2",
+    "levelup": "~0.18.2",
+    "liver": "~0.1.0",
+    "passport-twitter": "~1.0.2",
+    "slugger": "~0.1.0",
+    "string": "~1.8.0",
+    "sugar": "~1.4.1",
+    "through": "~2.3.4",
+    "travelogue": "git://github.com/nlf/travelogue.git#dd75e017a66d6e9516005e5b02d381b1372588f4",
+    "underscore": "~1.5.2",
+    "verymodel": "~1.5.1",
+    "verymodel-level": "~1.1.1"
+  },
+  "homepage": "https://github.com/adambrault/triciti.es-hapi",
+  "license": "ISC",
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/adambrault/triciti.es-hapi.git"
   },
-  "author": "Adam Brault",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/adambrault/triciti.es-hapi/issues"
-  },
-  "homepage": "https://github.com/adambrault/triciti.es-hapi",
-  "dependencies": {
-    "hapi": "~2.0.0-preview",
-    "jade": "~1.1.4",
-    "levelup": "~0.18.2",
-    "leveldown": "~0.10.2",
-    "jquery": "~2.1.0-beta3",
-    "level-sublevel": "~5.2.0",
-    "level-mapped-index": "~0.3.2",
-    "level-range": "0.0.0",
-    "JSONStream": "~0.7.1",
-    "concat-stream": "~1.4.1",
-    "level": "~0.18.0",
-    "gravatar": "~1.0.6",
-    "through": "~2.3.4",
-    "liver": "~0.1.0",
-    "verymodel-level": "~1.1.0",
-    "sugar": "~1.4.1",
-    "getconfig": "~0.2.1",
-    "verymodel": "~1.5.1",
-    "passport-twitter": "~1.0.2",
-    "string": "~1.8.0",
-    "slugger": "~0.1.0",
-    "underscore": "~1.5.2"
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   }
 }
