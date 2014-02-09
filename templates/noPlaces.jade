@@ -7,8 +7,8 @@ block body
     h1 No places found
     
     if user
-      p.empty    
-        a(href="/places/add") 
-            button Add one
+      ul
+        li
+          a.andOne(href="/places/add") +
     
     include in/footer

@@ -72,7 +72,7 @@ header
   &.modfalse
     background-color: #F8FFC9
 
-.person, .place
+.person, .place, .group
   text-align: center
   width: 500px 
   margin: 0 auto
@@ -92,6 +92,7 @@ ul
   text-align: center
 
   li
+    vertical-align: top
     width: 120px
     list-style: none
     display: inline-block
@@ -100,6 +101,12 @@ ul
   h3
     font-size: 13px
     font-weight: 500
+
+  .moderate
+    font-size: 10px
+
+    a
+      display: block
 
 .grav
   border-radius: 100px
@@ -118,11 +125,25 @@ a.andOne
   background-color: #fefefe
   font-size: 80px
   line-height: 65px
-  position: relative
-  top: -33px
-  margin-bottom: -13px
   font-weight: 1000
   text-decoration: none
+  text-align: center
+  &:hover
+    color: #fff
+    background-color: #2ba6cb
+
+a.andMe
+  border: 1px solid #eee
+  width: 80px
+  height: 80px
+  border-radius: 100px
+  display: inline-block
+  background-color: #fefefe
+  font-size: 20px
+  line-height: 75px
+  font-weight: 1000
+  text-decoration: none
+  text-align: center
   &:hover
     color: #fff
     background-color: #2ba6cb

@@ -1,5 +1,6 @@
 var User = require('../models/User');
 var Place = require('../models/Place');
+var Group = require('../models/Group');
 var _ = require('underscore');
 
 module.exports = function moderation(server) {
@@ -14,12 +15,27 @@ module.exports = function moderation(server) {
       Place.all(function(err, places) {
         var pendingPlaces = _.where(places, { approved: false });
 
-        if(pendingPeople.length + pendingPlaces.length === 0) {
-          reply.view('noPending', { user : request.session.user, moderator : request.session.moderator, admin : request.session.admin });
-        }
-        else {
-          reply.view('listPending', { people : pendingPeople, places : pendingPlaces, user : request.session.user, moderator : request.session.moderator, admin : request.session.admin });
-        }
+        Group.all(function(err, groups) {
+          var pendingGroups = _.where(groups, { approved: false });
+
+          if(pendingPeople.length + pendingPlaces.length + pendingGroups.length === 0) {
+            reply.view('noPending', { 
+              user : request.session.user, 
+              moderator : request.session.moderator, 
+              admin : request.session.admin 
+            });
+          }
+          else {
+            reply.view('listPending', { 
+              people : pendingPeople, 
+              places : pendingPlaces,
+              groups : pendingGroups, 
+              user : request.session.user, 
+              moderator : request.session.moderator, 
+              admin : request.session.admin 
+            });
+          }
+        });
       });
     });
   };    
@@ -43,6 +59,16 @@ module.exports = function moderation(server) {
     }
     else { reply().code(401).redirect('/'); }
   };
+
+  approveGroup = function (request, reply) {
+    if (request.session.moderator) {
+      Group.update(request.params.group, { approved: true }, function (group) {
+        console.log('approved:', request.params.group);
+        reply().code(200).redirect('/groups');
+      })
+    }
+    else { reply().code(401).redirect('/'); }
+  };  
 
   adminPerson = function (request, reply) {
     if (request.session.admin) {

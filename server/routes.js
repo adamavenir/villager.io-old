@@ -35,7 +35,7 @@ module.exports = function _routes(server, views) {
     { method: 'GET',  
       path: '/people/add', 
       config: { auth: 'passport' }, 
-      handler: this.formPerson 
+      handler: this.addPerson 
     },
     { method: 'POST', 
       path: '/people/add', 
@@ -60,7 +60,7 @@ module.exports = function _routes(server, views) {
     { method: 'GET',  
       path: '/places/add', 
       config: { auth: 'passport' }, 
-      handler: this.formPlace 
+      handler: this.addPlace 
     },
     { method: 'POST', 
       path: '/places/add', 
@@ -86,7 +86,7 @@ module.exports = function _routes(server, views) {
     { method: 'GET',  
       path: '/groups/add', 
       config: { auth: 'passport' }, 
-      handler: this.formGroup
+      handler: this.addGroup
     },
     { method: 'POST', 
       path: '/groups/add', 
@@ -116,6 +116,11 @@ module.exports = function _routes(server, views) {
       config: { auth: 'passport' }, 
       handler: this.approvePlace
     },    
+    { method: 'GET', 
+      path: '/groups/approve/{group}', 
+      config: { auth: 'passport' }, 
+      handler: this.approveGroup
+    },        
     { method: 'GET', 
       path: '/people/moderator/{person}', 
       config: { auth: 'passport' }, 

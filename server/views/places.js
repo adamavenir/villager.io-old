@@ -5,8 +5,8 @@ module.exports = function places(server) {
 
   var Passport = server.plugins.travelogue.passport;
 
-  formPlace = function (request, reply) {
-    reply.view('formPlace');
+  addPlace = function (request, reply) {
+    reply.view('addPlace');
   };
 
   createPlace = function (request, reply) {
@@ -35,7 +35,12 @@ module.exports = function places(server) {
       }
       else {
         if (Array.isArray(value) && value.length === 1) { value = value[0] };
-        reply.view('place', { place : value, user : request.session.user, moderator : request.session.moderator, admin : request.session.admin });
+        reply.view('place', { 
+          place : value, 
+          user : request.session.user, 
+          moderator : request.session.moderator, 
+          admin : request.session.admin 
+        });
       }
     });
   };
@@ -44,7 +49,11 @@ module.exports = function places(server) {
     Place.all(function(err, data) {
       var approved = _.where(data, { approved: true });
       if(approved.length === 0) {
-        reply.view('noPlaces', { user : request.session.user, moderator : request.session.moderator, admin : request.session.admin });
+        reply.view('noPlaces', { 
+          user : request.session.user, 
+          moderator : request.session.moderator, 
+          admin : request.session.admin 
+        });
       }
       else {
         reply.view('listPlaces', { places : approved });

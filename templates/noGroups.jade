@@ -7,8 +7,8 @@ block body
     h1 No groups found
     
     if user
-      p.empty    
-        a(href="/groups/add") 
-            button Add one
+      ul
+        li
+          a.andOne(href="/groups/add") +
     
     include in/footer

@@ -1,0 +1,27 @@
+extends layout
+
+block body
+  body
+    include in/header
+
+    h1 Add a group
+    p (Music, theatre, art, coworking, educational, social, nonprofit, support)
+    form#addPlace(method="POST", action="/groups/add")
+      label(for="type") Type of place:
+      select#inputType(name="type")
+        option(value="Music") Music
+        option(value="Art") Art
+        option(value="Theatre") Theatre
+        option(value="Coworking") Coworking
+        option(value="Educational") Educational
+        option(value="Social") Social
+        option(value="Nonprofit") Nonprofit
+        option(value="Support") Support
+      input#inputName(name="name", type="text", placeholder="Name of the group")
+      input#inputWebsite(name="website", type="text", placeholder="http://placewebsite.com")
+      input#inputTwitter(name="twitter", type="text", placeholder="Twitter username")
+      input#inputImage(name="image", type="text", placeholder="link to an image")
+      textarea#inputAbout(name="about", type="text", maxlength="160", placeholder="Describe this group (160 characters max)")
+      button(name="submit", type="submit") Add this group
+
+    include in/footer

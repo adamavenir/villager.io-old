@@ -4317,7 +4317,7 @@ header {
   header.modfalse {
     background-color: #f8ffc9; }
 
-.person, .place {
+.person, .place, .group {
   text-align: center;
   width: 500px;
   margin: 0 auto;
@@ -4336,6 +4336,7 @@ a.delete {
 ul {
   text-align: center; }
   ul li {
+    vertical-align: top;
     width: 120px;
     list-style: none;
     display: inline-block;
@@ -4343,6 +4344,10 @@ ul {
   ul h3 {
     font-size: 13px;
     font-weight: 500; }
+  ul .moderate {
+    font-size: 10px; }
+    ul .moderate a {
+      display: block; }
 
 .grav {
   border-radius: 100px;
@@ -4361,12 +4366,26 @@ a.andOne {
   background-color: #fefefe;
   font-size: 80px;
   line-height: 65px;
-  position: relative;
-  top: -33px;
-  margin-bottom: -13px;
   font-weight: 1000;
-  text-decoration: none; }
+  text-decoration: none;
+  text-align: center; }
   a.andOne:hover {
+    color: white;
+    background-color: #2ba6cb; }
+
+a.andMe {
+  border: 1px solid #eeeeee;
+  width: 80px;
+  height: 80px;
+  border-radius: 100px;
+  display: inline-block;
+  background-color: #fefefe;
+  font-size: 20px;
+  line-height: 75px;
+  font-weight: 1000;
+  text-decoration: none;
+  text-align: center; }
+  a.andMe:hover {
     color: white;
     background-color: #2ba6cb; }
 

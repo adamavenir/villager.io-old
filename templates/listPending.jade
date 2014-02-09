@@ -4,8 +4,8 @@ block body
   body
     include in/header
 
-    h1 Pending people
-    ul.people
+    h1 Pending
+    ul.pending
       for person in people
         li(class= person.approved)
           a(href= '/people/' + person.slug)
@@ -20,15 +20,25 @@ block body
               | M 
             if person.admin 
               | A
-          a(href="/people/approve/" + person.key) Approve 
-          a(href="/people/moderator/" + person.key) Moderator
-    h1 Pending places
-    ul.places
+          p.moderate
+            a(href="/people/approve/" + person.key) Approve 
+            a(href="/people/moderator/" + person.key) Moderator
+            a(href="/people/delete/" + person.key) Delete
       for place in places
         li
           a(href= '/places/' + place.slug)
             img.grav(src= place.image)
-          h3= place.name              
-          a(href="/places/approve/" + place.key) Approve
+          h3= place.name
+          p.moderate
+            a(href="/places/approve/" + place.key) Approve
+            a(href="/places/delete/" + place.key) Delete
+      for group in groups
+        li
+          a(href= '/groups/' + group.slug)
+            img.grav(src= group.image)
+          h3= group.name
+          p.moderate
+            a(href="/groups/approve/" + group.key) Approve 
+            a(href="/groups/delete/" + group.key) Delete           
 
     include in/footer

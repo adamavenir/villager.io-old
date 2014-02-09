@@ -5,8 +5,12 @@ module.exports = function people(server) {
 
   var Passport = server.plugins.travelogue.passport;
 
-  formPerson = function (request, reply) {
-    reply.view('formPerson', { user : request.session.user, moderator : request.session.moderator, admin : request.session.admin});
+  addPerson = function (request, reply) {
+    reply.view('addPerson', { 
+      user : request.session.user, 
+      moderator : request.session.moderator, 
+      admin : request.session.admin
+    });
   };
 
   createPerson = function (request, reply) {

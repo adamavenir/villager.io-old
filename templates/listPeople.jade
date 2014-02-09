@@ -25,7 +25,6 @@ block body
           a.andOne(href="/people/add") +
       else
         li
-          a(href="/auth/twitter") 
-            button Add yourself
+          a.andMe(href="/auth/twitter") + me
 
     include in/footer
