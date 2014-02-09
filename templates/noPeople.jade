@@ -6,11 +6,8 @@ block body
 
     h1 No people found
 
-    p.empty
-      if moderator
-        a.andOne(href="/people/add") +
-      else
-        a(href="/auth/twitter") 
-            button Add yourself
+    p.empty    
+      a(href="/auth/twitter") 
+          button Add yourself
 
     include in/footer

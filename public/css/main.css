@@ -4312,6 +4312,10 @@ header {
     border-radius: 100px;
     margin-top: 0px;
     margin-left: 10px; }
+  header.modtrue {
+    background-color: #c9ffe4; }
+  header.modfalse {
+    background-color: #f8ffc9; }
 
 .person, .place {
   text-align: center;

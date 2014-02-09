@@ -17,10 +17,14 @@ module.exports = function auth(server) {
   };
 
   authenticated = function (request, reply) {
-    User.getByIndex('twitterId', request.session.user.id, function (err, user) {
+    console.log(request.session.user.id);
+    User.getByIndex('twitterId', request.session.user.id, function (err, users) {
       // if this user exists, log in
-      if (Array.isArray(user) && user.length === 1) {
-        user = user[0];
+      if (err) {
+        console.log('err', err);
+      }
+      if (Array.isArray(users) && users.length === 1 && users[0] !== undefined) {
+        user = users[0];
         request.session.userid = user.__verymeta.data.key;
         request.session.admin = user.__verymeta.data.admin;
         request.session.moderator = user.__verymeta.data.moderator;

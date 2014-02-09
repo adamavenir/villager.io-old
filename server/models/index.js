@@ -2,7 +2,7 @@ var models = {
   Person: require('./Person'),
   Place: require('./Place'),
   User: require('./User'),
-  Group: requore('./Group')
+  Group: require('./Group')
 };
 
 function attachDB(db) {

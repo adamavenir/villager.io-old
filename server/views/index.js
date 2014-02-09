@@ -4,4 +4,5 @@ module.exports = function views(server) {
   pages = require('./pages')(server);
   people = require('./people')(server);
   places = require('./places')(server);
+  groups = require('./groups')(server);
 }

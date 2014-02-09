@@ -20,10 +20,8 @@ block body
               | M 
             if person.admin 
               | A
-          a(href="/people/approve/" + person.key)
-            button Approve
-          a(href="/people/moderator/" + person.key)
-            button Moderator`
+          a(href="/people/approve/" + person.key) Approve 
+          a(href="/people/moderator/" + person.key) Moderator
     h1 Pending places
     ul.places
       for place in places
@@ -31,7 +29,6 @@ block body
           a(href= '/places/' + place.slug)
             img.grav(src= place.image)
           h3= place.name              
-          a(href="/places/approve/" + place.key)
-            button Approve
+          a(href="/places/approve/" + place.key) Approve
 
     include in/footer

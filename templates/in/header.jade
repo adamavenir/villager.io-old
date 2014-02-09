@@ -1,16 +1,16 @@
-header
+header(class="mod" + moderator)
   nav 
     a(href="/people") People
     a(href="/places") Places
-    //- a(href="/groups") Groups
+    a(href="/groups") Groups
     //- a(href="/events") Events
     //- a(href="/projects") Projects
-    if (moderator)
+    if moderator
       a(href="/pending") Pending
-    if (user)
+    if user
       a(href="/logout") Log out
-    if (!user)
+    if !user
       a(href="/auth/twitter") Log in
-  if (user)
+  if user
     span.user= user.displayName
       img(src= user._json.profile_image_url)

@@ -1,0 +1,16 @@
+extends layout
+
+block body
+  body
+    include in/header
+    div.group
+      a(href= group.website)
+        img.grav(src= group.image)
+        h2= group.name
+      p= group.about
+      p
+        a(href= group.map)
+          span= group.address + ' ' + group.city
+      a.delete(href= '/groups/delete/' + group.key) Delete this group
+
+    include in/footer

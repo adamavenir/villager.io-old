@@ -7,7 +7,7 @@ module.exports = function _routes(server, views) {
 
   var routes = [
 
-    // GET STATIC FILES
+    ////////////////////////////////// STATIC
     { method: 'GET',  path: '/{path*}',   
       handler: {
         directory: { 
@@ -23,7 +23,7 @@ module.exports = function _routes(server, views) {
       handler: this.index 
     },
 
-    // PEOPLE
+    ////////////////////////////////// PEOPLE
     { method: 'GET',  
       path: '/people', 
       handler: this.listPeople 
@@ -48,7 +48,7 @@ module.exports = function _routes(server, views) {
       handler: this.deletePerson 
     },
 
-    // PLACES
+    ////////////////////////////////// PLACES
     { method: 'GET',  
       path: '/places', 
       handler: this.listPlaces
@@ -73,7 +73,34 @@ module.exports = function _routes(server, views) {
       handler: this.deletePlace
     },
 
-    // MODERATION
+
+    ////////////////////////////////// GROUPS
+    { method: 'GET',  
+      path: '/groups', 
+      handler: this.listGroups
+    },
+    { method: 'GET',
+      path: '/groups/{group}', 
+      handler: this.getGroup 
+    },
+    { method: 'GET',  
+      path: '/groups/add', 
+      config: { auth: 'passport' }, 
+      handler: this.formGroup
+    },
+    { method: 'POST', 
+      path: '/groups/add', 
+      config: { auth: 'passport' }, 
+      handler: this.createGroup
+    },
+    { method: 'GET', 
+      path: '/groups/delete/{group}', 
+      config: { auth: 'passport' }, 
+      handler: this.deleteGroup
+    },
+
+
+    ////////////////////////////////// MODERATION
     { method: 'GET',  
       path: '/pending', 
       config: { auth: 'passport' },
@@ -100,7 +127,7 @@ module.exports = function _routes(server, views) {
       handler: this.adminPerson 
     },
 
-    // AUTH
+    ////////////////////////////////// AUTH
 
     { method: 'GET', path: '/login', handler: this.login },
     { method: 'GET', path: '/authenticated', handler: this.authenticated },

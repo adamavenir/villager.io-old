@@ -1,0 +1,17 @@
+extends layout
+
+block body
+  body
+    include in/header
+
+    h1 Groups
+    ul.groups
+      for group in groups
+        li
+          a(href= '/groups/' + group.slug)
+            img.grav(src= group.image)
+            h3= group.name
+      li
+        a.andOne(href="/groups/add") +
+
+    include in/footer
