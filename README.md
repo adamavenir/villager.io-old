@@ -2,9 +2,9 @@ triciti.es
 ==========
 Wouldn't it be great if there was a good site to create and share the indie culture and community of the Tri-Cities?
 
-People, places, groups, events, projects.
+People, places, groups, projects, events.
 
-This is the spiritual successor to [wecreate.tc](http://wecreate.tc), but it'll be more than that.
+This is the successor to [wecreate.tc](http://wecreate.tc), but it'll be more than that.
 
 ## Done:
 
@@ -18,9 +18,11 @@ This is the spiritual successor to [wecreate.tc](http://wecreate.tc), but it'll 
 
 ## Todo:
 
-- Add events, projects
+- Custom avatars, upload images
+- Projects
+- CSRF
 - <3s for favorite locations
 - Add list of interests
-- Ability to be a member of a group
+- Ability to be a member of a group, project
 - Events, calendar, RSVPs
 - Relationships
