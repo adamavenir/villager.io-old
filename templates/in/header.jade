@@ -9,6 +9,7 @@ header(class="mod" + moderator)
       a(href="/pending") Pending
     if user
       a(href="/logout") Log out
+      a(href="/profile/edit/" + userid) Edit profile
     if !user
       a(href="/auth/twitter") Log in
   if user

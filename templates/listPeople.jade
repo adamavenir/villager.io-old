@@ -20,10 +20,25 @@ block body
                 | M 
               if person.admin 
                 | A
+      if me
+        li(class="pending")
+          a(href="/people/" + me.slug)
+            img.grav(src= me.avatar)
+            h3= me.fullName
+            p
+              if !me.approved
+                | Pending
+              if me.approved
+                | √  
+              if me.moderator
+                | M 
+              if me.admin 
+                | A
+
       if moderator
         li
           a.andOne(href="/people/add") +
-      else
+      if !user
         li
           a.andMe(href="/auth/twitter") + me
 

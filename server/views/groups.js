@@ -6,7 +6,12 @@ module.exports = function groups(server) {
   var Passport = server.plugins.travelogue.passport;
 
   addGroup = function (request, reply) {
-    reply.view('addGroup');
+    reply.view('addGroup', {
+      user : request.session.user, 
+      userid : request.session.userid,
+      moderator : request.session.moderator, 
+      admin : request.session.admin
+    });
   };
 
   createGroup = function (request, reply) {
@@ -40,6 +45,7 @@ module.exports = function groups(server) {
         reply.view('group', { 
           group : value, 
           user : request.session.user, 
+          userid : request.session.userid,
           moderator : request.session.moderator, 
           admin : request.session.admin 
         });
@@ -53,6 +59,7 @@ module.exports = function groups(server) {
       if(approved.length === 0) {
         reply.view('noGroups', { 
           user : request.session.user, 
+          userid : request.session.userid,
           moderator : request.session.moderator, 
           admin : request.session.admin 
         });
@@ -61,6 +68,7 @@ module.exports = function groups(server) {
         reply.view('listGroups', { 
           groups : approved, 
           user : request.session.user, 
+          userid : request.session.userid,
           moderator : request.session.moderator, 
           admin : request.session.admin  
         });

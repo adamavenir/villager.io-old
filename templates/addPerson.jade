@@ -6,13 +6,12 @@ block body
 
     h1 Add someone
     form#addPerson(method="POST", action="/people/add", )
-      input#inputFirstName(name="firstName", type="text", placeholder="First name")
-      input#inputLastName(name="lastName", type="text", placeholder="Last name")
+      input#inputName(name="fullName", type="text", placeholder="Name")
       input#inputEmail(name="email", type="text", placeholder="Email address")
       input#inputTwitter(name="twitter", type="text", placeholder="Twitter username")
-      input#inputSite(name="site", type="text", placeholder="Website")
+      input#inputWebsite(name="website", type="text", placeholder="Website")
       input#inputCompany(name="company", type="text", placeholder="Company")
-      textarea#inputBio(name="bio", type="text", maxlength="160", placeholder="Introduce yourself (160 characters max)")
+      textarea#inputAbout(name="about", type="text", maxlength="160", placeholder="Introduce yourself (160 characters max)")
       label(for="interests") What are you interested in?
       ul.pickInterests
         li 

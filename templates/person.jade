@@ -7,7 +7,7 @@ block body
       img.grav(src= person.avatar)
       h2= person.name
        h3 
-        a(href= 'http://twitter.com/' + person.twitter) @#{twitter}
+        a(href= 'http://twitter.com/' + person.twitter) @#{person.twitter}
       p
         if !person.approved
           | Pending

@@ -31,6 +31,7 @@ module.exports = function moderation(server) {
               places : pendingPlaces,
               groups : pendingGroups, 
               user : request.session.user, 
+              userid : request.session.userid,
               moderator : request.session.moderator, 
               admin : request.session.admin 
             });

@@ -42,6 +42,16 @@ module.exports = function _routes(server, views) {
       config: { auth: 'passport' }, 
       handler: this.createPerson 
     },
+    { method: 'GET',  
+      path: '/profile/edit/{person}', 
+      config: { auth: 'passport' }, 
+      handler: this.editPerson 
+    }, 
+    { method: 'POST', 
+      path: '/profile/update/{person}', 
+      config: { auth: 'passport' }, 
+      handler: this.updatePerson 
+    },       
     { method: 'GET', 
       path: '/people/delete/{person}', 
       config: { auth: 'passport' }, 

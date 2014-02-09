@@ -22,7 +22,12 @@ var User = new VeryLevelModel(
     },
     slug: { 
       derive: function () {
-        return slugger(this.fullName, {alsoAllow: "&"});
+        if (this.fullName) {
+          return slugger(this.fullName, {alsoAllow: "&"});  
+        }
+        else {
+          return this.twitter;
+        }
       }, 
       index: true,
       private: false 
@@ -44,16 +49,17 @@ var User = new VeryLevelModel(
         console.log(twitter);
       },
       type: new type().isAlphanumeric().len(1,16),
+      index: true,
       required: false
     },
-    site: {
+    website: {
       type: new type().isUrl(),
       required: false
     },
     company: {
       type: new type().isAlphanumeric()
     },
-    bio: {
+    about: {
       type: new type().isAlphanumeric().len(0,160),
     },
     approved: {
@@ -69,6 +75,12 @@ var User = new VeryLevelModel(
       index: true
     },
     admin: {
+      default: false,
+      type: 'boolean',
+      required: true,
+      index: true
+    },
+    hasLoggedIn: {
       default: false,
       type: 'boolean',
       required: true,

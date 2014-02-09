@@ -17,49 +17,94 @@ module.exports = function auth(server) {
   };
 
   authenticated = function (request, reply) {
-    console.log(request.session.user.id);
-    User.getByIndex('twitterId', request.session.user.id, function (err, users) {
-      // if this user exists, log in
+    var t = request.session.user;
+
+    console.log(t.id);
+
+    User.getByIndex('twitterId', t.id, function (err, users) {
+
+      // check if the user already exists by handle, then log in
       if (err) {
-        console.log('err', err);
+        console.log('I do not seem to have a Twitter ID...')
+        User.getByIndex('twitter', t.username, function (err, users) {
+
+          if (Array.isArray(users) && users.length === 1 && users[0] !== undefined) {
+            console.log('But, yes, I have a Twitter handle!');
+            var user = users[0];
+            request.session.userid = user.__verymeta.data.key;
+            request.session.admin = user.__verymeta.data.admin;
+            request.session.moderator = user.__verymeta.data.moderator;
+            User.update(user.__verymeta.data.key, { 
+              hasLoggedIn : true,
+              fullName    : t.displayName,
+              twitterId   : t.id,
+              twitter     : t.username,
+              avatar      : t._json.profile_image_url,
+              website     : t._json.entities.url.urls[0].expanded_url,
+              about       : t._json.description
+            }, function (err) {
+              reply().code(201).redirect('/profile/edit/' + user.__verymeta.data.key);
+            });  
+          }
+          else {
+            console.log('No Twitter handle either...');
+            createUser();
+          }
+        });
       }
-      if (Array.isArray(users) && users.length === 1 && users[0] !== undefined) {
-        user = users[0];
+
+      // Got an ID, log in
+      if (Array.isArray(users) && users.length === 1 && users[0] !== undefined && users[0].__verymeta.data.twitterId > 0) {
+        console.log('I have signed in before, because I have an ID!');
+        var user = users[0];
+        console.log(user.__verymeta.data.fullName);
         request.session.userid = user.__verymeta.data.key;
         request.session.admin = user.__verymeta.data.admin;
         request.session.moderator = user.__verymeta.data.moderator;
-        reply().code(201).redirect('/people');
+        User.update(user.__verymeta.data.key, { 
+          hasLoggedIn : true,
+          twitter     : t.username,
+          avatar      : t._json.profile_image_url
+        }, function (err) {
+          console.log('updating user', t.displayName);
+          reply().code(201).redirect('/people');
+        });       
       }
+
       // otherwise, create a new user
-      else {
-        if (request.session.user.id === '1568') {
+      createUser = function (err) {
+        if (err) { console.log('err', err) }
+        if (t.id === '1568') {
           console.log('Hi, Adam');
           var access = true;
         }
-        else {
-          var access = false;
-        }
+        else { var access = false; }
         var u = User.create({
-          fullName : request.session.user.displayName,
-          twitterId : request.session.user.id,
-          twitter : request.session.user.username,
-          avatar: request.session.user._json.profile_image_url,
-          approved : access,
-          admin : access,
-          moderator : access,
+          fullName    : t.displayName,
+          twitterId   : t.id,
+          twitter     : t.username,
+          avatar      : t._json.profile_image_url,
+          website     : t._json.entities.url.urls[0].expanded_url,
+          about       : t._json.description,
+          hasLoggedIn : true,
+          approved    : access,
+          admin       : access,
+          moderator   : access,
         });
         u.save(function (err) {
-          reply().code(201).redirect('/people');
+          console.log('creating user', t.displayName);
+          reply().code(201).redirect('/profile/edit/' + u.__verymeta.data.key);
           request.session.userid = u.__verymeta.data.key;
           request.session.admin = request.session.moderator = access;
         });
       }
+
     })
   };
 
   logout = function (request, reply) {
     request.session._logOut();
-    request.session.admin = request.session.moderator = "";
+    request.session.admin = request.session.userid = request.session.moderator = "";
     reply().redirect('/');
   };
 

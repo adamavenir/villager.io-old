@@ -6,7 +6,12 @@ module.exports = function places(server) {
   var Passport = server.plugins.travelogue.passport;
 
   addPlace = function (request, reply) {
-    reply.view('addPlace');
+    reply.view('addPlace', {
+      userid : request.session.userid,
+      user : request.session.user, 
+      moderator : request.session.moderator, 
+      admin : request.session.admin
+    });
   };
 
   createPlace = function (request, reply) {
@@ -38,6 +43,7 @@ module.exports = function places(server) {
         reply.view('place', { 
           place : value, 
           user : request.session.user, 
+          userid : request.session.userid,
           moderator : request.session.moderator, 
           admin : request.session.admin 
         });
@@ -51,6 +57,7 @@ module.exports = function places(server) {
       if(approved.length === 0) {
         reply.view('noPlaces', { 
           user : request.session.user, 
+          userid : request.session.userid,
           moderator : request.session.moderator, 
           admin : request.session.admin 
         });
