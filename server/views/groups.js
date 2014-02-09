@@ -58,7 +58,12 @@ module.exports = function groups(server) {
         });
       }
       else {
-        reply.view('listGroups', { groups : approved });
+        reply.view('listGroups', { 
+          groups : approved, 
+          user : request.session.user, 
+          moderator : request.session.moderator, 
+          admin : request.session.admin  
+        });
       }
     });
   };
