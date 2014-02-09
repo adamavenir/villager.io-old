@@ -8,8 +8,7 @@ This is the spiritual successor to [wecreate.tc](http://wecreate.tc), but it'll 
 
 ## Done
 - Add yourself by logging in with Twitter
-- List people/users
-- Add and list places
+- List people, places, groups
 - Add moderators
 - List pending submissions
 - Moderate submitted entries
@@ -17,7 +16,7 @@ This is the spiritual successor to [wecreate.tc](http://wecreate.tc), but it'll 
 
 ## Todo:
 
-- Add groups, events, projects
+- Add events, projects
 - <3s for favorite locations
 - Add list of interests
 - Ability to be a member of a group
