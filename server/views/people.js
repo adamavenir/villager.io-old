@@ -7,10 +7,10 @@ module.exports = function people(server) {
 
   addPerson = function (request, reply) {
     reply.view('addPerson', { 
-      userid : request.session.userid,
-      user : request.session.user, 
+      userid    : request.session.userid,
+      user      : request.session.user, 
       moderator : request.session.moderator, 
-      admin : request.session.admin
+      admin     : request.session.admin
     });
   };
 
@@ -35,11 +35,11 @@ module.exports = function people(server) {
   editPerson = function (request, reply) {
     User.load(request.params.person, function(err, person) {
       reply.view('editPerson', { 
-        person : person,
-        userid : request.session.userid,
-        user : request.session.user, 
+        person    : person,
+        userid    : request.session.userid,
+        user      : request.session.user, 
         moderator : request.session.moderator, 
-        admin : request.session.admin
+        admin     : request.session.admin
       });
     });
   };
@@ -69,11 +69,11 @@ module.exports = function people(server) {
       else {
         if (Array.isArray(value) && value.length === 1) { value = value[0] };
         reply.view('person', { 
-          person : value, 
-          userid : request.session.userid,
-          user : request.session.user, 
+          person    : value, 
+          userid    : request.session.userid,
+          user      : request.session.user, 
           moderator : request.session.moderator, 
-          admin : request.session.admin 
+          admin     : request.session.admin 
         });
       }
     });
@@ -82,19 +82,25 @@ module.exports = function people(server) {
   listPeople = function (request, reply) {
     User.load(request.session.userid, function(err, user) {
       if (user && user.approved === false) { var me = user; } else { var me = false; }
+      console.log('me', me.fullName);
       User.all(function(err, data) {
         var approved = _.where(data, { approved: true });
         if(approved.length === 0) {
-          reply.view('noPeople');
+          reply.view('noPeople', { 
+            userid    : request.session.userid,
+            user      : request.session.user, 
+            moderator : request.session.moderator, 
+            admin     : request.session.admin 
+          });
         }
         else {
           reply.view('listPeople', { 
-            people : approved, 
-            me     : me,
-            userid : request.session.userid,
-            user : request.session.user, 
+            people    : approved, 
+            me        : me,
+            userid    : request.session.userid,
+            user      : request.session.user, 
             moderator : request.session.moderator, 
-            admin : request.session.admin 
+            admin     : request.session.admin 
           });  
         }
       });

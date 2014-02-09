@@ -11,6 +11,11 @@ block body
           a(href= '/groups/' + group.slug)
             img.grav(src= group.image)
             h3= group.name
+      for item in mine
+        li
+          a(href= '/groups/' + item.slug)
+            img.grav(src= item.image)
+            h3= item.name
       li
         a.andOne(href="/groups/add") +
 

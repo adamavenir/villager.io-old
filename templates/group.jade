@@ -8,6 +8,8 @@ block body
         img.grav(src= group.image)
         h2= group.name
       p= group.about
-      a.delete(href= '/groups/delete/' + group.key) Delete this group
+      p= group.createdBy
+      if moderator
+        a.delete(href= '/groups/delete/' + group.key) Delete this group
 
     include in/footer

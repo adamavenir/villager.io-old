@@ -58,6 +58,12 @@ var Place = new VeryLevelModel ({
     type: 'boolean',
     required: true,
     index: true
+  },
+  createdBy: { 
+    index: true
+  },
+  moderator: {
+    index: true
   }
 }, {prefix: 'places!'});
 

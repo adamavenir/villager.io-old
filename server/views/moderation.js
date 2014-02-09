@@ -20,20 +20,20 @@ module.exports = function moderation(server) {
 
           if(pendingPeople.length + pendingPlaces.length + pendingGroups.length === 0) {
             reply.view('noPending', { 
-              user : request.session.user, 
+              user      : request.session.user, 
               moderator : request.session.moderator, 
-              admin : request.session.admin 
+              admin     : request.session.admin 
             });
           }
           else {
             reply.view('listPending', { 
-              people : pendingPeople, 
-              places : pendingPlaces,
-              groups : pendingGroups, 
-              user : request.session.user, 
-              userid : request.session.userid,
+              people    : pendingPeople, 
+              places    : pendingPlaces,
+              groups    : pendingGroups, 
+              user      : request.session.user, 
+              userid    : request.session.userid,
               moderator : request.session.moderator, 
-              admin : request.session.admin 
+              admin     : request.session.admin 
             });
           }
         });

@@ -17,14 +17,15 @@ module.exports = function places(server) {
   createPlace = function (request, reply) {
     var form = request.payload;
     var p = Place.create({
-      type    : form.type,
-      name    : form.name,
-      address : form.address,
-      city    : form.city,
-      image   : form.image,
-      twitter : form.twitter,
-      website : form.website,
-      about   : form.about
+      type      : form.type,
+      name      : form.name,
+      address   : form.address,
+      city      : form.city,
+      image     : form.image,
+      twitter   : form.twitter,
+      website   : form.website,
+      about     : form.about,
+      createdBy : request.session.userid
     });
     p.save(function (err) {
       Place.load(p.key, function (err, place) {
@@ -39,12 +40,14 @@ module.exports = function places(server) {
         reply.view('404');
       }
       else {
-        if (Array.isArray(value) && value.length === 1) { value = value[0] };
+        if (Array.isArray(value) && value.length === 1) { place = value[0] };
+        if (place.createdBy === request.session.userid) { var moderator = true }
+        else { var moderator = request.session.moderator }
         reply.view('place', { 
-          place : value, 
+          place : place, 
           user : request.session.user, 
           userid : request.session.userid,
-          moderator : request.session.moderator, 
+          moderator : moderator, 
           admin : request.session.admin 
         });
       }
@@ -63,7 +66,13 @@ module.exports = function places(server) {
         });
       }
       else {
-        reply.view('listPlaces', { places : approved });
+        reply.view('listPlaces', { 
+          places : approved,
+          user : request.session.user, 
+          userid : request.session.userid,
+          moderator : request.session.moderator, 
+          admin : request.session.admin
+        });
       }
     });
   };

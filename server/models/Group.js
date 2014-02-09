@@ -43,12 +43,16 @@ var Group = new VeryLevelModel({
   about: {
     type: new type().isAlphanumeric().len(0,160),
   },
-  createdBy: {},
-  moderators: {},
   approved: {
     default: false,
     type: 'boolean',
     required: true,
+    index: true
+  },
+  createdBy: {
+    index: true
+  },
+  moderator: {
     index: true
   }
 }, { prefix: 'groups!' });
