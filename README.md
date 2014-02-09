@@ -6,9 +6,11 @@ People, places, groups, events, projects.
 
 This is the spiritual successor to [wecreate.tc](http://wecreate.tc), but it'll be more than that.
 
-## Done
+## Done:
+
 - Add yourself by logging in with Twitter
 - List people, places, groups
+- Add and pre-approve users by Twitter handle
 - Add moderators
 - List pending submissions
 - Moderate submitted entries
