@@ -62,12 +62,11 @@ module.exports = function people(server) {
   };
 
   getPerson = function (request, reply) {
-    User.getByIndex('slug', request.params.person, function(err, value) {
+    User.findByIndex('slug', request.params.person, function(err, value) {
       if (err) {
         reply.view('404');
       }
       else {
-        if (Array.isArray(value) && value.length === 1) { value = value[0] };
         reply.view('person', { 
           person    : value, 
           userid    : request.session.userid,
@@ -82,10 +81,9 @@ module.exports = function people(server) {
   listPeople = function (request, reply) {
     User.load(request.session.userid, function(err, user) {
       if (user && user.approved === false) { var me = user; } else { var me = false; }
-      console.log('me', me.fullName);
       User.all(function(err, data) {
         var approved = _.where(data, { approved: true });
-        if(approved.length === 0) {
+        if(me === false && approved.length === 0) {
           reply.view('noPeople', { 
             userid    : request.session.userid,
             user      : request.session.user, 

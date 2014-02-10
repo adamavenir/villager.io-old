@@ -17,13 +17,13 @@ module.exports = function groups(server) {
   createGroup = function (request, reply) {
     var form = request.payload;
     var g = Group.create({
-      type      : form.type,
-      name      : form.name,
-      image     : form.image,
-      twitter   : form.twitter,
-      website   : form.website,
-      about     : form.about,
-      createdBy : request.session.userid
+      type    : form.type,
+      name    : form.name,
+      image   : form.image,
+      twitter : form.twitter,
+      website : form.website,
+      about   : form.about,
+      creatorKey : request.session.userid
     });
     g.save(function (err) {
       Group.load(g.key, function (err, group) {
@@ -34,21 +34,21 @@ module.exports = function groups(server) {
   };
 
   getGroup = function (request, reply) {
-    Group.getByIndex('slug', request.params.group, function(err, value) {
+    Group.findByIndex('slug', request.params.group, function(err, group) {
       console.log('req', request.params.group);
-      if (Array.isArray(value) && value.length === 1 && value[0] !== undefined) { group = value[0] };
       if (err) {
         console.log('err', err);
         reply.view('404');
       }
       else {
-        if (group.createdBy === request.session.userid) { var moderator = true }
-        else { var moderator = request.session.moderator }
+        if (group.creatorKey === request.session.userid) { var thismod = true }
+        else { var thismod = false }
         reply.view('group', { 
           group     : group, 
+          thismod   : thismod, 
           user      : request.session.user, 
           userid    : request.session.userid,
-          moderator : moderator, 
+          moderator : request.session.moderator,
           admin     : request.session.admin 
         });
       }
@@ -58,9 +58,8 @@ module.exports = function groups(server) {
   listGroups = function (request, reply) {
     Group.all(function(err, data) {
       var approved = _.where(data, { approved: true });
-      var mine = _.where(data, { createdBy: request.session.userid });
-      console.log('mine', mine);
-      if(approved.length === 0) {
+      var mine = _.where(data, { creatorKey: request.session.userid, approved: false });
+      if(mine.length + approved.length === 0) {
         reply.view('noGroups', { 
           user      : request.session.user, 
           userid    : request.session.userid,

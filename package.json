@@ -29,7 +29,7 @@
     "travelogue": "git://github.com/nlf/travelogue.git#dd75e017a66d6e9516005e5b02d381b1372588f4",
     "underscore": "~1.5.2",
     "verymodel": "~1.5.1",
-    "verymodel-level": "~1.1.1"
+    "verymodel-level": "~1.2.0"
   },
   "homepage": "https://github.com/adambrault/triciti.es-hapi",
   "license": "ISC",

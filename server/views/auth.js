@@ -21,16 +21,15 @@ module.exports = function auth(server) {
 
     // console.log(t.id);
 
-    User.getByIndex('twitterId', t.id, function (err, users) {
+    User.findByIndex('twitterId', t.id, function (err, user) {
 
       // check if the user already exists by handle, then log in
       if (err === 'no index for value') {
         // console.log('I do not seem to have a Twitter ID...')
-        User.getByIndex('twitter', t.username, function (err, users) {
+        User.findByIndex('twitter', t.username, function (err, user) {
 
-          if (Array.isArray(users) && users.length === 1 && users[0] !== undefined) {
+          if (user) {
             // console.log('But, yes, I have a Twitter handle!');
-            var user = users[0];
             request.session.userid = user.key;
             console.log('user.key', user.key);
             request.session.admin = user.admin;
@@ -55,10 +54,8 @@ module.exports = function auth(server) {
       }
 
       // Got an ID, log in
-      if (Array.isArray(users) && users.length === 1 && users[0] !== undefined && users[0].twitterId > 0) {
+      if (user) {
         // console.log('I have signed in before, because I have an ID!');
-        var user = users[0];
-        // console.log(user.__verymeta.data.fullName);
         User.update(user.key, { 
           hasLoggedIn : true,
           twitter     : t.username,

@@ -9,36 +9,40 @@ module.exports = function moderation(server) {
 
   listPending = function (request, reply) {
 
-    User.all(function(err, people) {
-      var pendingPeople = _.where(people, { approved: false });
-      
-      Place.all(function(err, places) {
-        var pendingPlaces = _.where(places, { approved: false });
+    if (request.session.moderator === true) {
 
-        Group.all(function(err, groups) {
-          var pendingGroups = _.where(groups, { approved: false });
+      User.all(function(err, people) {
+        var pendingPeople = _.where(people, { approved: false });
+        
+        Place.all(function(err, places) {
+          var pendingPlaces = _.where(places, { approved: false });
 
-          if(pendingPeople.length + pendingPlaces.length + pendingGroups.length === 0) {
-            reply.view('noPending', { 
-              user      : request.session.user, 
-              moderator : request.session.moderator, 
-              admin     : request.session.admin 
-            });
-          }
-          else {
-            reply.view('listPending', { 
-              people    : pendingPeople, 
-              places    : pendingPlaces,
-              groups    : pendingGroups, 
-              user      : request.session.user, 
-              userid    : request.session.userid,
-              moderator : request.session.moderator, 
-              admin     : request.session.admin 
-            });
-          }
+          Group.all(function(err, groups) {
+            var pendingGroups = _.where(groups, { approved: false });
+
+            if(pendingPeople.length + pendingPlaces.length + pendingGroups.length === 0) {
+              reply.view('noPending', { 
+                user      : request.session.user, 
+                moderator : request.session.moderator, 
+                admin     : request.session.admin 
+              });
+            }
+            else {
+              reply.view('listPending', { 
+                people    : pendingPeople, 
+                places    : pendingPlaces,
+                groups    : pendingGroups, 
+                user      : request.session.user, 
+                userid    : request.session.userid,
+                moderator : request.session.moderator, 
+                admin     : request.session.admin 
+              });
+            }
+          });
         });
       });
-    });
+    }
+    else { reply().code(401).redirect('/'); }
   };    
 
   approvePerson = function (request, reply) {

@@ -59,8 +59,15 @@ var Place = new VeryLevelModel ({
     required: true,
     index: true
   },
-  createdBy: { 
+  creatorKey: {
     index: true
+  },
+  creatorName: {
+    derive: function(creatorKey) {
+      User.getByIndex(creatorKey, function(err, user) {
+        return user.fullName;
+      })
+    }
   },
   moderator: {
     index: true
