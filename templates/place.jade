@@ -12,6 +12,6 @@ block body
         a(href= place.map)
           span= place.address + ' ' + place.city
       if thismod || moderator
-        a.delete(href= '/places/delete/' + place.key) Delete this place
+        a.delete(href= '/places/delete/' + place.key + '/' + place.name) Delete this place
 
     include in/footer

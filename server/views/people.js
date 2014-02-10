@@ -29,7 +29,7 @@ module.exports = function people(server) {
     p.save(function (err) {
       User.load(p.key, function (err, person) {
         reply().code(201).redirect('/people/' + p.slug);
-        var l = Log.create({ objType: 'person', editType: 'created', editorKey: request.session.userid });
+        var l = Log.create({ objType: 'person', editType: 'created', editorKey: request.session.userid, editorName: request.session.user.displayName, editorAvatar: request.session.user._json.profile_image_url, editedKey: person.key, editedName: person.fullName });
         l.save(function(err) { console.log('logging')});
       })
     });
@@ -100,11 +100,11 @@ module.exports = function people(server) {
       website   : form.website,
       company   : form.company,
       about     : form.about
-    }, function(err) {
+    }, function(err, p) {
       if (err) { console.log('err', err) }
       else {
         reply().code(201).redirect('/people');
-        var l = Log.create({ objType: 'person', editType: 'updated', editorKey: request.session.userid });
+        var l = Log.create({ objType: 'person', editType: 'updated', editorKey: request.session.userid, editorName: request.session.user.displayName, editorAvatar: request.session.user._json.profile_image_url, editedKey: p.key, editedName: p.fullName });
         l.save(function(err) { console.log('logging')});
       }
     });
@@ -113,7 +113,7 @@ module.exports = function people(server) {
   deletePerson = function (request, reply) {
     if (request.session.moderator) {
       User.delete(request.params.person, function(err) {
-        var l = Log.create({ objType: 'person', editType: 'deleted', editorKey: request.session.userid });
+        var l = Log.create({ objType: 'person', editType: 'deleted', editorKey: request.session.userid, editorName: request.session.user.displayName, editorAvatar: request.session.user._json.profile_image_url, editedKey: request.params.person, editedName: "" });
         l.save(function(err) { console.log('logging')});
         reply.view('deleted').redirect('/people');
       });

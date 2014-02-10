@@ -49,19 +49,19 @@ var Group = new VeryLevelModel({
   creatorKey: {
     index: true
   },
-  creatorName: {
-    derive: function() {
-      User.load(this.creatorKey, function(err, user) {
-        return user.fullName;
-        console.log('fullName', user.fullName);
-      })
-    }
-  },
-  creatorSlug: {
-    derive: function() {
-      return slugger(this.creatorName);
-    }
-  },
+  // creatorName: {
+  //   derive: function() {
+  //     User.load(this.creatorKey, function(err, user) {
+  //       return user.fullName;
+  //       console.log('fullName', user.fullName);
+  //     })
+  //   }
+  // },
+  // creatorSlug: {
+  //   derive: function() {
+  //     return slugger(this.creatorName);
+  //   }
+  // },
   moderator: {
     index: true
   }

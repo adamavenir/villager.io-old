@@ -29,8 +29,8 @@ module.exports = function places(server) {
       creatorKey : request.session.userid
     });
     p.save(function (err) {
-      var l = Log.create({ objType: 'place', editType: 'created', editorKey: request.session.userid });
-      l.save();
+      // var l = Log.create({ objType: 'place', editType: 'created', editorKey: request.session.userid, editorName: request.session.user.displayName, editorAvatar: request.session.user._json.profile_image_url });
+      // l.save();
       Place.load(p.key, function (err, place) {
         reply().code(201).redirect('/places/' + p.slug);
       })
@@ -108,7 +108,7 @@ module.exports = function places(server) {
       creatorKey : request.session.userid 
     },
     function(err) {
-      var l = Log.create({ objType: 'place', editType: 'updated', editorKey: request.session.userid });
+      var l = Log.create({ objType: 'place', editType: 'updated', editorKey: request.session.userid, editorName: request.session.user.displayName, editorAvatar: request.session.user._json.profile_image_url });
       l.save();
       if (err) { console.log('err', err) }
       else {
@@ -119,7 +119,7 @@ module.exports = function places(server) {
 
   deletePlace = function (request, reply) {
     Place.delete(request.params.place, callback);
-    var l = Log.create({ objType: 'place', editType: 'deleted', editorKey: request.session.userid });
+    var l = Log.create({ objType: 'place', editType: 'deleted', editorKey: request.session.userid, editorName: request.session.user.displayName, editorAvatar: request.session.user._json.profile_image_url });
     l.save();
     var callback = reply.view('deleted').redirect('/places');
   };

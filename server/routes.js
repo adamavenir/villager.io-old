@@ -53,7 +53,7 @@ module.exports = function _routes(server, views) {
       handler: this.updatePerson 
     },       
     { method: 'GET', 
-      path: '/people/delete/{person}', 
+      path: '/people/delete/{personKey}/{personName}', 
       config: { auth: 'passport' }, 
       handler: this.deletePerson 
     },
@@ -88,7 +88,7 @@ module.exports = function _routes(server, views) {
       handler: this.updatePlace 
     },           
     { method: 'GET', 
-      path: '/places/delete/{place}', 
+      path: '/places/delete/{placeKey}/{placeName}', 
       config: { auth: 'passport' }, 
       handler: this.deletePlace
     },
@@ -124,7 +124,7 @@ module.exports = function _routes(server, views) {
       handler: this.updateGroup
     },       
     { method: 'GET', 
-      path: '/groups/delete/{group}', 
+      path: '/groups/delete/{groupKey}/{groupName}', 
       config: { auth: 'passport' }, 
       handler: this.deleteGroup
     },

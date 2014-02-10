@@ -53,11 +53,17 @@ header
     display: inline-block
     padding: 10px
 
-  .user
+  .user, .home
     position: absolute
     top: 3px
-    right: 10px
     padding-top: 5px
+
+  .user
+    right: 10px
+
+  .home
+    left: 10px
+    padding: 0
 
   img
     width: 24px
@@ -107,6 +113,20 @@ ul
 
     a
       display: block
+
+.history li
+  +grid-column($columns:5, $center:true)
+  font-size: 14px
+  border-bottom: 1px solid #eee
+  text-align: left
+  padding-bottom: 15px
+  display: block
+
+  img
+    width: 30px
+    height: 30px
+    border-radius: 100px
+    margin: 0 10px 0px 0
 
 .grav
   border-radius: 100px

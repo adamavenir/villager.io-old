@@ -10,6 +10,6 @@ block body
       p= group.about
       p= group.creatorName
       if thismod || moderator
-        a.delete(href= '/groups/delete/' + group.key) Delete this group
+        a.delete(href= '/groups/delete/' + group.key + '/' + group.name) Delete this group
 
     include in/footer
