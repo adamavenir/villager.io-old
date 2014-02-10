@@ -1,4 +1,5 @@
 var User = require('../models/User');
+var Log = require('../models/Log');
 var _ = require('underscore');
 
 module.exports = function people(server) {
@@ -28,36 +29,9 @@ module.exports = function people(server) {
     p.save(function (err) {
       User.load(p.key, function (err, person) {
         reply().code(201).redirect('/people/' + p.slug);
+        var l = Log.create({ objType: 'person', editType: 'created', editorKey: request.session.userid });
+        l.save(function(err) { console.log('logging')});
       })
-    });
-  };
-
-  editPerson = function (request, reply) {
-    User.load(request.params.person, function(err, person) {
-      reply.view('editPerson', { 
-        person    : person,
-        userid    : request.session.userid,
-        user      : request.session.user, 
-        moderator : request.session.moderator, 
-        admin     : request.session.admin
-      });
-    });
-  };
-
-  updatePerson = function (request, reply) {
-    var form = request.payload;
-    var p = User.update(request.params.person, {
-      fullName  : form.fullName,
-      email     : form.email,
-      twitter   : form.twitter,
-      website   : form.website,
-      company   : form.company,
-      about     : form.about
-    }, function(err) {
-      if (err) { console.log('err', err) }
-      else {
-        reply().code(201).redirect('/people');
-      }
     });
   };
 
@@ -105,10 +79,44 @@ module.exports = function people(server) {
     })
   };
 
+  editPerson = function (request, reply) {
+    User.load(request.params.person, function(err, person) {
+      reply.view('editPerson', { 
+        person    : person,
+        userid    : request.session.userid,
+        user      : request.session.user, 
+        moderator : request.session.moderator, 
+        admin     : request.session.admin
+      });
+    });
+  };
+
+  updatePerson = function (request, reply) {
+    var form = request.payload;
+    var p = User.update(request.params.person, {
+      fullName  : form.fullName,
+      email     : form.email,
+      twitter   : form.twitter,
+      website   : form.website,
+      company   : form.company,
+      about     : form.about
+    }, function(err) {
+      if (err) { console.log('err', err) }
+      else {
+        reply().code(201).redirect('/people');
+        var l = Log.create({ objType: 'person', editType: 'updated', editorKey: request.session.userid });
+        l.save(function(err) { console.log('logging')});
+      }
+    });
+  };  
+
   deletePerson = function (request, reply) {
     if (request.session.moderator) {
-      User.delete(request.params.person, callback);
-      var callback = reply.view('deleted').redirect('/people');
+      User.delete(request.params.person, function(err) {
+        var l = Log.create({ objType: 'person', editType: 'deleted', editorKey: request.session.userid });
+        l.save(function(err) { console.log('logging')});
+        reply.view('deleted').redirect('/people');
+      });
     }
     else { reply().code(401).redirect('/'); }
   };

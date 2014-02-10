@@ -5,6 +5,14 @@ block body
     include in/header
 
     h1 Welcome
-    p Howdy and stuff.
+
+    if user
+      ul.history
+        for i in log
+          li(class='edit' + i.editType)
+            img(src= i.editorAvatar)
+            span= i.editorName + ' '
+            span= i.editType + ' '
+            span= i.objType + ' '
 
     include in/footer

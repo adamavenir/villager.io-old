@@ -1,4 +1,5 @@
 var Group = require('../models/Group');
+var Log = require('../models/Log');
 var _ = require('underscore');
 
 module.exports = function groups(server) {
@@ -26,6 +27,8 @@ module.exports = function groups(server) {
       creatorKey : request.session.userid
     });
     g.save(function (err) {
+      var l = Log.create({ objType: 'group', editType: 'created', editorKey: request.session.userid });
+      l.save();
       Group.load(g.key, function (err, group) {
         console.log('saved ' +  g.key);
         reply().code(201).redirect('/groups/' + g.slug);
@@ -80,8 +83,43 @@ module.exports = function groups(server) {
     });
   };
 
+  editGroup = function (request, reply) {
+    Place.load(request.params.group, function(err, group) {
+      reply.view('editGroup', { 
+        group     : group,
+        userid    : request.session.userid,
+        user      : request.session.user, 
+        moderator : request.session.moderator, 
+        admin     : request.session.admin
+      });
+    });
+  };
+
+  updateGroup = function (request, reply) {
+    var form = request.payload;
+    var p = Group.update(request.params.group, {
+      type    : form.type,
+      name    : form.name,
+      image   : form.image,
+      twitter : form.twitter,
+      website : form.website,
+      about   : form.about,
+      creatorKey : request.session.userid
+    },
+    function(err) {
+      var l = Log.create({ objType: 'group', editType: 'updated', editorKey: request.session.userid });
+      l.save();
+      if (err) { console.log('err', err) }
+      else {
+        reply().code(201).redirect('/groups');
+      }
+    });
+  };
+
   deleteGroup = function (request, reply) {
     Group.delete(request.params.group, callback);
+    var l = Log.create({ objType: 'group', editType: 'deleted', editorKey: request.session.userid });
+      l.save();
     var callback = reply.view('deleted').redirect('/groups');
   };
 

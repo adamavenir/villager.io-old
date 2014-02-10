@@ -77,6 +77,16 @@ module.exports = function _routes(server, views) {
       config: { auth: 'passport' }, 
       handler: this.createPlace 
     },
+    { method: 'GET',  
+      path: '/places/edit/{place}', 
+      config: { auth: 'passport' }, 
+      handler: this.editPlace 
+    }, 
+    { method: 'POST', 
+      path: '/place/update/{place}', 
+      config: { auth: 'passport' }, 
+      handler: this.updatePlace 
+    },           
     { method: 'GET', 
       path: '/places/delete/{place}', 
       config: { auth: 'passport' }, 
@@ -103,6 +113,16 @@ module.exports = function _routes(server, views) {
       config: { auth: 'passport' }, 
       handler: this.createGroup
     },
+    { method: 'GET',  
+      path: '/groups/edit/{group}', 
+      config: { auth: 'passport' }, 
+      handler: this.editGroup
+    }, 
+    { method: 'POST', 
+      path: '/groups/update/{group}', 
+      config: { auth: 'passport' }, 
+      handler: this.updateGroup
+    },       
     { method: 'GET', 
       path: '/groups/delete/{group}', 
       config: { auth: 'passport' }, 

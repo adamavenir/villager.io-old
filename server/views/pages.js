@@ -1,11 +1,20 @@
+var Log = require('../models/Log');
+
 module.exports = function pages(server) {
 
   index = function (request, reply) {
-    reply.view('index', { 
-      user : request.session.user, 
-      moderator : request.session.moderator, 
-      admin : request.session.admin 
-    });
+    if (request.session.user) {
+      Log.all(function(err, log) {
+        if (err) { console.log(err); }
+        reply.view('index', { 
+          log       : log,
+          user      : request.session.user, 
+          moderator : request.session.moderator, 
+          admin     : request.session.admin 
+        });
+      }) 
+    }
+    else { reply.view('index') }
   };
 
   notFound = function (request, reply) {

@@ -1,6 +1,7 @@
 var models = {
-  Place: require('./Place'),
+  Log: require('./Log'),
   User: require('./User'),
+  Place: require('./Place'),
   Group: require('./Group')
 };
 

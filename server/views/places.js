@@ -1,4 +1,5 @@
 var Place = require('../models/Place');
+var Log = require('../models/Log');
 var _ = require('underscore');
 
 module.exports = function places(server) {
@@ -28,6 +29,8 @@ module.exports = function places(server) {
       creatorKey : request.session.userid
     });
     p.save(function (err) {
+      var l = Log.create({ objType: 'place', editType: 'created', editorKey: request.session.userid });
+      l.save();
       Place.load(p.key, function (err, place) {
         reply().code(201).redirect('/places/' + p.slug);
       })
@@ -79,8 +82,45 @@ module.exports = function places(server) {
     });
   };
 
+  editPlace = function (request, reply) {
+    Place.load(request.params.place, function(err, place) {
+      reply.view('editPlace', { 
+        place     : place,
+        userid    : request.session.userid,
+        user      : request.session.user, 
+        moderator : request.session.moderator, 
+        admin     : request.session.admin
+      });
+    });
+  };
+
+  updatePlace = function (request, reply) {
+    var form = request.payload;
+    var p = User.update(request.params.place, {
+      type    : form.type,
+      name    : form.name,
+      address : form.address,
+      city    : form.city,
+      image   : form.image,
+      twitter : form.twitter,
+      website : form.website,
+      about   : form.about,
+      creatorKey : request.session.userid 
+    },
+    function(err) {
+      var l = Log.create({ objType: 'place', editType: 'updated', editorKey: request.session.userid });
+      l.save();
+      if (err) { console.log('err', err) }
+      else {
+        reply().code(201).redirect('/places');
+      }
+    });
+  };
+
   deletePlace = function (request, reply) {
     Place.delete(request.params.place, callback);
+    var l = Log.create({ objType: 'place', editType: 'deleted', editorKey: request.session.userid });
+    l.save();
     var callback = reply.view('deleted').redirect('/places');
   };
 
