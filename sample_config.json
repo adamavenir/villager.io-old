@@ -1,0 +1,26 @@
+{
+    "hostname": "localhost",
+    "port": 7000,
+    "urls": {
+        "failureRedirect": "/login",
+        "successRedirect": "/"
+    },
+    "auth": {
+        "urls": {
+            "failureRedirect": "/login",
+            "successRedirect": "/on-login",
+            "failureFlash": true
+        },
+        "twitter": {
+            "consumerKey": "tweedlekey",
+            "consumerSecret": "tweedlesecret",
+            "callbackURL": "http://localhost:7000/auth/twitter/callback"
+        }
+    },
+    "session": {
+        "cookieOptions": {
+            "password": "cheshirecarp",
+            "isSecure": false
+        }
+    }
+}
