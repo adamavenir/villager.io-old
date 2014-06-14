@@ -21,8 +21,14 @@ This is the successor to [wecreate.tc](http://wecreate.tc), but it'll be more th
 - Custom avatars, upload images
 - Projects
 - CSRF
-- <3s for favorite locations
-- Add list of interests
+- ★ for favorites
+- Lists
 - Ability to be a member of a group, project
+- Ability to be an admin of a group or project
+- Suggest changes
+- Email notifications
+- Ability to follow people
+
+## Considering:
 - Events, calendar, RSVPs
 - Relationships
