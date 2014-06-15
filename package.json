@@ -11,7 +11,7 @@
     "concat-stream": "~1.4.1",
     "getconfig": "~0.2.1",
     "gravatar": "~1.0.6",
-    "hapi": "~2.0.0-preview",
+    "hapi": "~2.3.0",
     "jade": "~1.1.4",
     "jquery": "~2.1.0-beta3",
     "level": "~0.18.0",
@@ -26,14 +26,16 @@
     "string": "~1.8.0",
     "sugar": "~1.4.1",
     "through": "~2.3.4",
-    "travelogue": "git://github.com/nlf/travelogue.git#dd75e017a66d6e9516005e5b02d381b1372588f4",
+    "travelogue": "~1.0.0",
     "underscore": "~1.5.2",
     "verymodel": "~1.5.1",
-    "verymodel-level": "~1.2.0"
+    "verymodel-level": "~1.2.0",
+    "jshint": "^2.5.1",
+    "precommit-hook": "^1.0.2"
   },
-  "homepage": "https://github.com/adambrault/triciti.es-hapi",
+  "homepage": "https://github.com/adambrault/triciti.es",
   "license": "ISC",
-  "main": "index.js",
+  "main": "server.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/adambrault/triciti.es-hapi.git"

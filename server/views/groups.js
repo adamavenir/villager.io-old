@@ -4,8 +4,6 @@ var _ = require('underscore');
 
 module.exports = function groups(server) {
 
-  var Passport = server.plugins.travelogue.passport;
-
   addGroup = function (request, reply) {
     reply.view('addGroup', {
       user      : request.session.user, 

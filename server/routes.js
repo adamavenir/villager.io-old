@@ -3,8 +3,6 @@ var Types     = require('hapi').types;
 
 module.exports = function _routes(server, views) {
 
-  var Passport = server.plugins.travelogue.passport;
-
   var routes = [
 
     ////////////////////////////////// STATIC
@@ -164,11 +162,11 @@ module.exports = function _routes(server, views) {
 
     ////////////////////////////////// AUTH
 
-    { method: 'GET', path: '/login', handler: this.login },
+    { method: 'GET', path: '/login', config: { auth: false }, handler: this.login },
     { method: 'GET', path: '/authenticated', handler: this.authenticated },
     { method: 'GET', path: '/session', handler: this.session },
-    { method: 'GET', path: '/auth/twitter', handler: this.twitterAuth },
-    { method: 'GET', path: '/auth/twitter/callback', handler: this.twitterCallback },
+    { method: 'GET', path: '/auth/twitter', config: { auth: false }, handler: this.twitterAuth },
+    { method: 'GET', path: '/auth/twitter/callback', config: { auth: false }, handler: this.twitterCallback },
     { method: 'GET', path: '/logout', handler: this.logout }
 
   ];

@@ -5,8 +5,6 @@ var _ = require('underscore');
 
 module.exports = function moderation(server) {
 
-  var Passport = server.plugins.travelogue.passport;
-
   listPending = function (request, reply) {
 
     if (request.session.moderator === true) {

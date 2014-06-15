@@ -24,27 +24,6 @@ var serverOptions = {
 
 var server = new Hapi.Server(config.hostname, config.port, serverOptions);
 
-server.pack.require(plugins, function(err) {
-  if (err) {
-    console.log('shit broke: ', err);
-  }
-});
-
-var Passport = server.plugins.travelogue.passport;
-
-Passport.use(new TwitterStrategy(config.auth.twitter, function(accessToken, refreshToken, profile, done) {
-    
-  return done(null, profile);
-}));
-
-Passport.serializeUser(function(user, done) {
-    done(null, user);
-});
-
-Passport.deserializeUser(function(obj, done) {
-    done(null, obj);
-});
-
 if (process.env.DEBUG) {
     server.on('internalError', function (event) {
         console.log('um', event)
@@ -53,6 +32,30 @@ if (process.env.DEBUG) {
 
 server.route(routes(server, views(server)));
 
-console.log('hapi listening on ', config.port);
+server.pack.require(plugins, function(err) {
+    if (err) {
+        throw err;
+    }
 
-server.start();
+    server.auth.strategy('passport', 'passport', true);
+
+    var Passport = server.plugins.travelogue.passport;
+
+    Passport.use(new TwitterStrategy(config.auth.twitter, function (accessToken, refreshToken, profile, done) {   
+        return done(null, profile);
+    }));
+
+    Passport.serializeUser(function(user, done) {
+        done(null, user);
+    });
+
+    Passport.deserializeUser(function(obj, done) {
+        done(null, obj);
+    });
+
+    server.start(function (err) {
+        if (err) { throw err; }
+        console.log('triciti.es running on ', 'http://' + config.hostname + ':' + config.port);
+    })
+
+});

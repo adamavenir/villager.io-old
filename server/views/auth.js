@@ -3,12 +3,10 @@ var _ = require('underscore');
 
 module.exports = function auth(server) {
 
-  var Passport = server.plugins.travelogue.passport;
-
   ///////////////// AUTH
 
   login = function (request, reply) {
-    Passport.authenticate('twitter')(request, reply);
+    request.server.plugins.travelogue.passport.authenticate('twitter')(request, reply);
     var html = '<a href="/auth/twitter">Login with Twitter</a>';
     if (request.session) {
       html += "<br/><br/><pre><span style='background-color: #eee'>session: " + JSON.stringify(request.session, null, 2) + "</span></pre>";
