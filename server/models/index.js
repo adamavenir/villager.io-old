@@ -1,14 +1,20 @@
+var Log   = new require('./Log');
+var User  = new require('./User');
+var Place = new require('./Place');
+var Group = new require('./Group');
+
 var models = {
-    Log: require('./Log'),
-    User: require('./User'),
-    Place: require('./Place'),
-    Group: require('./Group')
+    User:   User,
+    Log:    Log,
+    Place:  Place,
+    Group:  Group
 };
 
 function attachDB(db) {
-    Object.keys(models).forEach(function (modelname) {
-        models[modelname].options.db = db;
-    });
+    models.User.options.db = db;
+    models.Log.options.db = db;
+    models.Place.options.db = db;
+    models.Group.options.db = db;
 };
 
 module.exports = {
