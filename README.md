@@ -1,10 +1,8 @@
-triciti.es
-==========
-Wouldn't it be great if there was a good site to create and share the indie culture and community of the Tri-Cities?
+villager.io
+===========
+__Forget social networks. Let's build villages.__
 
-People, places, groups, projects, events.
-
-This is the successor to [wecreate.tc](http://wecreate.tc), but it'll be more than that.
+First implementation: [triciti.es](http://triciti.es)
 
 ## Done:
 
