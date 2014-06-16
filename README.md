@@ -1,6 +1,6 @@
 villager.io
 ===========
-__Forget social networks. Let's build villages.__
+__Forget massive corporate social networks. Let's build villages.__
 
 First implementation: [triciti.es](http://triciti.es)
 
