@@ -9,7 +9,7 @@ The project takes its name from [Jane Jacobs](http://en.wikipedia.org/wiki/Jane_
 > __“Cities have the capability of providing something for everybody, only because, and only when, they are created by everybody.”__ 
 > — Jane Jacobs
 
-![](http://upload.wikimedia.org/wikipedia/commons/1/14/Jane_Jacobs.jpg)
+[![](http://upload.wikimedia.org/wikipedia/commons/1/14/Jane_Jacobs.jpg)](http://en.wikipedia.org/wiki/Jane_Jacobs)
 
 
 ## Done:
