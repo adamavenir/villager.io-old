@@ -1,5 +1,6 @@
-var User = require('../models/User');
-var Log = require('../models/Log');
+var models = require('../models').models;
+var User = models.User;
+var Log = models.Log;
 var _ = require('underscore');
 
 module.exports = {
