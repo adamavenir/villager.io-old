@@ -4,7 +4,7 @@ __Forget massive corporate social networks. Let's build villages.__
 
 First implementation will be [triciti.es](http://triciti.es), which I'm hoping to launch at [TriConf](http://triconf.com) as a successor to [WeCreate TC](http://wecreate.tc).
 
-The project takes its name from [Jane Jacobs](http://en.wikipedia.org/wiki/Jane_Jacobs) and her work on the [urban village](http://en.wikipedia.org/wiki/Urban_village). It is the underlying thesis of this project that our online connectedness can be a tool to help overcome the tragic disconnectedness of suburbia.
+The project takes its name from [Jane Jacobs](http://en.wikipedia.org/wiki/Jane_Jacobs) and her work on the [urban village](http://en.wikipedia.org/wiki/Urban_village). The underlying thesis of this project is that our online connectedness can be a tool to help overcome the tragic disconnectedness of suburbia.
 
 > __“Cities have the capability of providing something for everybody, only because, and only when, they are created by everybody.”__ 
 > — Jane Jacobs
