@@ -1,6 +1,5 @@
 var S = require('string');
 var slugger = require('slugger');
-var gravatar = require('gravatar');
 var dulcimer = require('dulcimer');
 var verymodel = require('verymodel');
 
@@ -23,7 +22,7 @@ var User = new dulcimer.Model(
         slug: { 
             derive: function () {
                 if (this.fullName) {
-                    return slugger(this.fullName, {alsoAllow: "&"});  
+                    return slugger(this.fullName, {alsoAllow: '&'});  
                 }
                 else {
                     return this.twitter;
@@ -41,12 +40,11 @@ var User = new dulcimer.Model(
         },
         twitter: {
             processIn: function(twitter) {
-                return twitter
-                    .remove('@')
-                    .remove('http://twitter.com/')
-                    .remove('https://twitter.com/')
-                    .remove('twitter.com/');
-                console.log(twitter);
+                return twitter;
+                    // .remove('@')
+                    // .remove('http://twitter.com/')
+                    // .remove('https://twitter.com/')
+                    // .remove('twitter.com/');
             },
             type: new type().isAlphanumeric().len(1,16),
             index: true,

@@ -1,7 +1,5 @@
 var Hapi    = require('hapi');
-var jade    = require('jade');
-var models = require('./server/models')
-var views   = require('./server/views');
+var models = require('./server/models');
 var routes  = require('./server/routes');
 var level   = require('level');
 var db      = level('./db', { valueEncoding: 'json' });
@@ -26,9 +24,9 @@ var server = new Hapi.Server(config.hostname, config.port, serverOptions);
 
 if (process.env.DEBUG) {
     server.on('internalError', function (event) {
-        console.log('um', event)
+        console.log('um', event);
     });
-};
+}
 
 server.route(routes(server));
 
@@ -56,6 +54,6 @@ server.pack.require(plugins, function(err) {
     server.start(function (err) {
         if (err) { throw err; }
         console.log('triciti.es running on ', 'http://' + config.hostname + ':' + config.port);
-    })
+    });
 
 });

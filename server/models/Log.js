@@ -1,10 +1,7 @@
 var dulcimer = require('dulcimer');
-var verymodel = require('verymodel');
-var level = require('level');
 var slugger = require('slugger');
-var User = require('../models/User');
 
-var type = verymodel.VeryType;
+// var type = verymodel.VeryType;
 
 var Log = new dulcimer.Model (
     {

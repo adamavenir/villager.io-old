@@ -29,20 +29,23 @@ module.exports = {
         p.save(function (err) {
             // var l = Log.create({ objType: 'place', editType: 'created', editorKey: request.session.userid, editorName: request.session.user.displayName, editorAvatar: request.session.user._json.profile_image_url });
             // l.save();
+            if (err) { throw err; }
             Place.load(p.key, function (err, place) {
-                reply().code(201).redirect('/places/' + p.slug);
-            })
+                if (err) { throw err; }
+                reply().code(201).redirect('/places/' + place.slug);
+            });
         });
     },
 
     getPlace: function (request, reply) {
         Place.findByIndex('slug', request.params.place, function(err, place) {
+            var thismod;
             if (err) {
                 reply.view('404');
             }
             else {
-                if (place.creatorKey === request.session.userid) { var thismod = true }
-                else { var thismod = false }
+                if (place.creatorKey === request.session.userid) { thismod = true; }
+                else { thismod = false; }
                 reply.view('place', { 
                     place     : place, 
                     thismod   : thismod, 
@@ -94,7 +97,7 @@ module.exports = {
 
     updatePlace: function (request, reply) {
         var form = request.payload;
-        var p = User.update(request.params.place, {
+        Place.update(request.params.place, {
             type    : form.type,
             name    : form.name,
             address : form.address,
@@ -108,7 +111,7 @@ module.exports = {
         function(err) {
             var l = Log.create({ objType: 'place', editType: 'updated', editorKey: request.session.userid, editorName: request.session.user.displayName, editorAvatar: request.session.user._json.profile_image_url });
             l.save();
-            if (err) { console.log('err', err) }
+            if (err) { console.log('err', err); }
             else {
                 reply().code(201).redirect('/places');
             }
@@ -116,10 +119,10 @@ module.exports = {
     },
 
     deletePlace: function (request, reply) {
-        Place.delete(request.params.place, callback);
+        Place.delete(request.params.place);
         var l = Log.create({ objType: 'place', editType: 'deleted', editorKey: request.session.userid, editorName: request.session.user.displayName, editorAvatar: request.session.user._json.profile_image_url });
         l.save();
-        var callback = reply.view('deleted').redirect('/places');
+        reply.view('deleted').redirect('/places');
     }
 
 };

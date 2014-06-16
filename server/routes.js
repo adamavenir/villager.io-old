@@ -1,5 +1,4 @@
 var views     = require('./views');
-var Types     = require('hapi').types;
 
 module.exports = function _routes() {
 
@@ -173,5 +172,5 @@ module.exports = function _routes() {
 
   return routes;
 
-}
+};
 

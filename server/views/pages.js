@@ -12,9 +12,9 @@ module.exports = {
                     moderator : request.session.moderator, 
                     admin     : request.session.admin 
                 });
-            }) 
+            });
         }
-        else { reply.view('index') }
+        else { reply.view('index'); }
     },
 
     notFound: function (request, reply) {

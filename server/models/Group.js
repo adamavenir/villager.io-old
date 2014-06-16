@@ -1,9 +1,6 @@
 var dulcimer = require('dulcimer');
 var verymodel = require('verymodel');
-var sugar = require('sugar');
 var slugger = require('slugger');
-var gravatar = require('gravatar');
-var User = require('../models/User');
 
 var type = verymodel.VeryType;
 
@@ -30,7 +27,6 @@ var Group = new dulcimer.Model(
         twitter: {
             processIn: function(twitter) {
                 return twitter.remove('@').remove('http://twitter.com/').remove('https://twitter.com/').remove('twitter.com/');
-                console.log(twitter);
             },
             type: new type().isAlphanumeric().len(1,16)
         },

@@ -46,9 +46,9 @@ module.exports = {
     approvePerson: function (request, reply) {
         if (request.session.moderator) {
             User.update(request.params.person, { approved: true }, function (person) {
-                console.log('approved:', request.params.person);
+                console.log('approved:', person.key);
                 reply().code(200).redirect('/people');
-            })
+            });
         }
         else { reply().code(401).redirect('/'); }
     },
@@ -56,9 +56,9 @@ module.exports = {
     approvePlace: function (request, reply) {
         if (request.session.moderator) {
             Place.update(request.params.place, { approved: true }, function (place) {
-                console.log('approved:', request.params.place);
+                console.log('approved:', place.key);
                 reply().code(200).redirect('/places');
-            })
+            });
         }
         else { reply().code(401).redirect('/'); }
     },
@@ -66,9 +66,9 @@ module.exports = {
     approveGroup: function (request, reply) {
         if (request.session.moderator) {
             Group.update(request.params.group, { approved: true }, function (group) {
-                console.log('approved:', request.params.group);
+                console.log('approved:', group.key);
                 reply().code(200).redirect('/groups');
-            })
+            });
         }
         else { reply().code(401).redirect('/'); }
     },
@@ -76,9 +76,9 @@ module.exports = {
     adminPerson: function (request, reply) {
         if (request.session.admin) {
             User.update(request.params.person, { admin: true, moderator: true, approved: true }, function (person) {
-                console.log('made admin:', request.params.person);
+                console.log('made admin:', person.key);
                 reply().code(200).redirect('/people');
-            })
+            });
         }
         else { reply().code(401).redirect('/'); }
     },
@@ -86,9 +86,9 @@ module.exports = {
     moderatorPerson: function (request, reply) {
         if (request.session.admin) {
             User.update(request.params.person, { moderator: true, approved: true }, function (person) {
-                console.log('made moderator:', request.params.person);
+                console.log('made moderator:', person.key);
                 reply().code(200).redirect('/people');
-            })
+            });
         }
         else { reply().code(401).redirect('/'); }
     },

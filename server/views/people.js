@@ -26,11 +26,13 @@ module.exports = {
             approved  : true
         });
         p.save(function (err) {
+            if (err) { throw err; }
             User.load(p.key, function (err, person) {
-                reply().code(201).redirect('/people/' + p.slug);
+                if (err) { throw err; }
+                reply().code(201).redirect('/people/' + person.slug);
                 var l = Log.create({ objType: 'person', editType: 'created', editorKey: request.session.userid, editorName: request.session.user.displayName, editorAvatar: request.session.user._json.profile_image_url, editedKey: person.key, editedName: person.fullName });
-                l.save(function(err) { console.log('logging')});
-            })
+                l.save(function () { console.log('logging'); });
+            });
         });
     },
 
@@ -53,8 +55,9 @@ module.exports = {
 
     listPeople: function (request, reply) {
         User.get(request.session.userid, function (err, user) {
-            if (err) { throw err };
-            if (user && user.approved === false) { var me = user; } else { var me = false; }
+            var me;
+            if (err) { throw err; }
+            if (user && user.approved === false) { me = user; } else { me = false; }
             User.all(function(err, data) {
                 var approved = _.where(data, { approved: true });
                 if(me === false && approved.length === 0) {
@@ -76,7 +79,7 @@ module.exports = {
                     });  
                 }
             });
-        })
+        });
     },
 
     editPerson: function (request, reply) {
@@ -93,7 +96,7 @@ module.exports = {
 
     updatePerson: function (request, reply) {
         var form = request.payload;
-        var p = User.update(request.params.person, {
+        User.update(request.params.person, {
             fullName  : form.fullName,
             email     : form.email,
             twitter   : form.twitter,
@@ -101,11 +104,14 @@ module.exports = {
             company   : form.company,
             about     : form.about
         }, function(err, p) {
-            if (err) { console.log('err', err) }
+            if (err) { throw err; }
             else {
                 reply().code(201).redirect('/people');
                 var l = Log.create({ objType: 'person', editType: 'updated', editorKey: request.session.userid, editorName: request.session.user.displayName, editorAvatar: request.session.user._json.profile_image_url, editedKey: p.key, editedName: p.fullName });
-                l.save(function(err) { console.log('logging')});
+                l.save(function(err) { 
+                    if (err) { throw err; }
+                    console.log('logging'); 
+                });
             }
         });
     },
@@ -113,8 +119,12 @@ module.exports = {
     deletePerson: function (request, reply) {
         if (request.session.moderator) {
             User.delete(request.params.person, function(err) {
-                var l = Log.create({ objType: 'person', editType: 'deleted', editorKey: request.session.userid, editorName: request.session.user.displayName, editorAvatar: request.session.user._json.profile_image_url, editedKey: request.params.person, editedName: "" });
-                l.save(function(err) { console.log('logging')});
+                if (err) { throw err; }
+                var l = Log.create({ objType: 'person', editType: 'deleted', editorKey: request.session.userid, editorName: request.session.user.displayName, editorAvatar: request.session.user._json.profile_image_url, editedKey: request.params.person, editedName: '' });
+                l.save(function(err) { 
+                    if (err) { throw err; }
+                    console.log('logging'); 
+                });
                 reply.view('deleted').redirect('/people');
             });
         }

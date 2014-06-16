@@ -15,7 +15,7 @@ function attachDB(db) {
     models.Log.options.db = db;
     models.Place.options.db = db;
     models.Group.options.db = db;
-};
+}
 
 module.exports = {
     models: models,

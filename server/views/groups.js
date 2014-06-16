@@ -25,12 +25,13 @@ module.exports = {
             creatorKey : request.session.userid
         });
         g.save(function (err) {
+            if (err) { throw err; }
             var l = Log.create({ objType: 'group', editType: 'created', editorKey: request.session.userid, editorName: request.session.user.displayName, editorAvatar: request.session.user._json.profile_image_url });
             l.save();
             Group.load(g.key, function (err, group) {
-                console.log('saved ' +  g.key);
-                reply().code(201).redirect('/groups/' + g.slug);
-            })
+                console.log('saved ' +  group.key);
+                reply().code(201).redirect('/groups/' + group.slug);
+            });
         });
     },
 
@@ -42,8 +43,9 @@ module.exports = {
                 reply.view('404');
             }
             else {
-                if (group.creatorKey === request.session.userid) { var thismod = true }
-                else { var thismod = false }
+                var thismod;
+                if (group.creatorKey === request.session.userid) { thismod = true; }
+                else { thismod = false; }
                 reply.view('group', { 
                     group     : group, 
                     thismod   : thismod, 
@@ -82,7 +84,7 @@ module.exports = {
     },
 
     editGroup: function (request, reply) {
-        Place.load(request.params.group, function(err, group) {
+        Group.load(request.params.group, function(err, group) {
             reply.view('editGroup', { 
                 group     : group,
                 userid    : request.session.userid,
@@ -107,7 +109,7 @@ module.exports = {
         function(err) {
             var l = Log.create({ objType: 'group', editType: 'updated', editorKey: request.session.userid, editorName: request.session.user.displayName, editorAvatar: request.session.user._json.profile_image_url, editedKey: p.key, editedName: p.name });
             l.save();
-            if (err) { console.log('err', err) }
+            if (err) { throw err; }
             else {
                 reply().code(201).redirect('/groups');
             }
@@ -115,10 +117,10 @@ module.exports = {
     },
 
     deleteGroup: function (request, reply) {
-        Group.delete(request.params.group, callback);
+        Group.delete(request.params.group);
         var l = Log.create({ objType: 'group', editType: 'deleted', editorKey: request.session.userid, editorName: request.session.user.displayName, editorAvatar: request.session.user._json.profile_image_url, editedKey: request.params.groupkey, editedName: request.params.groupname });
             l.save();
-        var callback = reply.view('deleted').redirect('/groups');
+        reply.view('deleted').redirect('/groups');
     },
 
 };

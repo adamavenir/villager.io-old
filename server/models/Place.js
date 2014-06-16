@@ -15,7 +15,7 @@ var Place = new dulcimer.Model (
         },
         slug: { 
             derive: function () {
-                return slugger(this.name, {alsoAllow: "&"});
+                return slugger(this.name, {alsoAllow: '&'});
             }, 
             index: true,
             private: false 
@@ -32,11 +32,9 @@ var Place = new dulcimer.Model (
             processIn: function() {
                 if (this.address.length > 0) {
                     return 'http://maps.google.com/?q=' + this.address + ' ' + this.city;
-                    console.log('http://maps.google.com/?q=' + this.address + ' ' + this.city);
                 }
                 else {
-                    return "";
-                    console.log('map blank');        
+                    return '';
                 }
             },
             type: type().isUrl(),
