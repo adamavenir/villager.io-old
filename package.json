@@ -1,10 +1,10 @@
 {
-  "name": "triciti.es",
-  "description": "the tricities underground directory",
+  "name": "villager.io",
+  "description": "May we perpetually be building villages",
   "version": "0.0.0",
   "author": "Adam Brault",
   "bugs": {
-    "url": "https://github.com/adambrault/triciti.es-hapi/issues"
+    "url": "https://github.com/adambrault/villager.io/issues"
   },
   "dependencies": {
     "JSONStream": "~0.7.1",
@@ -33,12 +33,12 @@
     "precommit-hook": "^1.0.2",
     "dulcimer": "^1.1.4"
   },
-  "homepage": "https://github.com/adambrault/triciti.es",
+  "homepage": "https://github.com/adambrault/villager.io",
   "license": "ISC",
   "main": "server.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/adambrault/triciti.es-hapi.git"
+    "url": "git://github.com/adambrault/villager.io.git"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
