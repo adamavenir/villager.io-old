@@ -27,13 +27,13 @@ The project takes its name from [Jane Jacobs](http://en.wikipedia.org/wiki/Jane_
 - Projects
 - CSRF
 - ★ for favorites
-- Lists
-- Ability to be a member of a group, project
-- Ability to be an admin of a group or project
+- Curated lists
+- Ability to be a member or admin of a group
 - Suggest changes
 - Email notifications
 - Relationships
 - Alternative methods of login / account creation
+- Design (not until features are more stable)
 
 ## Considering:
 - Events, calendar, RSVPs
