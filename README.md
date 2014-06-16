@@ -32,8 +32,8 @@ The project takes its name from [Jane Jacobs](http://en.wikipedia.org/wiki/Jane_
 - Ability to be an admin of a group or project
 - Suggest changes
 - Email notifications
-- Ability to follow people
+- Relationships
+- Alternative methods of login / account creation
 
 ## Considering:
 - Events, calendar, RSVPs
-- Relationships
