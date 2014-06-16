@@ -32,27 +32,27 @@ module.exports = function _routes(server, views) {
     },
     { method: 'GET',  
       path: '/people/add', 
-      config: { auth: 'passport' }, 
+      // config: { auth: 'passport' }, 
       handler: this.addPerson 
     },
     { method: 'POST', 
       path: '/people/add', 
-      config: { auth: 'passport' }, 
+      // config: { auth: 'passport' }, 
       handler: this.createPerson 
     },
     { method: 'GET',  
       path: '/profile/edit/{person}', 
-      config: { auth: 'passport' }, 
+      // config: { auth: 'passport' }, 
       handler: this.editPerson 
     }, 
     { method: 'POST', 
       path: '/profile/update/{person}', 
-      config: { auth: 'passport' }, 
+      // config: { auth: 'passport' }, 
       handler: this.updatePerson 
     },       
     { method: 'GET', 
       path: '/people/delete/{personKey}/{personName}', 
-      config: { auth: 'passport' }, 
+      // config: { auth: 'passport' }, 
       handler: this.deletePerson 
     },
 
@@ -67,27 +67,27 @@ module.exports = function _routes(server, views) {
     },
     { method: 'GET',  
       path: '/places/add', 
-      config: { auth: 'passport' }, 
+      // config: { auth: 'passport' }, 
       handler: this.addPlace 
     },
     { method: 'POST', 
       path: '/places/add', 
-      config: { auth: 'passport' }, 
+      // config: { auth: 'passport' }, 
       handler: this.createPlace 
     },
     { method: 'GET',  
       path: '/places/edit/{place}', 
-      config: { auth: 'passport' }, 
+      // config: { auth: 'passport' }, 
       handler: this.editPlace 
     }, 
     { method: 'POST', 
       path: '/place/update/{place}', 
-      config: { auth: 'passport' }, 
+      // config: { auth: 'passport' }, 
       handler: this.updatePlace 
     },           
     { method: 'GET', 
       path: '/places/delete/{placeKey}/{placeName}', 
-      config: { auth: 'passport' }, 
+      // config: { auth: 'passport' }, 
       handler: this.deletePlace
     },
 
@@ -103,27 +103,27 @@ module.exports = function _routes(server, views) {
     },
     { method: 'GET',  
       path: '/groups/add', 
-      config: { auth: 'passport' }, 
+      // config: { auth: 'passport' }, 
       handler: this.addGroup
     },
     { method: 'POST', 
       path: '/groups/add', 
-      config: { auth: 'passport' }, 
+      // config: { auth: 'passport' }, 
       handler: this.createGroup
     },
     { method: 'GET',  
       path: '/groups/edit/{group}', 
-      config: { auth: 'passport' }, 
+      // config: { auth: 'passport' }, 
       handler: this.editGroup
     }, 
     { method: 'POST', 
       path: '/groups/update/{group}', 
-      config: { auth: 'passport' }, 
+      // config: { auth: 'passport' }, 
       handler: this.updateGroup
     },       
     { method: 'GET', 
       path: '/groups/delete/{groupKey}/{groupName}', 
-      config: { auth: 'passport' }, 
+      // config: { auth: 'passport' }, 
       handler: this.deleteGroup
     },
 
@@ -131,32 +131,32 @@ module.exports = function _routes(server, views) {
     ////////////////////////////////// MODERATION
     { method: 'GET',  
       path: '/pending', 
-      config: { auth: 'passport' },
+      // config: { auth: 'passport' },
       handler: this.listPending 
     },
     { method: 'GET', 
       path: '/people/approve/{person}', 
-      config: { auth: 'passport' }, 
+      // config: { auth: 'passport' }, 
       handler: this.approvePerson
     },
     { method: 'GET', 
       path: '/places/approve/{place}', 
-      config: { auth: 'passport' }, 
+      // config: { auth: 'passport' }, 
       handler: this.approvePlace
     },    
     { method: 'GET', 
       path: '/groups/approve/{group}', 
-      config: { auth: 'passport' }, 
+      // config: { auth: 'passport' }, 
       handler: this.approveGroup
     },        
     { method: 'GET', 
       path: '/people/moderator/{person}', 
-      config: { auth: 'passport' }, 
+      // config: { auth: 'passport' }, 
       handler: this.moderatorPerson 
     },
     { method: 'GET', 
       path: '/people/admin/{person}', 
-      config: { auth: 'passport' }, 
+      // config: { auth: 'passport' }, 
       handler: this.adminPerson 
     },
 
