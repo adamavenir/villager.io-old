@@ -30,7 +30,7 @@ if (process.env.DEBUG) {
     });
 };
 
-server.route(routes(server, views(server)));
+server.route(routes(server));
 
 server.pack.require(plugins, function(err) {
     if (err) {

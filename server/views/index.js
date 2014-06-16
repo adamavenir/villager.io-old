@@ -1,8 +1,8 @@
-module.exports = function views(server) {
-  auth = require('./auth')(server);
-  moderation = require('./moderation')(server);
-  pages = require('./pages')(server);
-  people = require('./people')(server);
-  places = require('./places')(server);
-  groups = require('./groups')(server);
+module.exports = {
+    auth:       require('./auth'),
+    moderation: require('./moderation'),
+    pages:      require('./pages'),
+    people:     require('./people'),
+    places:     require('./places'),
+    groups:     require('./groups')
 }

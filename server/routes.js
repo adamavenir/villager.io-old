@@ -1,7 +1,7 @@
 var views     = require('./views');
 var Types     = require('hapi').types;
 
-module.exports = function _routes(server, views) {
+module.exports = function _routes() {
 
   var routes = [
 
@@ -18,113 +18,113 @@ module.exports = function _routes(server, views) {
 
     { method: 'GET',  
       path: '/', 
-      handler: this.index 
+      handler: views.pages.index 
     },
 
     ////////////////////////////////// PEOPLE
     { method: 'GET',  
       path: '/people', 
-      handler: this.listPeople 
+      handler: views.people.listPeople 
     },
     { method: 'GET',
       path: '/people/{person}',
-      handler: this.getPerson 
+      handler: views.people.getPerson 
     },
     { method: 'GET',  
       path: '/people/add', 
       // config: { auth: 'passport' }, 
-      handler: this.addPerson 
+      handler: views.people.addPerson 
     },
     { method: 'POST', 
       path: '/people/add', 
       // config: { auth: 'passport' }, 
-      handler: this.createPerson 
+      handler: views.people.createPerson 
     },
     { method: 'GET',  
       path: '/profile/edit/{person}', 
       // config: { auth: 'passport' }, 
-      handler: this.editPerson 
+      handler: views.people.editPerson 
     }, 
     { method: 'POST', 
       path: '/profile/update/{person}', 
       // config: { auth: 'passport' }, 
-      handler: this.updatePerson 
+      handler: views.people.updatePerson 
     },       
     { method: 'GET', 
       path: '/people/delete/{personKey}/{personName}', 
       // config: { auth: 'passport' }, 
-      handler: this.deletePerson 
+      handler: views.people.deletePerson 
     },
 
     ////////////////////////////////// PLACES
     { method: 'GET',  
       path: '/places', 
-      handler: this.listPlaces
+      handler: views.places.listPlaces
     },
     { method: 'GET',
       path: '/places/{place}', 
-      handler: this.getPlace 
+      handler: views.places.getPlace 
     },
     { method: 'GET',  
       path: '/places/add', 
       // config: { auth: 'passport' }, 
-      handler: this.addPlace 
+      handler: views.places.addPlace 
     },
     { method: 'POST', 
       path: '/places/add', 
       // config: { auth: 'passport' }, 
-      handler: this.createPlace 
+      handler: views.places.createPlace 
     },
     { method: 'GET',  
       path: '/places/edit/{place}', 
       // config: { auth: 'passport' }, 
-      handler: this.editPlace 
+      handler: views.places.editPlace 
     }, 
     { method: 'POST', 
       path: '/place/update/{place}', 
       // config: { auth: 'passport' }, 
-      handler: this.updatePlace 
+      handler: views.places.updatePlace 
     },           
     { method: 'GET', 
       path: '/places/delete/{placeKey}/{placeName}', 
       // config: { auth: 'passport' }, 
-      handler: this.deletePlace
+      handler: views.places.deletePlace
     },
 
 
     ////////////////////////////////// GROUPS
     { method: 'GET',  
       path: '/groups', 
-      handler: this.listGroups
+      handler: views.groups.listGroups
     },
     { method: 'GET',
       path: '/groups/{group}', 
-      handler: this.getGroup 
+      handler: views.groups.getGroup 
     },
     { method: 'GET',  
       path: '/groups/add', 
       // config: { auth: 'passport' }, 
-      handler: this.addGroup
+      handler: views.groups.addGroup
     },
     { method: 'POST', 
       path: '/groups/add', 
       // config: { auth: 'passport' }, 
-      handler: this.createGroup
+      handler: views.groups.createGroup
     },
     { method: 'GET',  
       path: '/groups/edit/{group}', 
       // config: { auth: 'passport' }, 
-      handler: this.editGroup
+      handler: views.groups.editGroup
     }, 
     { method: 'POST', 
       path: '/groups/update/{group}', 
       // config: { auth: 'passport' }, 
-      handler: this.updateGroup
+      handler: views.groups.updateGroup
     },       
     { method: 'GET', 
       path: '/groups/delete/{groupKey}/{groupName}', 
       // config: { auth: 'passport' }, 
-      handler: this.deleteGroup
+      handler: views.groups.deleteGroup
     },
 
 
@@ -132,42 +132,42 @@ module.exports = function _routes(server, views) {
     { method: 'GET',  
       path: '/pending', 
       // config: { auth: 'passport' },
-      handler: this.listPending 
+      handler: views.moderation.listPending 
     },
     { method: 'GET', 
       path: '/people/approve/{person}', 
       // config: { auth: 'passport' }, 
-      handler: this.approvePerson
+      handler: views.moderation.approvePerson
     },
     { method: 'GET', 
       path: '/places/approve/{place}', 
       // config: { auth: 'passport' }, 
-      handler: this.approvePlace
+      handler: views.moderation.approvePlace
     },    
     { method: 'GET', 
       path: '/groups/approve/{group}', 
       // config: { auth: 'passport' }, 
-      handler: this.approveGroup
+      handler: views.moderation.approveGroup
     },        
     { method: 'GET', 
       path: '/people/moderator/{person}', 
       // config: { auth: 'passport' }, 
-      handler: this.moderatorPerson 
+      handler: views.moderation.moderatorPerson 
     },
     { method: 'GET', 
       path: '/people/admin/{person}', 
       // config: { auth: 'passport' }, 
-      handler: this.adminPerson 
+      handler: views.moderation.adminPerson 
     },
 
     ////////////////////////////////// AUTH
 
-    { method: 'GET', path: '/login', config: { auth: false }, handler: this.login },
-    { method: 'GET', path: '/authenticated', handler: this.authenticated },
-    { method: 'GET', path: '/session', handler: this.session },
-    { method: 'GET', path: '/auth/twitter', config: { auth: false }, handler: this.twitterAuth },
-    { method: 'GET', path: '/auth/twitter/callback', config: { auth: false }, handler: this.twitterCallback },
-    { method: 'GET', path: '/logout', handler: this.logout }
+    { method: 'GET', path: '/login', config: { auth: false }, handler: views.auth.login },
+    { method: 'GET', path: '/authenticated', handler: views.auth.authenticated },
+    { method: 'GET', path: '/session', handler: views.auth.session },
+    { method: 'GET', path: '/auth/twitter', config: { auth: false }, handler: views.auth.twitterAuth },
+    { method: 'GET', path: '/auth/twitter/callback', config: { auth: false }, handler: views.auth.twitterCallback },
+    { method: 'GET', path: '/logout', handler: views.auth.logout }
 
   ];
 
