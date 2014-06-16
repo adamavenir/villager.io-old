@@ -1,5 +1,5 @@
-villager.io
-===========
+villager.io (work in progress)
+==============================
 __Forget massive corporate social networks. Let's build villages.__
 
 First implementation: [triciti.es](http://triciti.es)
