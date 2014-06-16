@@ -52,7 +52,8 @@ module.exports = {
     },
 
     listPeople: function (request, reply) {
-        User.load(request.session.userid, function(err, user) {
+        User.get(request.session.userid, function (err, user) {
+            if (err) { throw err };
             if (user && user.approved === false) { var me = user; } else { var me = false; }
             User.all(function(err, data) {
                 var approved = _.where(data, { approved: true });
@@ -79,7 +80,7 @@ module.exports = {
     },
 
     editPerson: function (request, reply) {
-        User.load(request.params.person, function(err, person) {
+        User.get(request.params.person, function(err, person) {
             reply.view('editPerson', { 
                 person    : person,
                 userid    : request.session.userid,

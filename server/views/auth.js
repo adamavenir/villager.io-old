@@ -43,6 +43,7 @@ module.exports = {
                 // new user
                 user.save(function (err) {
                     console.log('Twitter user ' + t.displayName + ' created with key ' + user.key);
+                    request.session.userid = user.key;
                     reply().code(201).redirect('/profile/edit/' + user.key);
                 })
             } else {
@@ -50,6 +51,7 @@ module.exports = {
                 exists.loadData(user.toJSON());
                 exists.save(function (err) {
                     console.log('Twitter user ' + t.displayName + ' updated with key ' + exists.key);
+                    request.session.userid = exists.key;
                     request.session.admin = exists.admin;
                     request.session.moderator = exists.moderator;
                     reply().code(201).redirect('/people');
