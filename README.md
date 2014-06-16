@@ -15,8 +15,6 @@ First implementation: [triciti.es](http://triciti.es)
 - Probably some other stuff
 
 ## Todo:
-- Port to Hapi 6
-- Port to Dulcimer
 - Custom avatars, upload images
 - Projects
 - CSRF
