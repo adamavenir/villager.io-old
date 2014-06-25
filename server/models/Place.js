@@ -13,12 +13,12 @@ var Place = new dulcimer.Model (
             required: true,
             type: type().isAlphanumeric()
         },
-        slug: { 
+        slug: {
             derive: function () {
                 return slugger(this.name, {alsoAllow: '&'});
-            }, 
+            },
             index: true,
-            private: false 
+            private: false
         },
         address: {
             required: false,
@@ -70,7 +70,7 @@ var Place = new dulcimer.Model (
         moderator: {
             index: true
         }
-    }, 
+    },
     {
         name: 'place'
     }

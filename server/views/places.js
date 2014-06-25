@@ -7,8 +7,8 @@ module.exports = {
     addPlace: function (request, reply) {
         reply.view('addPlace', {
             userid    : request.session.userid,
-            user      : request.session.user, 
-            moderator : request.session.moderator, 
+            user      : request.session.user,
+            moderator : request.session.moderator,
             admin     : request.session.admin
         });
     },
@@ -46,13 +46,13 @@ module.exports = {
             else {
                 if (place.creatorKey === request.session.userid) { thismod = true; }
                 else { thismod = false; }
-                reply.view('place', { 
-                    place     : place, 
-                    thismod   : thismod, 
-                    user      : request.session.user, 
+                reply.view('place', {
+                    place     : place,
+                    thismod   : thismod,
+                    user      : request.session.user,
                     userid    : request.session.userid,
                     moderator : request.session.moderator,
-                    admin     : request.session.admin 
+                    admin     : request.session.admin
                 });
             }
         });
@@ -63,20 +63,20 @@ module.exports = {
             var approved = _.where(data, { approved: true });
             var mine = _.where(data, { creatorKey: request.session.userid, approved: false });
             if(mine.length + approved.length === 0) {
-                reply.view('noPlaces', { 
-                    user      : request.session.user, 
+                reply.view('noPlaces', {
+                    user      : request.session.user,
                     userid    : request.session.userid,
-                    moderator : request.session.moderator, 
-                    admin     : request.session.admin 
+                    moderator : request.session.moderator,
+                    admin     : request.session.admin
                 });
             }
             else {
-                reply.view('listPlaces', { 
+                reply.view('listPlaces', {
                     places    : approved,
                     mine      : mine,
-                    user      : request.session.user, 
+                    user      : request.session.user,
                     userid    : request.session.userid,
-                    moderator : request.session.moderator, 
+                    moderator : request.session.moderator,
                     admin     : request.session.admin
                 });
             }
@@ -85,11 +85,11 @@ module.exports = {
 
     editPlace: function (request, reply) {
         Place.load(request.params.place, function(err, place) {
-            reply.view('editPlace', { 
+            reply.view('editPlace', {
                 place     : place,
                 userid    : request.session.userid,
-                user      : request.session.user, 
-                moderator : request.session.moderator, 
+                user      : request.session.user,
+                moderator : request.session.moderator,
                 admin     : request.session.admin
             });
         });
@@ -106,7 +106,7 @@ module.exports = {
             twitter : form.twitter,
             website : form.website,
             about   : form.about,
-            creatorKey : request.session.userid 
+            creatorKey : request.session.userid
         },
         function(err) {
             var l = Log.create({ objType: 'place', editType: 'updated', editorKey: request.session.userid, editorName: request.session.user.displayName, editorAvatar: request.session.user._json.profile_image_url });

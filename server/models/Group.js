@@ -13,12 +13,12 @@ var Group = new dulcimer.Model(
             type: new type().isAlphanumeric().len(1,80),
             required: true
         },
-        slug: { 
+        slug: {
             derive: function () {
                 return slugger(this.name);
-            }, 
+            },
             index: true,
-            private: false 
+            private: false
         },
         image: {
             required: true,
@@ -62,9 +62,9 @@ var Group = new dulcimer.Model(
         moderator: {
             index: true
         }
-    }, 
-    { 
-        name: 'group' 
+    },
+    {
+        name: 'group'
     }
 );
 

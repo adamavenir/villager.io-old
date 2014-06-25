@@ -1,16 +1,23 @@
-var Log = require('../models/Log');
+var models = require('../models').models;
+// var Log = require('../models/Log');
 
 module.exports = {
 
     index: function (request, reply) {
-        if (request.session.user) {
-            Log.all(function(err, log) {
+        var session = request.auth.credentials;
+        //console.log('\n====in pages.js request.auth%j', request.auth);
+        // request.session = request.auth.
+        if (session.userid) {
+            models.Log.all(function(err, log) {
                 if (err) { console.log(err); }
-                reply.view('index', { 
-                    log       : log,
-                    user      : request.session.user, 
-                    moderator : request.session.moderator, 
-                    admin     : request.session.admin 
+                models.User.get(session.userid, function (err, user) {
+                    reply.view('index', {
+                        log       : log,
+                        user      : user,
+                        userid    : session.userid,
+                        moderator : session.moderator,
+                        admin     : session.admin
+                    });
                 });
             });
         }

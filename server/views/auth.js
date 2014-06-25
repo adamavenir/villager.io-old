@@ -1,24 +1,29 @@
 var models = require('../models').models;
 var User = models.User;
+var _ = require('underscore');
 
 module.exports = {
 
     ///////////////// AUTH
 
     login: function (request, reply) {
-        request.server.plugins.travelogue.passport.authenticate('twitter')(request, reply);
-        var html = '<a href="/auth/twitter">Login with Twitter</a>';
-        if (request.session) {
-            html += '<br/><br/><pre><span style="background-color: #eee">session: ' + JSON.stringify(request.session, null, 2) + '</span></pre>';
-        }
-        reply(html);
-    },
-
-    authenticated: function (request, reply) {
+        //request.server.plugins.travelogue.passport.authenticate('twitter')(request, reply);
+        // var html = '<a href="/auth/twitter">Login with Twitter</a>';
+        // if (request.session) {
+        //     html += '<br/><br/><pre><span style="background-color: #eee">session: ' + JSON.stringify(request.session, null, 2) + '</span></pre>';
+        // }
+        // reply(html);
+        console.log('\n=========CREDENTIALS', request.auth.credentials);
+        // if (request.auth.isAuthenticated) {
+        //     return reply.redirect('/');
+        // }
+        //console.log('session', request.session);
+        //request.session = request.auth.credentials;
+        //var context = request.auth.credentials;
         var access;
-        var t = request.session.user;
+        var t = request.auth.credentials.profile;
 
-        if (t.id === '1568') {
+        if (t.id === '2511636140') {
             console.log('Greetings, superadmin!');
             access = true;
         } else { access = false; }
@@ -27,9 +32,9 @@ module.exports = {
             fullName    : t.displayName,
             twitterId   : t.id,
             twitter     : t.username,
-            avatar      : t._json.profile_image_url,
-            website     : t._json.entities.url.urls[0].expanded_url,
-            about       : t._json.description,
+            avatar      : t.raw.profile_image_url,
+            website     : t.raw.url,
+            about       : t.raw.description,
             hasLoggedIn : true,
             approved    : access,
             admin       : access,
@@ -39,27 +44,45 @@ module.exports = {
         User.findByIndex('twitterId', t.id, function (err, exists) {
             console.log('looking up', t.id);
             if (err || !exists) {
+                console.log('new user');
                 // new user
                 user.save(function (err) {
                     if (err) { throw err; }
                     console.log('Twitter user ' + t.displayName + ' created with key ' + user.key);
-                    request.session.userid = user.key;
-                    reply().code(201).redirect('/profile/edit/' + user.key);
+                    var sessionObject = {userid: exists.key,
+                                         admin: exists.admin,
+                                         moderator: exists.moderator
+                                        };
+                    var session = _.extend(request.auth.credentials, sessionObject);
+                    var send = function (session) {
+                        request.auth.session.set(session);
+                        reply.redirect('/profile/edit/' + user.key);
+                    };
+                    return send(session);
                 });
             } else {
+                console.log('update user');
                 // update user
                 exists.loadData(user.toJSON());
                 exists.save(function (err) {
                     if (err) { throw err; }
                     console.log('Twitter user ' + t.displayName + ' updated with key ' + exists.key);
-                    request.session.userid = exists.key;
-                    request.session.admin = exists.admin;
-                    request.session.moderator = exists.moderator;
-                    reply().code(201).redirect('/people');
+                    // var userid = exists.key;
+                    // var admin = exists.admin;
+                    // var moderator = exists.moderator;
+                    var sessionObject = {userid: exists.key,
+                                         admin: exists.admin,
+                                         moderator: exists.moderator
+                                        };
+                    var session = _.extend(request.auth.credentials, sessionObject);
+                    var send = function (session) {
+                        request.auth.session.set(session);
+                        reply.redirect('/people');
+                    };
+                    return send(session);
                 });
             }
         });
-
     },
 
     logout: function (request, reply) {
@@ -68,27 +91,13 @@ module.exports = {
         reply().redirect('/');
     },
 
-    twitterAuth: function (request, reply) {
-        request.server.plugins.travelogue.passport.authenticate('twitter')(request, reply);
-    },
-
-    twitterCallback: function (request, reply) {
-        request.server.plugins.travelogue.passport.authenticate('twitter', {
-            failureRedirect: '/login',
-            successRedirect: '/authenticated',
-            failureFlash: true
-        })(request, reply, function () {
-            reply().redirect('/authenticated');
-        });
-    },
-
     session: function (request, reply) {
-        request.server.plugins.travelogue.passport.authenticate('twitter')(request, reply);
+        console.log('credentials', request.auth.credentials);
         var html = '<a href="/auth/twitter">Login with Twitter</a>';
         if (request.session) {
             html += '<br/><br/><pre><span style="background-color: #eee">session: ' + JSON.stringify(request.session, null, 2) + '</span></pre>';
         }
         reply(html);
-    }  
+    }
 
 };

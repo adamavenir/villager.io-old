@@ -17,7 +17,12 @@ module.exports = function _routes() {
 
     { method: 'GET',
       path: '/',
-      handler: views.pages.index
+      handler: views.pages.index,
+      config: {
+        auth: {
+          mode: 'optional'
+        }
+      }
     },
 
     ////////////////////////////////// PEOPLE
@@ -161,11 +166,16 @@ module.exports = function _routes() {
 
     ////////////////////////////////// AUTH
 
-    { method: 'GET', path: '/login', config: { auth: false }, handler: views.auth.login },
-    { method: 'GET', path: '/authenticated', handler: views.auth.authenticated },
+    { method: ['GET', 'POST'],
+      path: '/auth/twitter',
+      config: { auth: {
+                 strategies: ['twitter'],
+                 mode: 'optional'
+               },
+                plugins: {'hapi-auth-cookie': {redirectTo: false}}
+              },
+      handler: views.auth.login },
     { method: 'GET', path: '/session', handler: views.auth.session },
-    { method: 'GET', path: '/auth/twitter', config: { auth: false }, handler: views.auth.twitterAuth },
-    { method: 'GET', path: '/auth/twitter/callback', config: { auth: false }, handler: views.auth.twitterCallback },
     { method: 'GET', path: '/logout', handler: views.auth.logout }
 
   ];

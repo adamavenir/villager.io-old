@@ -19,17 +19,17 @@ var User = new dulcimer.Model(
             },
             required: false
         },
-        slug: { 
+        slug: {
             derive: function () {
                 if (this.fullName) {
-                    return slugger(this.fullName, {alsoAllow: '&'});  
+                    return slugger(this.fullName, {alsoAllow: '&'});
                 }
                 else {
                     return this.twitter;
                 }
-            }, 
+            },
             index: true,
-            private: false 
+            private: false
         },
         twitterId: {
             index: true
@@ -85,7 +85,7 @@ var User = new dulcimer.Model(
             index: true
         }
     },
-    { 
+    {
         name: 'user'
     }
 );

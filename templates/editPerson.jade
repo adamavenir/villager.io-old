@@ -13,21 +13,21 @@ block body
       input#inputCompany(name="company", type="text", placeholder="Company", value= person.company)
       textarea#inputAbout(name="about", type="text", maxlength="160", placeholder="Introduce yourself (160 characters max)") #{person.about}
       label(for="interests") What are you interested in?
-      ul.pickInterests 
-        li 
-          input#inputInterests(name="interests", type="checkbox", value="fishing") 
+      ul.pickInterests
+        li
+          input#inputInterests(name="interests", type="checkbox", value="fishing")
           | fishing
         li
-          input#inputInterests(name="interests", type="checkbox", value="pizza") 
+          input#inputInterests(name="interests", type="checkbox", value="pizza")
           | pizza
         li
-          input#inputInterests(name="interests", type="checkbox", value="hopscotch") 
+          input#inputInterests(name="interests", type="checkbox", value="hopscotch")
           | hopscotch
         li
-          input#inputInterests(name="interests", type="checkbox", value="dancing") 
+          input#inputInterests(name="interests", type="checkbox", value="dancing")
           | dancing
         li
-          input#inputInterests(name="interests", type="checkbox", value="prancing") 
+          input#inputInterests(name="interests", type="checkbox", value="prancing")
           | prancing
       button(name="submit", type="submit") Update
 

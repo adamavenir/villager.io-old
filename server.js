@@ -4,19 +4,20 @@ var routes  = require('./server/routes');
 var level   = require('level');
 var db      = level('./db', { valueEncoding: 'json' });
 var config = require('getconfig');
-var TwitterStrategy = require('passport-twitter').Strategy;
+//var TwitterStrategy = require('passport-twitter').Strategy;
 
-var plugins = {
-    yar: config.session,
-    travelogue: config.auth
-};
+var plugins = [
+    {plugin: require('bell')},
+    {plugin: require('good')},
+    {plugin: require('hapi-auth-cookie')}
+    ];
 
 models.attachDB(db);
 
 var serverOptions = {
     views: {
         path: 'templates',
-        engines: { jade: 'jade' }
+        engines: { jade: require('jade') }
     }
 };
 
@@ -28,28 +29,26 @@ if (process.env.DEBUG) {
     });
 }
 
-server.route(routes(server));
-
-server.pack.require(plugins, function(err) {
+server.pack.register(plugins, function (err) {
     if (err) {
         throw err;
     }
-
-    server.auth.strategy('passport', 'passport', true);
-
-    var Passport = server.plugins.travelogue.passport;
-
-    Passport.use(new TwitterStrategy(config.auth.twitter, function (accessToken, refreshToken, profile, done) {   
-        return done(null, profile);
-    }));
-
-    Passport.serializeUser(function(user, done) {
-        done(null, user);
+    server.auth.strategy('twitter', 'bell', {
+        provider: 'twitter',
+        password: config.session.cookieOptions.password,
+        clientId: config.auth.twitter.consumerKey,
+        clientSecret: config.auth.twitter.consumerSecret,
+        isSecure: false
     });
 
-    Passport.deserializeUser(function(obj, done) {
-        done(null, obj);
+    server.auth.strategy('session', 'cookie', 'required', {
+        password: config.session.cookieOptions.password,
+        cookie: 'sid',
+        redirectTo: '/auth/twitter',
+        isSecure: false
     });
+
+    server.route(routes(server));
 
     server.start(function (err) {
         if (err) { throw err; }
