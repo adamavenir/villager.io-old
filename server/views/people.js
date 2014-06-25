@@ -2,6 +2,7 @@ var models = require('../models').models;
 var User = models.User;
 var Log = models.Log;
 var _ = require('underscore');
+var async = require('async');
 
 module.exports = {
 
@@ -27,13 +28,21 @@ module.exports = {
             about     : form.about,
             approved  : true
         });
-        p.save(function (err) {
-            if (err) { throw err; }
-            User.load(p.key, function (err, person) {
+        User.get(session.userid, function (err, user) {
+            p.save(function (err) {
                 if (err) { throw err; }
-                reply().code(201).redirect('/people/' + person.slug);
-                var l = Log.create({ objType: 'person', editType: 'created', editorKey: session.userid, editorName: session.user.displayName, editorAvatar: session.user._json.profile_image_url, editedKey: person.key, editedName: person.fullName });
-                l.save(function () { console.log('logging'); });
+                User.load(p.key, function (err, person) {
+                    if (err) { throw err; }
+                    reply().code(201).redirect('/people/' + person.slug);
+                    var l = Log.create({ objType: 'person',
+                                         editType: 'created',
+                                         editorKey: session.userid,
+                                         editorName: user.fullName,
+                                         editorAvatar: user.avatar,
+                                         editedKey: person.key,
+                                         editedName: person.fullName });
+                    l.save(function () { console.log('logging'); });
+                });
             });
         });
     },
@@ -136,18 +145,37 @@ module.exports = {
 
     deletePerson: function (request, reply) {
         var session = request.auth.credentials;
-        if (session.moderator) {
-            User.delete(request.params.person, function(err) {
-                if (err) { throw err; }
-                var l = Log.create({ objType: 'person', editType: 'deleted', editorKey: session.userid, editorName: session.user.displayName, editorAvatar: session.user._json.profile_image_url, editedKey: request.params.person, editedName: '' });
-                l.save(function(err) {
+        async.parallel({
+            user: function (done) {
+                User.get(session.userid, done);
+            },
+            person: function (done) {
+                User.get(request.params.personKey, done);
+            }
+        }, function (err, context) {
+            if (err) { throw err; }
+            // Note: Deleting the current session user is a very bad thing
+            // In this iteration of the code it is possible and causes
+            // lots of problems. Thus I disallow deletion of any admin
+            // here until the overall auth system is improved - heather
+            if (session.moderator && !context.person.admin) {
+                context.person.delete(function (err) {
                     if (err) { throw err; }
-                    console.log('logging');
+                    var l = Log.create({ objType: 'person',
+                                         editType: 'deleted',
+                                         editorKey: session.userid,
+                                         editorName: context.user.fullName,
+                                         editorAvatar: context.user.avatar,
+                                         editedKey: request.params.personKey,
+                                         editedName: request.params.personName });
+                    l.save(function(err) {
+                        if (err) { throw err; }
+                        console.log('logging');
+                    });
+                    reply.view('deleted').redirect('/people');
                 });
-                reply.view('deleted').redirect('/people');
-            });
-        }
-        else { reply().code(401).redirect('/'); }
+            }
+            else { reply().code(401).redirect('/'); }
+        });
     }
-
 };

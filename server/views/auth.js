@@ -7,19 +7,7 @@ module.exports = {
     ///////////////// AUTH
 
     login: function (request, reply) {
-        //request.server.plugins.travelogue.passport.authenticate('twitter')(request, reply);
-        // var html = '<a href="/auth/twitter">Login with Twitter</a>';
-        // if (request.session) {
-        //     html += '<br/><br/><pre><span style="background-color: #eee">session: ' + JSON.stringify(request.session, null, 2) + '</span></pre>';
-        // }
-        // reply(html);
         console.log('\n=========CREDENTIALS', request.auth.credentials);
-        // if (request.auth.isAuthenticated) {
-        //     return reply.redirect('/');
-        // }
-        //console.log('session', request.session);
-        //request.session = request.auth.credentials;
-        //var context = request.auth.credentials;
         var access;
         var t = request.auth.credentials.profile;
 
@@ -67,9 +55,6 @@ module.exports = {
                 exists.save(function (err) {
                     if (err) { throw err; }
                     console.log('Twitter user ' + t.displayName + ' updated with key ' + exists.key);
-                    // var userid = exists.key;
-                    // var admin = exists.admin;
-                    // var moderator = exists.moderator;
                     var sessionObject = {userid: exists.key,
                                          admin: exists.admin,
                                          moderator: exists.moderator

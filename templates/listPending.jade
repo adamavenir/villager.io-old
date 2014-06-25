@@ -15,15 +15,15 @@ block body
             if !person.approved
               | Pending
             if person.approved
-              | √  
+              | √
             if person.moderator
-              | M 
-            if person.admin 
+              | M
+            if person.admin
               | A
           p.moderate
-            a(href="/people/approve/" + person.key) Approve 
+            a(href="/people/approve/" + person.key) Approve
             a(href="/people/moderator/" + person.key) Moderator
-            a(href="/people/delete/" + person.key) Delete
+            a(href="/people/delete/" + person.key + '/' + person.slug) Delete
       for place in places
         li
           a(href= '/places/' + place.slug)
@@ -31,14 +31,14 @@ block body
           h3= place.name
           p.moderate
             a(href="/places/approve/" + place.key) Approve
-            a(href="/places/delete/" + place.key) Delete
+            a(href="/places/delete/" + place.key + '/' + place.slug) Delete
       for group in groups
         li
           a(href= '/groups/' + group.slug)
             img.grav(src= group.image)
           h3= group.name
           p.moderate
-            a(href="/groups/approve/" + group.key) Approve 
-            a(href="/groups/delete/" + group.key) Delete           
+            a(href="/groups/approve/" + group.key) Approve
+            a(href="/groups/delete/" + group.key + '/' + group.slug) Delete
 
     include in/footer

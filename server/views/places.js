@@ -1,19 +1,23 @@
 var Place = require('../models/Place');
 var Log = require('../models/Log');
-var _ = require('underscore');
+var User = require('../models/User');
+//var _ = require('underscore');
+var async = require('async');
 
 module.exports = {
 
     addPlace: function (request, reply) {
+        var session = request.auth.credentials;
         reply.view('addPlace', {
-            userid    : request.session.userid,
-            user      : request.session.user,
-            moderator : request.session.moderator,
-            admin     : request.session.admin
+            userid    : session.userid,
+            user      : session.user,
+            moderator : session.moderator,
+            admin     : session.admin
         });
     },
 
     createPlace: function (request, reply) {
+        var session = request.auth.credentials;
         var form = request.payload;
         var p = Place.create({
             type    : form.type,
@@ -24,10 +28,10 @@ module.exports = {
             twitter : form.twitter,
             website : form.website,
             about   : form.about,
-            creatorKey : request.session.userid
+            creatorKey : session.userid
         });
         p.save(function (err) {
-            // var l = Log.create({ objType: 'place', editType: 'created', editorKey: request.session.userid, editorName: request.session.user.displayName, editorAvatar: request.session.user._json.profile_image_url });
+            // var l = Log.create({ objType: 'place', editType: 'created', editorKey: session.userid, editorName: session.user.displayName, editorAvatar: session.user._json.profile_image_url });
             // l.save();
             if (err) { throw err; }
             Place.load(p.key, function (err, place) {
@@ -38,64 +42,80 @@ module.exports = {
     },
 
     getPlace: function (request, reply) {
+        var session = request.auth.credentials;
         Place.findByIndex('slug', request.params.place, function(err, place) {
             var thismod;
             if (err) {
                 reply.view('404');
             }
             else {
-                if (place.creatorKey === request.session.userid) { thismod = true; }
+                if (place.creatorKey === session.userid) { thismod = true; }
                 else { thismod = false; }
                 reply.view('place', {
                     place     : place,
                     thismod   : thismod,
-                    user      : request.session.user,
-                    userid    : request.session.userid,
-                    moderator : request.session.moderator,
-                    admin     : request.session.admin
+                    user      : session.user,
+                    userid    : session.userid,
+                    moderator : session.moderator,
+                    admin     : session.admin
                 });
             }
         });
     },
 
     listPlaces: function (request, reply) {
-        Place.all(function(err, data) {
-            var approved = _.where(data, { approved: true });
-            var mine = _.where(data, { creatorKey: request.session.userid, approved: false });
-            if(mine.length + approved.length === 0) {
-                reply.view('noPlaces', {
-                    user      : request.session.user,
-                    userid    : request.session.userid,
-                    moderator : request.session.moderator,
-                    admin     : request.session.admin
-                });
+        var session = request.auth.credentials;
+        if (session) {console.log('we have a session');}
+        async.parallel({
+            places: function (done) {
+                Place.all(done);
+            },
+            sessionUser: function (done) {
+                User.get(session.userid, done);
             }
-            else {
+        }, function (err, context) {
+            console.log('places %j', context.places);
+            if (err) { throw err; }
+            //var approved = _.where(context.places[0], { approved: true });
+            //console.log('approved places', approved);
+            //var mine = _.where(context.places[0], { creatorKey: session.userid, approved: false });
+            // if(mine.length + approved.length === 0) {
+            //     reply.view('noPlaces', {
+            //         userid    : session.userid,
+            //         user      : context.sessionUser[0],
+            //         moderator : session.moderator,
+            //         admin     : session.admin
+            //     });
+            // }
+            //else {
+                console.log('there are places!');
                 reply.view('listPlaces', {
-                    places    : approved,
-                    mine      : mine,
-                    user      : request.session.user,
-                    userid    : request.session.userid,
-                    moderator : request.session.moderator,
-                    admin     : request.session.admin
+                    places    : context.places[0],
+                    //mine      : mine,
+                    userid    : session.userid,
+                    user      : context.sessionUser,
+                    moderator : session.moderator,
+                    admin     : session.admin
                 });
-            }
+            //}
         });
     },
 
     editPlace: function (request, reply) {
+        var session = request.auth.credentials;
         Place.load(request.params.place, function(err, place) {
             reply.view('editPlace', {
                 place     : place,
-                userid    : request.session.userid,
-                user      : request.session.user,
-                moderator : request.session.moderator,
-                admin     : request.session.admin
+                userid    : session.userid,
+                user      : session.user,
+                moderator : session.moderator,
+                admin     : session.admin
             });
         });
     },
 
     updatePlace: function (request, reply) {
+        var session = request.auth.credentials;
         var form = request.payload;
         Place.update(request.params.place, {
             type    : form.type,
@@ -106,10 +126,10 @@ module.exports = {
             twitter : form.twitter,
             website : form.website,
             about   : form.about,
-            creatorKey : request.session.userid
+            creatorKey : session.userid
         },
         function(err) {
-            var l = Log.create({ objType: 'place', editType: 'updated', editorKey: request.session.userid, editorName: request.session.user.displayName, editorAvatar: request.session.user._json.profile_image_url });
+            var l = Log.create({ objType: 'place', editType: 'updated', editorKey: session.userid, editorName: session.user.displayName, editorAvatar: session.user._json.profile_image_url });
             l.save();
             if (err) { console.log('err', err); }
             else {
@@ -119,10 +139,32 @@ module.exports = {
     },
 
     deletePlace: function (request, reply) {
-        Place.delete(request.params.place);
-        var l = Log.create({ objType: 'place', editType: 'deleted', editorKey: request.session.userid, editorName: request.session.user.displayName, editorAvatar: request.session.user._json.profile_image_url });
-        l.save();
-        reply.view('deleted').redirect('/places');
+        var session = request.auth.credentials;
+        async.parallel({
+            user: function (done) {
+                User.get(session.userid, done);
+            },
+            place: function (done) {
+                Place.get(request.params.placeKey, done);
+            }
+        }, function (err, context) {
+            if (err) { throw err; }
+            context.place.delete(function (err) {
+                if (err) { throw err; }
+                var l = Log.create({ objType: 'person',
+                                    editType: 'deleted',
+                                    editorKey: session.userid,
+                                    editorName: context.user.fullName,
+                                    editorAvatar: context.user.avatar,
+                                    editedKey: request.params.placeKey,
+                                    editedName: request.params.placeName });
+                l.save(function(err) {
+                    if (err) { throw err; }
+                    console.log('logging');
+                });
+                reply.view('deleted').redirect('/places');
+            });
+        });
     }
 
 };

@@ -6,7 +6,6 @@ module.exports = {
     index: function (request, reply) {
         var session = request.auth.credentials;
         //console.log('\n====in pages.js request.auth%j', request.auth);
-        // request.session = request.auth.
         if (session.userid) {
             models.Log.all(function(err, log) {
                 if (err) { console.log(err); }

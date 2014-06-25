@@ -25,9 +25,9 @@ var Group = new dulcimer.Model(
             type: type().isUrl()
         },
         twitter: {
-            processIn: function(twitter) {
-                return twitter.remove('@').remove('http://twitter.com/').remove('https://twitter.com/').remove('twitter.com/');
-            },
+            // processIn: function(twitter) {
+            //     return twitter.remove('@').remove('http://twitter.com/').remove('https://twitter.com/').remove('twitter.com/');
+            // },
             type: new type().isAlphanumeric().len(1,16)
         },
         site: {

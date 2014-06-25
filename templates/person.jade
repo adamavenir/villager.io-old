@@ -18,8 +18,8 @@ block body
         if person.admin
           | A
       p= person.bio
-      if moderator
-        a.delete(href= '/people/delete/' + person.key + '/' + person.name) Delete this person
+      if moderator && !person.admin
+        a.delete(href= '/people/delete/' + person.key + '/' + person.slug) Delete this person
         if !person.moderator
           a.moderator(href= '/people/moderator/' + person.key) Make moderator
 
