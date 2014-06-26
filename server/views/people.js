@@ -1,6 +1,4 @@
 var models = require('../models').models;
-var User = models.User;
-var Log = models.Log;
 var _ = require('underscore');
 var async = require('async');
 
@@ -8,33 +6,39 @@ module.exports = {
 
     addPerson: function (request, reply) {
         var session = request.auth.credentials;
-        reply.view('addPerson', {
-            userid    : session.userid,
-            user      : session.user,
-            moderator : session.moderator,
-            admin     : session.admin
+        models.Interest.all(function (err, interests) {
+            console.log('interests%j', interests);
+            reply.view('addPerson', {
+                interests : interests,
+                userid    : session.userid,
+                user      : session.userid,
+                moderator : session.moderator,
+                admin     : session.admin
+            });
         });
+
     },
 
     createPerson: function (request, reply) {
         var session = request.auth.credentials;
         var form = request.payload;
-        var p = User.create({
+        var p = models.User.create({
             fullName  : form.fullName,
             email     : form.email,
             twitter   : form.twitter,
             website   : form.website,
             company   : form.company,
             about     : form.about,
+            interests : form.interests,
             approved  : true
         });
-        User.get(session.userid, function (err, user) {
+        models.User.get(session.userid, function (err, user) {
             p.save(function (err) {
                 if (err) { throw err; }
-                User.load(p.key, function (err, person) {
+                models.User.load(p.key, function (err, person) {
                     if (err) { throw err; }
                     reply().code(201).redirect('/people/' + person.slug);
-                    var l = Log.create({ objType: 'person',
+                    var l = models.Log.create({ objType: 'person',
                                          editType: 'created',
                                          editorKey: session.userid,
                                          editorName: user.fullName,
@@ -49,7 +53,7 @@ module.exports = {
 
     getPerson: function (request, reply) {
         var session = request.auth.credentials;
-        User.findByIndex('slug', request.params.person, function(err, value) {
+        models.User.findByIndex('slug', request.params.person, function(err, value) {
             if (err) {
                 reply.view('404');
             }
@@ -57,7 +61,7 @@ module.exports = {
                 reply.view('person', {
                     person    : value,
                     userid    : session.userid,
-                    user      : session.user,
+                    user      : session.userid,
                     moderator : session.moderator,
                     admin     : session.admin
                 });
@@ -67,12 +71,12 @@ module.exports = {
 
     listPeople: function (request, reply) {
         var session = request.auth.credentials;
-        console.log('\n in listPeople request.auth  is',request.auth);
-        User.get(session.userid, function (err, user) {
+        // console.log('\n in listPeople request.auth  is',request.auth);
+        models.User.get(session.userid, function (err, user) {
             var me;
             if (err) { throw err; }
             if (user && user.approved === false) { me = user; } else { me = false; }
-            User.all(function(err, data) {
+            models.User.all(function(err, data) {
                 var approved = _.where(data, { approved: true });
                 if(me === false && approved.length === 0) {
                     reply.view('noPeople', {
@@ -83,8 +87,7 @@ module.exports = {
                     });
                 }
                 else {
-                    console.log('there are people!');
-                    User.get(session.userid, function (err, sessionUser) {
+                    models.User.get(session.userid, function (err, sessionUser) {
                         reply.view('listPeople', {
                             people    : approved,
                             me        : me,
@@ -101,12 +104,16 @@ module.exports = {
 
     editPerson: function (request, reply) {
         var session = request.auth.credentials;
-        User.get(request.params.person, function(err, person) {
-            reply.view('editPerson', {
-                person    : person,
-                userid    : session.userid,
-                moderator : session.moderator,
-                admin     : session.admin
+        models.User.get(request.params.person, function (err, person) {
+            models.Interest.all(function (err, interests) {
+                person.interests = _.pluck(person.interests, 'key');
+                reply.view('editPerson', {
+                    interests : interests,
+                    person    : person,
+                    userid    : session.userid,
+                    moderator : session.moderator,
+                    admin     : session.admin
+                });
             });
         });
     },
@@ -115,19 +122,20 @@ module.exports = {
         var session = request.auth.credentials;
         var form = request.payload;
         console.log('form is', form);
-        User.update(request.params.person, {
+        models.User.update(request.params.person, {
             fullName  : form.fullName,
             email     : form.email,
             twitter   : form.twitter,
             website   : form.website,
             company   : form.company,
-            about     : form.about
+            about     : form.about,
+            interests : form.interests
         }, function(err, p) {
             if (err) { throw err; }
             else {
                 reply().code(201).redirect('/people');
-                User.get(session.userid, function (err, sessionUser) {
-                    var l = Log.create({ objType: 'person',
+                models.User.get(session.userid, function (err, sessionUser) {
+                    var l = models.Log.create({ objType: 'person',
                                          editType: 'updated',
                                          editorKey: session.userid,
                                          editorName: sessionUser.fullName,
@@ -147,10 +155,10 @@ module.exports = {
         var session = request.auth.credentials;
         async.parallel({
             user: function (done) {
-                User.get(session.userid, done);
+                models.User.get(session.userid, done);
             },
             person: function (done) {
-                User.get(request.params.personKey, done);
+                models.User.get(request.params.personKey, done);
             }
         }, function (err, context) {
             if (err) { throw err; }
@@ -161,7 +169,7 @@ module.exports = {
             if (session.moderator && !context.person.admin) {
                 context.person.delete(function (err) {
                     if (err) { throw err; }
-                    var l = Log.create({ objType: 'person',
+                    var l = models.Log.create({ objType: 'person',
                                          editType: 'deleted',
                                          editorKey: session.userid,
                                          editorName: context.user.fullName,

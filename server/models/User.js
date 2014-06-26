@@ -60,6 +60,11 @@ var User = new dulcimer.Model(
         about: {
             type: new type().isAlphanumeric().len(0,160),
         },
+        interests: {
+            foreignCollection: 'interest',
+            default: [],
+            required: true
+        },
         approved: {
             default: false,
             type: 'boolean',

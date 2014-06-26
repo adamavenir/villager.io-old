@@ -37,7 +37,24 @@ p
 
 h2
   margin-top: 20px
+///// This is all trying to get the dropdown to work but it's not....
+.tinker
+  position: absolute
 
+.dropdown
+  display: none
+  position: relative
+  width: 100%
+
+ul.dropdown
+  width: 20px
+  height: 10px
+
+a.tinker:hover
+  ul.dropdown
+    display: block
+    width: 100%
+////////////
 header
   background-color: #eee
   width: 100%
@@ -65,6 +82,7 @@ header
     left: 10px
     padding: 0
 
+
   img
     width: 24px
     height: 24px
@@ -78,7 +96,7 @@ header
   &.modfalse
     background-color: #F8FFC9
 
-.person, .place, .group
+.person, .place, .group, .interest
   text-align: center
   width: 500px 
   margin: 0 auto
@@ -87,11 +105,14 @@ header
   box-shadow: rgba(0,0,0,.03) 0 0 10px
   position: relative
 
+.interest
+  padding-top: 40px
+  padding-bottom: 40px
+
 a.delete
   color: #aaa
   position: absolute
   right: 0
-  bottom: -30px
   font-size: 13px
 
 ul

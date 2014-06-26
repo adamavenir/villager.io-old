@@ -9,15 +9,9 @@ block body
     form#addPlace(method="POST", action="/places/add")
       label(for="type") Type of place:
       select#inputType(name="type")
-        option(value="Restaurant") Restaurant
-        option(value="Coffee shop") Coffee shop
-        option(value="Bar") Bar
-        option(value="Winery") Winery
-        option(value="Store") Story
-        option(value="Company") Company
-        option(value="Nonprofit") Nonprofit
-        option(value="Venue") Venue
-        option(value="Public") Public
+        option(value="") -- Select a Category --
+        each cat in placeCategories
+          option(value=cat.key) #{cat.name}
       input#inputName(name="name", type="text", placeholder="Name of the place")
       input#inputAddress(name="address", type="text", placeholder="112 Hundred Acre Wood")
       input#inputCity(name="city", type="text", placeholder="West Richlascowickton City")

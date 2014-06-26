@@ -5,18 +5,12 @@ block body
     include in/header
 
     h1 Add a group
-    p (Music, theatre, art, coworking, educational, social, nonprofit, support)
     form#addPlace(method="POST", action="/groups/add")
       label(for="type") Type of place:
       select#inputType(name="type")
-        option(value="Music") Music
-        option(value="Art") Art
-        option(value="Theatre") Theatre
-        option(value="Coworking") Coworking
-        option(value="Educational") Educational
-        option(value="Social") Social
-        option(value="Nonprofit") Nonprofit
-        option(value="Support") Support
+        option(value="") -- Select a Category --
+        each cat in groupCategories
+          option(value=cat.key) #{cat.name}
       input#inputName(name="name", type="text", placeholder="Name of the group")
       input#inputWebsite(name="website", type="text", placeholder="http://placewebsite.com")
       input#inputTwitter(name="twitter", type="text", placeholder="Twitter username")

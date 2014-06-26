@@ -13,5 +13,9 @@ block body
           span= place.address + ' ' + place.city
       if thismod || moderator
         a.delete(href= '/places/delete/' + place.key + '/' + place.name) Delete this place
-
+      .stars
+        if place.stars > 0
+          a.unStarThis(href='star/' + place.key) ★
+        if !place.stars
+          a.starThis(href='star/' + place.key) ☆
     include in/footer

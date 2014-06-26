@@ -7,7 +7,7 @@ var type = verymodel.VeryType;
 var Place = new dulcimer.Model (
     {
         type: {
-            type: type().isIn('Restaurant', 'Coffee shop', 'Bar', 'Winery', 'Store', 'Company', 'Nonprofit', 'Venue', 'Public')
+            foreignKey: 'place-category'
         },
         name: {
             required: true,
@@ -50,6 +50,17 @@ var Place = new dulcimer.Model (
         about: {
             required: false,
             type: type().isAlphanumeric().len(0,160)
+        },
+        starredBy: {
+            default: [],
+            foreignCollection: 'user',
+            required: true
+        },
+        stars: {
+            required: true,
+            derive: function () {
+                return this.starredBy.length || 0;
+            },
         },
         approved: {
             default: false,

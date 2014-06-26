@@ -14,21 +14,11 @@ block body
       textarea#inputAbout(name="about", type="text", maxlength="160", placeholder="Introduce yourself (160 characters max)") #{person.about}
       label(for="interests") What are you interested in?
       ul.pickInterests
-        li
-          input#inputInterests(name="interests", type="checkbox", value="fishing")
-          | fishing
-        li
-          input#inputInterests(name="interests", type="checkbox", value="pizza")
-          | pizza
-        li
-          input#inputInterests(name="interests", type="checkbox", value="hopscotch")
-          | hopscotch
-        li
-          input#inputInterests(name="interests", type="checkbox", value="dancing")
-          | dancing
-        li
-          input#inputInterests(name="interests", type="checkbox", value="prancing")
-          | prancing
+        each interest in interests
+          li
+            - var inInterests = (person.interests.indexOf(interest.key) > -1)
+            input#inputInterests(name="interests[]", type="checkbox", checked=inInterests , value=interest.key)
+            | #{interest.name}
       button(name="submit", type="submit") Update
 
     include in/footer

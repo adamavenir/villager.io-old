@@ -1279,7 +1279,6 @@ blockquote p {
 
   @page {
     margin: 0.5cm; }
-
   p,
   h2,
   h3 {
@@ -2915,28 +2914,24 @@ form.custom {
 
   to {
     -webkit-transform: rotate(360deg); } }
-
 @-moz-keyframes rotate {
   from {
     -webkit-transform: rotate(0deg); }
 
   to {
     -webkit-transform: rotate(360deg); } }
-
 @-o-keyframes rotate {
   from {
     -webkit-transform: rotate(0deg); }
 
   to {
     -webkit-transform: rotate(360deg); } }
-
 @keyframes rotate {
   from {
     -webkit-transform: rotate(0deg); }
 
   to {
     -webkit-transform: rotate(360deg); } }
-
 /* Orbit Graceful Loading */
 .slideshow-wrapper {
   position: relative; }
@@ -3016,7 +3011,7 @@ form.custom {
     left: 10px;
     font-size: 12px;
     color: white;
-    background: rgba(0, 0, 0, 0); }
+    background: transparent; }
     .orbit-container .orbit-slide-number span {
       font-weight: 700;
       padding: 0.3125em; }
@@ -4288,6 +4283,22 @@ p {
 h2 {
   margin-top: 20px; }
 
+.tinker {
+  position: absolute; }
+
+.dropdown {
+  display: none;
+  position: relative;
+  width: 100%; }
+
+ul.dropdown {
+  width: 20px;
+  height: 10px; }
+
+a.tinker:hover ul.dropdown {
+  display: block;
+  width: 100%; }
+
 header {
   background-color: #eeeeee;
   width: 100%;
@@ -4321,7 +4332,7 @@ header {
   header.modfalse {
     background-color: #f8ffc9; }
 
-.person, .place, .group {
+.person, .place, .group, .interest {
   text-align: center;
   width: 500px;
   margin: 0 auto;
@@ -4330,11 +4341,14 @@ header {
   box-shadow: rgba(0, 0, 0, 0.03) 0 0 10px;
   position: relative; }
 
+.interest {
+  padding-top: 40px;
+  padding-bottom: 40px; }
+
 a.delete {
   color: #aaaaaa;
   position: absolute;
   right: 0;
-  bottom: -30px;
   font-size: 13px; }
 
 ul {

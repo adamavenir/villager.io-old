@@ -1,6 +1,4 @@
-var User = require('../models/User');
-var Place = require('../models/Place');
-var Group = require('../models/Group');
+var models = require('../models').models;
 var _ = require('underscore');
 var async = require('async');
 
@@ -10,16 +8,16 @@ module.exports = {
         var session = request.auth.credentials;
         async.parallel({
             user: function (done) {
-                User.get(session.userid, done);
+                models.User.get(session.userid, done);
             },
             people: function (done) {
-                User.all(done);
+                models.User.all(done);
             },
             places: function (done) {
-                Place.all(done);
+                models.Place.all(done);
             },
             groups: function (done) {
-                Group.all(done);
+                models.Group.all(done);
             }
         }, function (err, context) {
             if (session.moderator === true) {
@@ -52,7 +50,7 @@ module.exports = {
     approvePerson: function (request, reply) {
         var session = request.auth.credentials;
         if (session.moderator) {
-            User.update(request.params.person, { approved: true }, function (person) {
+            models.User.update(request.params.person, { approved: true }, function (person) {
                 console.log('approved:', person.key);
                 reply.redirect('/people');
             });
@@ -63,7 +61,7 @@ module.exports = {
     approvePlace: function (request, reply) {
         var session = request.auth.credentials;
         if (session.moderator) {
-            Place.update(request.params.place, { approved: true }, function () {
+            models.Place.update(request.params.place, { approved: true }, function () {
                 //console.log('approved:', place.key);
                 reply.redirect('/places');
             });
@@ -74,7 +72,7 @@ module.exports = {
     approveGroup: function (request, reply) {
         var session = request.auth.credentials;
         if (session.moderator) {
-            Group.update(request.params.group, { approved: true }, function (err, group) {
+            models.Group.update(request.params.group, { approved: true }, function (err, group) {
                 console.log('approved:', group.key);
                 reply.redirect('/groups');
             });
@@ -85,7 +83,7 @@ module.exports = {
     adminPerson: function (request, reply) {
         var session = request.auth.credentials;
         if (session.admin) {
-            User.update(request.params.person, { admin: true, moderator: true, approved: true }, function (person) {
+            models.User.update(request.params.person, { admin: true, moderator: true, approved: true }, function (person) {
                 console.log('made admin:', person.key);
                 reply().code(200).redirect('/people');
             });
@@ -96,7 +94,7 @@ module.exports = {
     moderatorPerson: function (request, reply) {
         var session = request.auth.credentials;
         if (session.admin) {
-            User.update(request.params.person, { moderator: true, approved: true }, function (person) {
+            models.User.update(request.params.person, { moderator: true, approved: true }, function (person) {
                 console.log('made moderator:', person.key);
                 reply().code(200).redirect('/people');
             });

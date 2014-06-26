@@ -12,6 +12,7 @@ header(class="mod" + moderator)
     if user
       a(href="/logout") Log out
       a(href="/profile/edit/" + userid) Edit profile
+      a.tinker(href="/tinker") Tinker
     if !user
       a(href="/auth/twitter") Log in
   if user

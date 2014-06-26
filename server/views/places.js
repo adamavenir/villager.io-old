@@ -1,25 +1,26 @@
-var Place = require('../models/Place');
-var Log = require('../models/Log');
-var User = require('../models/User');
 //var _ = require('underscore');
+var models = require('../models').models;
 var async = require('async');
 
 module.exports = {
 
     addPlace: function (request, reply) {
         var session = request.auth.credentials;
-        reply.view('addPlace', {
-            userid    : session.userid,
-            user      : session.user,
-            moderator : session.moderator,
-            admin     : session.admin
+        models.PlaceCategory.all(function (err, placeCategories) {
+            reply.view('addPlace', {
+                placeCategories: placeCategories,
+                userid    : session.userid,
+                user      : session.user,
+                moderator : session.moderator,
+                admin     : session.admin
+            });
         });
     },
 
     createPlace: function (request, reply) {
         var session = request.auth.credentials;
         var form = request.payload;
-        var p = Place.create({
+        var p = models.Place.create({
             type    : form.type,
             name    : form.name,
             address : form.address,
@@ -34,7 +35,7 @@ module.exports = {
             // var l = Log.create({ objType: 'place', editType: 'created', editorKey: session.userid, editorName: session.user.displayName, editorAvatar: session.user._json.profile_image_url });
             // l.save();
             if (err) { throw err; }
-            Place.load(p.key, function (err, place) {
+            models.Place.load(p.key, function (err, place) {
                 if (err) { throw err; }
                 reply().code(201).redirect('/places/' + place.slug);
             });
@@ -43,7 +44,7 @@ module.exports = {
 
     getPlace: function (request, reply) {
         var session = request.auth.credentials;
-        Place.findByIndex('slug', request.params.place, function(err, place) {
+        models.Place.findByIndex('slug', request.params.place, function(err, place) {
             var thismod;
             if (err) {
                 reply.view('404');
@@ -68,13 +69,12 @@ module.exports = {
         if (session) {console.log('we have a session');}
         async.parallel({
             places: function (done) {
-                Place.all(done);
+                models.Place.all(done);
             },
             sessionUser: function (done) {
-                User.get(session.userid, done);
+                models.User.get(session.userid, done);
             }
         }, function (err, context) {
-            console.log('places %j', context.places);
             if (err) { throw err; }
             //var approved = _.where(context.places[0], { approved: true });
             //console.log('approved places', approved);
@@ -88,7 +88,6 @@ module.exports = {
             //     });
             // }
             //else {
-                console.log('there are places!');
                 reply.view('listPlaces', {
                     places    : context.places[0],
                     //mine      : mine,
@@ -103,7 +102,7 @@ module.exports = {
 
     editPlace: function (request, reply) {
         var session = request.auth.credentials;
-        Place.load(request.params.place, function(err, place) {
+        models.Place.load(request.params.place, function(err, place) {
             reply.view('editPlace', {
                 place     : place,
                 userid    : session.userid,
@@ -117,7 +116,7 @@ module.exports = {
     updatePlace: function (request, reply) {
         var session = request.auth.credentials;
         var form = request.payload;
-        Place.update(request.params.place, {
+        models.Place.update(request.params.place, {
             type    : form.type,
             name    : form.name,
             address : form.address,
@@ -129,7 +128,7 @@ module.exports = {
             creatorKey : session.userid
         },
         function(err) {
-            var l = Log.create({ objType: 'place', editType: 'updated', editorKey: session.userid, editorName: session.user.displayName, editorAvatar: session.user._json.profile_image_url });
+            var l = models.Log.create({ objType: 'place', editType: 'updated', editorKey: session.userid, editorName: session.user.displayName, editorAvatar: session.user._json.profile_image_url });
             l.save();
             if (err) { console.log('err', err); }
             else {
@@ -142,16 +141,16 @@ module.exports = {
         var session = request.auth.credentials;
         async.parallel({
             user: function (done) {
-                User.get(session.userid, done);
+                models.User.get(session.userid, done);
             },
             place: function (done) {
-                Place.get(request.params.placeKey, done);
+                models.Place.get(request.params.placeKey, done);
             }
         }, function (err, context) {
             if (err) { throw err; }
             context.place.delete(function (err) {
                 if (err) { throw err; }
-                var l = Log.create({ objType: 'person',
+                var l = models.Log.create({ objType: 'person',
                                     editType: 'deleted',
                                     editorKey: session.userid,
                                     editorName: context.user.fullName,

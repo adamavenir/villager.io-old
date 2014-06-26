@@ -7,7 +7,6 @@ module.exports = {
     ///////////////// AUTH
 
     login: function (request, reply) {
-        console.log('\n=========CREDENTIALS', request.auth.credentials);
         var access;
         var t = request.auth.credentials.profile;
 
@@ -32,7 +31,6 @@ module.exports = {
         User.findByIndex('twitterId', t.id, function (err, exists) {
             console.log('looking up', t.id);
             if (err || !exists) {
-                console.log('new user');
                 // new user
                 user.save(function (err) {
                     if (err) { throw err; }
@@ -49,7 +47,6 @@ module.exports = {
                     return send(session);
                 });
             } else {
-                console.log('update user');
                 // update user
                 exists.loadData(user.toJSON());
                 exists.save(function (err) {
@@ -71,16 +68,19 @@ module.exports = {
     },
 
     logout: function (request, reply) {
-        request.session._logOut();
-        request.session.admin = request.session.userid = request.session.moderator = '';
-        reply().redirect('/');
+        var session = request.auth.credentials;
+        request.auth.session.clear();
+        // request.session._logOut();
+        session.admin = session.userid = session.moderator = '';
+        return reply().redirect('/');
     },
 
     session: function (request, reply) {
-        console.log('credentials', request.auth.credentials);
+        var session = request.auth.credentials;
+        // console.log('credentials', request.auth.credentials);
         var html = '<a href="/auth/twitter">Login with Twitter</a>';
-        if (request.session) {
-            html += '<br/><br/><pre><span style="background-color: #eee">session: ' + JSON.stringify(request.session, null, 2) + '</span></pre>';
+        if (session) {
+            html += '<br/><br/><pre><span style="background-color: #eee">session: ' + JSON.stringify(session, null, 2) + '</span></pre>';
         }
         reply(html);
     }

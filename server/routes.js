@@ -24,6 +24,36 @@ module.exports = function _routes() {
         }
       }
     },
+    ////////////////////////////////// TINKER
+
+    { method: 'GET',
+      path: '/tinker',
+      handler: views.pages.tinker
+    },
+    { method: 'POST',
+      path: '/tinker/add-interest',
+      handler: views.categories.addInterest
+    },
+    { method: 'POST',
+      path: '/tinker/add-group-category',
+      handler: views.categories.addGroupCategory
+    },
+    { method: 'POST',
+      path: '/tinker/add-place-category',
+      handler: views.categories.addPlaceCategory
+    },
+    { method: 'GET',
+      path: '/tinker/delete/{categoryType}/{modelSlug}',
+      handler: views.categories.delete
+    },
+    { method: 'GET',
+      path: '/tinker/edit/{categoryType}/{modelSlug}',
+      handler: views.categories.edit
+    },
+    { method: 'POST',
+      path: '/tinker/update/{categoryType}/{modelKey}',
+      handler: views.categories.update
+    },
 
     ////////////////////////////////// PEOPLE
     { method: 'GET',

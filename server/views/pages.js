@@ -1,5 +1,5 @@
 var models = require('../models').models;
-// var Log = require('../models/Log');
+var async = require('async');
 
 module.exports = {
 
@@ -21,6 +21,27 @@ module.exports = {
             });
         }
         else { reply.view('index'); }
+    },
+
+    tinker: function (request, reply) {
+        var session = request.auth.credentials;
+        async.parallel({
+            interests: function (done) {
+                models.Interest.all(done);
+            },
+            groupCategories: function (done) {
+                models.GroupCategory.all(done);
+            },
+            placeCategories: function (done) {
+                models.PlaceCategory.all(done);
+            },
+            user: function (done) {
+                models.User.get(session.userid, done);
+            }
+        }, function (err, context) {
+            if (err) { throw err; }
+            reply.view('tinker/tinker', context);
+        });
     },
 
     notFound: function (request, reply) {

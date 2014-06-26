@@ -4,5 +4,6 @@ module.exports = {
     pages:      require('./pages'),
     people:     require('./people'),
     places:     require('./places'),
-    groups:     require('./groups')
+    groups:     require('./groups'),
+    categories: require('./categories')
 };
