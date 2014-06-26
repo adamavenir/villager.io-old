@@ -1,0 +1,17 @@
+extends ../layout
+
+block body
+  body
+    include ../in/header
+
+    h1 Edit #{model.name}
+    form#addPlace(method="POST", action="/tinker/update/" + categoryType + "/" + model.key)
+      label(for="name") Name
+      input(name="name", value=model.name)
+      label(for="description") Description
+      input(name="description", value=model.description)
+      label(for="image") Image URL
+      input(name="image", value=model.image)
+      button(name="submit", type="submit") Update
+
+    include ../in/footer
