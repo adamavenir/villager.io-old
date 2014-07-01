@@ -55,6 +55,29 @@ module.exports = function _routes() {
       handler: views.categories.update
     },
 
+    ////////////////////////////////// LISTS
+
+    { method: 'GET',
+      path: '/lists',
+      handler: views.lists.main
+    },
+    { method: 'POST',
+      path: '/lists/add',
+      handler: views.lists.addList
+    },
+    { method: 'GET',
+      path: '/lists/edit/{listSlug}',
+      handler: views.lists.editList
+    },
+    { method: 'POST',
+      path: '/lists/update/{listKey}',
+      handler: views.lists.updateList
+    },
+    { method: 'GET',
+      path: '/lists/delete/{listKey}',
+      handler: views.lists.deleteList
+    },
+
     ////////////////////////////////// PEOPLE
     { method: 'GET',
       path: '/people',
@@ -66,27 +89,27 @@ module.exports = function _routes() {
     },
     { method: 'GET',
       path: '/people/add',
-      // config: { auth: 'passport' },
+
       handler: views.people.addPerson
     },
     { method: 'POST',
       path: '/people/add',
-      // config: { auth: 'passport' },
+
       handler: views.people.createPerson
     },
     { method: 'GET',
       path: '/profile/edit/{person}',
-      // config: { auth: 'passport' },
+
       handler: views.people.editPerson
     },
     { method: 'POST',
       path: '/profile/update/{person}',
-      // config: { auth: 'passport' },
+
       handler: views.people.updatePerson
     },
     { method: 'GET',
       path: '/people/delete/{personKey}/{personName}',
-      // config: { auth: 'passport' },
+
       handler: views.people.deletePerson
     },
 
@@ -101,27 +124,31 @@ module.exports = function _routes() {
     },
     { method: 'GET',
       path: '/places/add',
-      // config: { auth: 'passport' },
+
       handler: views.places.addPlace
     },
     { method: 'POST',
       path: '/places/add',
-      // config: { auth: 'passport' },
+
       handler: views.places.createPlace
     },
     { method: 'GET',
-      path: '/places/edit/{place}',
-      // config: { auth: 'passport' },
+      path: '/places/edit/{placeSlug}',
+
       handler: views.places.editPlace
     },
     { method: 'POST',
-      path: '/place/update/{place}',
-      // config: { auth: 'passport' },
+      path: '/places/update/{placeKey}',
+
       handler: views.places.updatePlace
     },
     { method: 'GET',
+      path: '/places/star/{placeKey}',
+      handler: views.places.starPlace
+    },
+    { method: 'GET',
       path: '/places/delete/{placeKey}/{placeName}',
-      // config: { auth: 'passport' },
+
       handler: views.places.deletePlace
     },
 
@@ -137,27 +164,31 @@ module.exports = function _routes() {
     },
     { method: 'GET',
       path: '/groups/add',
-      // config: { auth: 'passport' },
+
       handler: views.groups.addGroup
     },
     { method: 'POST',
       path: '/groups/add',
-      // config: { auth: 'passport' },
+
       handler: views.groups.createGroup
     },
     { method: 'GET',
-      path: '/groups/edit/{group}',
-      // config: { auth: 'passport' },
+      path: '/groups/edit/{groupSlug}',
+
       handler: views.groups.editGroup
     },
     { method: 'POST',
-      path: '/groups/update/{group}',
-      // config: { auth: 'passport' },
+      path: '/groups/update/{groupKey}',
+
       handler: views.groups.updateGroup
     },
     { method: 'GET',
+      path: '/groups/star/{groupKey}',
+      handler: views.groups.starGroup
+    },
+    { method: 'GET',
       path: '/groups/delete/{groupKey}/{groupName}',
-      // config: { auth: 'passport' },
+
       handler: views.groups.deleteGroup
     },
 
@@ -165,32 +196,32 @@ module.exports = function _routes() {
     ////////////////////////////////// MODERATION
     { method: 'GET',
       path: '/pending',
-      // config: { auth: 'passport' },
+
       handler: views.moderation.listPending
     },
     { method: 'GET',
       path: '/people/approve/{person}',
-      // config: { auth: 'passport' },
+
       handler: views.moderation.approvePerson
     },
     { method: 'GET',
       path: '/places/approve/{place}',
-      // config: { auth: 'passport' },
+
       handler: views.moderation.approvePlace
     },
     { method: 'GET',
       path: '/groups/approve/{group}',
-      // config: { auth: 'passport' },
+
       handler: views.moderation.approveGroup
     },
     { method: 'GET',
       path: '/people/moderator/{person}',
-      // config: { auth: 'passport' },
+
       handler: views.moderation.moderatorPerson
     },
     { method: 'GET',
       path: '/people/admin/{person}',
-      // config: { auth: 'passport' },
+
       handler: views.moderation.adminPerson
     },
 

@@ -4299,6 +4299,36 @@ a.tinker:hover ul.dropdown {
   display: block;
   width: 100%; }
 
+.star {
+  position: absolute;
+  right: 0;
+  top: -30px; }
+  .star:hover .starCount li {
+    display: block; }
+
+.starCount {
+  text-align: right;
+  position: absolute;
+  top: 7px;
+  right: 30px;
+  padding: 5px 10px 5px 0;
+  margin: 0;
+  width: 180px;
+  font-weight: bold;
+  cursor: default; }
+  .starCount .starredBy {
+    padding: 0;
+    margin: 5px 0;
+    position: absolute;
+    right: -30px; }
+  .starCount li {
+    list-style: none;
+    padding: 10px;
+    width: 180px;
+    text-align: left;
+    display: none;
+    border-radius: 5px; }
+
 header {
   background-color: #eeeeee;
   width: 100%;

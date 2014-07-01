@@ -10,6 +10,16 @@ block body
       p= group.about
       p= group.creatorName
       if thismod || moderator
-        a.delete(href= '/groups/delete/' + group.key + '/' + group.name) Delete this group
-
+        a(href= '/groups/delete/' + group.key + '/' + group.name) Delete this group
+        a(href='/groups/edit/' + group.slug) Edit this group
+      .stars
+        if group.stars > 0
+          a.unStarThis(href='star/' + group.key) ★ #{group.starredBy.length}
+          ul.starredBy
+              for person in group.starredBy
+                li
+                  img.avatar(src= person.avatar)
+                  h6= person.fullName
+        if !group.stars
+          a.starThis(href='star/' + group.key) ☆
     include in/footer

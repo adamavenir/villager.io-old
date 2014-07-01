@@ -12,10 +12,17 @@ block body
         a(href= place.map)
           span= place.address + ' ' + place.city
       if thismod || moderator
-        a.delete(href= '/places/delete/' + place.key + '/' + place.name) Delete this place
+        a(href= '/places/delete/' + place.key + '/' + place.name) Delete this place
+        a(href='/places/edit/' + place.slug) Edit this place
+
       .stars
         if place.stars > 0
-          a.unStarThis(href='star/' + place.key) ★
+          a.unStarThis(href='star/' + place.key) ★ #{place.starredBy.length}
+          ul.starredBy
+              for person in place.starredBy
+                li
+                  img.avatar(src= person.avatar)
+                  h6= person.fullName
         if !place.stars
           a.starThis(href='star/' + place.key) ☆
     include in/footer

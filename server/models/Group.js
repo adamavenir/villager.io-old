@@ -37,6 +37,17 @@ var Group = new dulcimer.Model(
         about: {
             type: new type().isAlphanumeric().len(0,160),
         },
+        starredBy: {
+            default: [],
+            foreignCollection: 'user',
+            required: true
+        },
+        stars: {
+            required: true,
+            derive: function () {
+                return this.starredBy.length || 0;
+            },
+        },
         approved: {
             default: false,
             type: 'boolean',

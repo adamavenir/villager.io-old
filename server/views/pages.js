@@ -1,5 +1,6 @@
 var models = require('../models').models;
 var async = require('async');
+var _ = require('underscore');
 
 module.exports = {
 
@@ -9,14 +10,13 @@ module.exports = {
         if (session.userid) {
             models.Log.all(function(err, log) {
                 if (err) { console.log(err); }
-                models.User.get(session.userid, function (err, user) {
-                    reply.view('index', {
-                        log       : log,
-                        user      : user,
-                        userid    : session.userid,
-                        moderator : session.moderator,
-                        admin     : session.admin
-                    });
+                reply.view('index', {
+                    log       : log,
+                    fullName  : session.fullName,
+                    avatar    : session.avatar,
+                    userid    : session.userid,
+                    moderator : session.moderator,
+                    admin     : session.admin
                 });
             });
         }
@@ -34,12 +34,16 @@ module.exports = {
             },
             placeCategories: function (done) {
                 models.PlaceCategory.all(done);
-            },
-            user: function (done) {
-                models.User.get(session.userid, done);
             }
         }, function (err, context) {
             if (err) { throw err; }
+            context = _.extend(context, {
+                fullName  : session.fullName,
+                avatar    : session.avatar,
+                userid    : session.userid,
+                moderator : session.moderator,
+                admin     : session.admin
+            });
             reply.view('tinker/tinker', context);
         });
     },

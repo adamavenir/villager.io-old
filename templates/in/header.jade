@@ -2,6 +2,7 @@ header(class="mod" + moderator)
   span.home
     a(href="/") triciti.es
   nav
+    a(href="/lists") Lists
     a(href="/people") People
     a(href="/places") Places
     a(href="/groups") Groups
@@ -9,12 +10,12 @@ header(class="mod" + moderator)
     //- a(href="/projects") Projects
     if moderator
       a(href="/pending") Pending
-    if user
-      a(href="/logout") Log out
+    if userid
       a(href="/profile/edit/" + userid) Edit profile
-      a.tinker(href="/tinker") Tinker
-    if !user
+      a(href="/tinker") Tinker
+      a(href="/logout") Log out
+    if !userid
       a(href="/auth/twitter") Log in
-  if user
-    span.user= user.fullName
-      img(src= user.avatar)
+  if fullName && avatar
+    span.user= fullName
+      img(src= avatar)

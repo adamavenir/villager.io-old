@@ -4,7 +4,6 @@ var routes  = require('./server/routes');
 var level   = require('level');
 var db      = level('./db', { valueEncoding: 'json' });
 var config = require('getconfig');
-//var TwitterStrategy = require('passport-twitter').Strategy;
 
 var plugins = [
     {plugin: require('bell')},

@@ -9,7 +9,6 @@ module.exports = {
     login: function (request, reply) {
         var access;
         var t = request.auth.credentials.profile;
-
         if (t.id === '2511636140') {
             console.log('Greetings, superadmin!');
             access = true;
@@ -36,6 +35,8 @@ module.exports = {
                     if (err) { throw err; }
                     console.log('Twitter user ' + t.displayName + ' created with key ' + user.key);
                     var sessionObject = {userid: exists.key,
+                                         fullName: exists.fullName,
+                                         avatar: exists.avatar,
                                          admin: exists.admin,
                                          moderator: exists.moderator
                                         };
@@ -53,12 +54,15 @@ module.exports = {
                     if (err) { throw err; }
                     console.log('Twitter user ' + t.displayName + ' updated with key ' + exists.key);
                     var sessionObject = {userid: exists.key,
+                                         fullName: exists.fullName,
+                                         avatar: exists.avatar,
                                          admin: exists.admin,
                                          moderator: exists.moderator
                                         };
                     var session = _.extend(request.auth.credentials, sessionObject);
                     var send = function (session) {
                         request.auth.session.set(session);
+                        console.log('cred=====', request.auth.credentials);
                         reply.redirect('/people');
                     };
                     return send(session);

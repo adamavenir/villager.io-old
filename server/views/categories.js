@@ -1,5 +1,6 @@
 var models = require('../models').models;
 var async = require('async');
+var _ = require('underscore');
 
 module.exports = {
 
@@ -16,7 +17,6 @@ module.exports = {
 		var categoryType = request.params.categoryType;
         var session = request.auth.credentials;
         async.parallel({
-            user: function(done) { done(null, session.userid); },
             model: function (done) {
             	if (categoryType === 'interests') {
             		console.log('interests');
@@ -39,8 +39,8 @@ module.exports = {
                 var l = models.Log.create({ objType: 'category',
                                     editType: 'deleted',
                                     editorKey: session.userid,
-                                    editorName: context.user.fullName,
-                                    editorAvatar: context.user.avatar,
+                                    editorName: session.fullName,
+                                    editorAvatar: session.avatar,
                                     editedKey: request.params.placeKey,
                                     editedName: request.params.placeName });
                 l.save(function(err) {
@@ -55,7 +55,6 @@ module.exports = {
 		var categoryType = request.params.categoryType;
         var session = request.auth.credentials;
         async.parallel({
-            user: function(done) { done(null, session.userid); },
             model: function (done) {
             	if (categoryType === 'interests') {
             		console.log('interests');
@@ -75,7 +74,10 @@ module.exports = {
             }
         }, function (err, context) {
             if (err) { throw err; }
-            console.log('context%j', context);
+            context = _.extend(context, {
+                fullName  : session.fullName,
+                avatar    : session.avatar
+            });
             context.categoryType = categoryType;
             reply.view('tinker/editing', context);
         });
@@ -83,8 +85,6 @@ module.exports = {
     update: function (request, reply) {
         var categoryType = request.params.categoryType;
         var form = request.payload;
-        console.log('form is', form);
-        console.log('categoryType', categoryType);
         if (form.name) {
         	if (categoryType === 'interests') {
         		models.Interest.update(request.params.modelKey, form, function () {

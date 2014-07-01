@@ -1,4 +1,4 @@
-//var _ = require('underscore');
+var _ = require('underscore');
 var models = require('../models').models;
 var async = require('async');
 
@@ -10,7 +10,8 @@ module.exports = {
             reply.view('addPlace', {
                 placeCategories: placeCategories,
                 userid    : session.userid,
-                user      : session.user,
+                fullName  : session.fullName,
+                avatar    : session.avatar,
                 moderator : session.moderator,
                 admin     : session.admin
             });
@@ -46,6 +47,7 @@ module.exports = {
         var session = request.auth.credentials;
         models.Place.findByIndex('slug', request.params.place, function(err, place) {
             var thismod;
+            //console.log('place is%j', _.pluck(place, 'starredBy'));
             if (err) {
                 reply.view('404');
             }
@@ -55,7 +57,8 @@ module.exports = {
                 reply.view('place', {
                     place     : place,
                     thismod   : thismod,
-                    user      : session.user,
+                    fullName  : session.fullName,
+                    avatar    : session.avatar,
                     userid    : session.userid,
                     moderator : session.moderator,
                     admin     : session.admin
@@ -70,9 +73,6 @@ module.exports = {
         async.parallel({
             places: function (done) {
                 models.Place.all(done);
-            },
-            sessionUser: function (done) {
-                models.User.get(session.userid, done);
             }
         }, function (err, context) {
             if (err) { throw err; }
@@ -92,7 +92,8 @@ module.exports = {
                     places    : context.places[0],
                     //mine      : mine,
                     userid    : session.userid,
-                    user      : context.sessionUser,
+                    fullName  : session.fullName,
+                    avatar    : session.avatar,
                     moderator : session.moderator,
                     admin     : session.admin
                 });
@@ -102,21 +103,31 @@ module.exports = {
 
     editPlace: function (request, reply) {
         var session = request.auth.credentials;
-        models.Place.load(request.params.place, function(err, place) {
-            reply.view('editPlace', {
-                place     : place,
+        async.parallel({
+            place: function (done) {
+                models.Place.findByIndex('slug', request.params.placeSlug, done);
+            },
+            placeCategories: function (done) {
+                models.PlaceCategory.all(done);
+            }
+        }, function (err, context) {
+            console.log('place is%j', context.place);
+            if (err) { throw err; }
+            context = _.extend(context, {
                 userid    : session.userid,
-                user      : session.user,
+                fullName  : session.fullName,
+                avatar    : session.avatar,
                 moderator : session.moderator,
                 admin     : session.admin
             });
+            reply.view('editPlace', context);
         });
     },
 
     updatePlace: function (request, reply) {
         var session = request.auth.credentials;
         var form = request.payload;
-        models.Place.update(request.params.place, {
+        models.Place.update(request.params.placeKey, {
             type    : form.type,
             name    : form.name,
             address : form.address,
@@ -126,14 +137,49 @@ module.exports = {
             website : form.website,
             about   : form.about,
             creatorKey : session.userid
-        },
-        function(err) {
-            var l = models.Log.create({ objType: 'place', editType: 'updated', editorKey: session.userid, editorName: session.user.displayName, editorAvatar: session.user._json.profile_image_url });
-            l.save();
-            if (err) { console.log('err', err); }
-            else {
-                reply().code(201).redirect('/places');
+        }, function (err, place) {
+            if (err) { throw err; }
+            var l = models.Log.create({ objType: 'place',
+                                        editType: 'updated',
+                                        editorKey: session.userid,
+                                        editorName: session.fullName,
+                                        editorAvatar: session.avatar,
+                                        editedKey: place.key,
+                                        editedName: place.name });
+            l.save( function (err) {
+                if (err) { throw err; }
+                else {
+                    reply().code(201).redirect('/places');
+                }
+            });
+        });
+    },
+
+    starPlace: function (request, reply) {
+        var session = request.auth.credentials;
+        models.Place.get(request.params.placeKey, function (err, place) {
+            // get an array of the users which already starred the place
+            var starredIds = place.starredBy.map(function (user) {
+                return user.key;
+            });
+            // if the user already starred it remove it
+            if (_.contains(starredIds, session.userid)) {
+                place.starredBy = _.without(place.starredBy, session.userid);
+                for (var i = 0; i < place.starredBy.length; i++) {
+                    if (place.starredBy[i].key === session.userid) {
+                        place.starredBy.splice(i, 1);
+                        break;
+                    }
+                }
             }
+            // otherwise we add it
+            else {
+                place.starredBy.push(session.userid);
+            }
+            place.save(function () {
+                console.log('place is%j', place);
+                reply().redirect('/places/' + place.slug);
+            });
         });
     },
 

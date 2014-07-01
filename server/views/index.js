@@ -5,5 +5,6 @@ module.exports = {
     people:     require('./people'),
     places:     require('./places'),
     groups:     require('./groups'),
-    categories: require('./categories')
+    categories: require('./categories'),
+    lists: 		require('./lists')
 };

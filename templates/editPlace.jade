@@ -5,19 +5,16 @@ block body
     include in/header
 
     h1 Edit #{place.name}
-    p (Restaurant, company, coffee shop, venue, park)
-    form#addPlace(method="POST", action="/places/add")
+    form#addPlace(method="POST", action="/places/update/" + place.key)
       label(for="type") Type of place:
       select#inputType(name="type")
-        option(value="Restaurant") Restaurant
-        option(value="Coffee shop") Coffee shop
-        option(value="Bar") Bar
-        option(value="Winery") Winery
-        option(value="Store") Story
-        option(value="Company") Company
-        option(value="Nonprofit") Nonprofit
-        option(value="Venue") Venue
-        option(value="Public") Public
+        if place.type
+          option(value=place.type) #{place.type.name}
+        else
+          option(value="") -- Select a Category --
+        each cat in placeCategories[0]
+          if place.type.key !== cat.key
+            option(value=cat.key) #{cat.name}
       input#inputName(name="name", type="text", placeholder="Name of the place", value= place.name)
       input#inputAddress(name="address", type="text", placeholder="112 Hundred Acre Wood", value= place.address)
       input#inputCity(name="city", type="text", placeholder="West Richlascowickton City", value= place.city)

@@ -9,6 +9,8 @@ module.exports = {
         models.GroupCategory.all(function (err, groupCategories) {
             reply.view('addGroup', {
                 userid    : session.userid,
+                fullName  : session.fullName,
+                avatar    : session.avatar,
                 moderator : session.moderator,
                 admin     : session.admin,
                 groupCategories : groupCategories
@@ -16,6 +18,59 @@ module.exports = {
         });
     },
 
+    listGroups: function (request, reply) {
+        var session = request.auth.credentials;
+        async.parallel({
+            groups: function (done) {
+                models.Group.all(done);
+            }
+        }, function (err, context) {
+            var approved = _.where(context.groups[0], { approved: true });
+            var mine = _.where(context.groups[0], { creatorKey: session.userid, approved: false });
+            if(mine.length + approved.length === 0) {
+                reply.view('noGroups', {
+                    fullName  : session.fullName,
+                    avatar    : session.avatar,
+                    userid    : session.userid,
+                    moderator : session.moderator,
+                    admin     : session.admin
+                });
+            }
+            else {
+                reply.view('listGroups', {
+                    groups    : approved,
+                    mine      : mine,
+                    fullName  : session.fullName,
+                    avatar    : session.avatar,
+                    userid    : session.userid,
+                    moderator : session.moderator,
+                    admin     : session.admin
+                });
+            }
+        });
+    },
+    getGroup: function (request, reply) {
+        var session = request.auth.credentials;
+        models.Group.findByIndex('slug', request.params.group, function(err, group) {
+            console.log('req', request.params.group);
+            if (err) {
+                console.log('err', err);
+                reply.view('404');
+            }
+            else {
+                var thismod;
+                if (group.creatorKey === session.userid) { thismod = true; }
+                else { thismod = false; }
+                reply.view('group', {
+                    group     : group,
+                    thismod   : thismod,
+                    userid    : session.userid,
+                    moderator : session.moderator,
+                    admin     : session.admin
+                });
+            }
+        });
+    },
     createGroup: function (request, reply) {
         var session = request.auth.credentials;
         var form = request.payload;
@@ -47,78 +102,32 @@ module.exports = {
         });
     },
 
-    getGroup: function (request, reply) {
-        var session = request.auth.credentials;
-        models.Group.findByIndex('slug', request.params.group, function(err, group) {
-            console.log('req', request.params.group);
-            if (err) {
-                console.log('err', err);
-                reply.view('404');
-            }
-            else {
-                var thismod;
-                if (group.creatorKey === session.userid) { thismod = true; }
-                else { thismod = false; }
-                reply.view('group', {
-                    group     : group,
-                    thismod   : thismod,
-                    userid    : session.userid,
-                    moderator : session.moderator,
-                    admin     : session.admin
-                });
-            }
-        });
-    },
-
-    listGroups: function (request, reply) {
-        var session = request.auth.credentials;
-        async.parallel({
-            groups: function (done) {
-                models.Group.all(done);
-            },
-            user: function (done) {
-                models.User.get(session.userid, done);
-            }
-        }, function (err, context) {
-            var approved = _.where(context.groups[0], { approved: true });
-            var mine = _.where(context.groups[0], { creatorKey: session.userid, approved: false });
-            if(mine.length + approved.length === 0) {
-                reply.view('noGroups', {
-                    user      : context.user,
-                    userid    : session.userid,
-                    moderator : session.moderator,
-                    admin     : session.admin
-                });
-            }
-            else {
-                reply.view('listGroups', {
-                    groups    : approved,
-                    mine      : mine,
-                    user      : context.user,
-                    userid    : session.userid,
-                    moderator : session.moderator,
-                    admin     : session.admin
-                });
-            }
-        });
-    },
-
     editGroup: function (request, reply) {
         var session = request.auth.credentials;
-        models.Group.load(request.params.group, function(err, group) {
-            reply.view('editGroup', {
-                group     : group,
+        async.parallel({
+            group: function (done) {
+                models.Group.findByIndex('slug', request.params.groupSlug, done);
+            },
+            groupCategories: function (done) {
+                models.GroupCategory.all(done);
+            }
+        }, function (err, context) {
+            if (err) { throw err; }
+            context = _.extend(context, {
+                fullName  : session.fullName,
+                avatar    : session.avatar,
                 userid    : session.userid,
                 moderator : session.moderator,
                 admin     : session.admin
             });
+            reply.view('editGroup', context);
         });
     },
 
     updateGroup: function (request, reply) {
         var session = request.auth.credentials;
         var form = request.payload;
-        var p = models.Group.update(request.params.group, {
+        models.Group.update(request.params.groupKey, {
             type    : form.type,
             name    : form.name,
             image   : form.image,
@@ -126,14 +135,47 @@ module.exports = {
             website : form.website,
             about   : form.about,
             creatorKey : session.userid
-        },
-        function(err) {
-            var l = models.Log.create({ objType: 'group', editType: 'updated', editorKey: session.userid, editorName: session.user.displayName, editorAvatar: session.user._json.profile_image_url, editedKey: p.key, editedName: p.name });
-            l.save();
+        }, function (err, group) {
             if (err) { throw err; }
-            else {
-                reply().code(201).redirect('/groups');
+            var l = models.Log.create({ objType: 'group',
+                                        editType: 'updated',
+                                        editorKey: session.userid,
+                                        editorName: session.fullName,
+                                        editorAvatar: session.avatar,
+                                        editedKey: group.key,
+                                        editedName: group.name });
+            l.save( function (err) {
+                if (err) { throw err; }
+                else {
+                    reply().code(201).redirect('/groups');
+                }
+            });
+        });
+    },
+    starGroup: function (request, reply) {
+        var session = request.auth.credentials;
+        models.Group.get(request.params.groupKey, function (err, group) {
+            // get an array of the users which already starred the group
+            var starredIds = group.starredBy.map(function (user) {
+                return user.key;
+            });
+            // if the user already starred it remove it
+            if (_.contains(starredIds, session.userid)) {
+                group.starredBy = _.without(group.starredBy, session.userid);
+                for (var i = 0; i < group.starredBy.length; i++) {
+                    if (group.starredBy[i].key === session.userid) {
+                        group.starredBy.splice(i, 1);
+                        break;
+                    }
+                }
             }
+            // otherwise we add it
+            else {
+                group.starredBy.push(session.userid);
+            }
+            group.save(function () {
+                reply().redirect('/groups/' + group.slug);
+            });
         });
     },
 

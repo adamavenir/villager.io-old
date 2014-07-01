@@ -7,9 +7,6 @@ module.exports = {
     listPending: function (request, reply) {
         var session = request.auth.credentials;
         async.parallel({
-            user: function (done) {
-                models.User.get(session.userid, done);
-            },
             people: function (done) {
                 models.User.all(done);
             },
@@ -26,7 +23,8 @@ module.exports = {
                 var pendingGroups = _.where(context.groups[0], { approved: false });
                 if(pendingPeople.length + pendingPlaces.length + pendingGroups.length === 0) {
                     reply.view('noPending', {
-                        user      : context.user,
+                        fullName  : session.fullName,
+                        avatar    : session.avatar,
                         moderator : session.moderator,
                         admin     : session.admin
                     });
@@ -36,7 +34,8 @@ module.exports = {
                         people    : pendingPeople,
                         places    : pendingPlaces,
                         groups    : pendingGroups,
-                        user      : context.user,
+                        fullName  : session.fullName,
+                        avatar    : session.avatar,
                         userid    : session.userid,
                         moderator : session.moderator,
                         admin     : session.admin

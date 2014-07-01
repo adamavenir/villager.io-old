@@ -7,11 +7,11 @@ module.exports = {
     addPerson: function (request, reply) {
         var session = request.auth.credentials;
         models.Interest.all(function (err, interests) {
-            console.log('interests%j', interests);
             reply.view('addPerson', {
                 interests : interests,
                 userid    : session.userid,
-                user      : session.userid,
+                fullName  : session.fullName,
+                avatar    : session.avatar,
                 moderator : session.moderator,
                 admin     : session.admin
             });
@@ -61,7 +61,8 @@ module.exports = {
                 reply.view('person', {
                     person    : value,
                     userid    : session.userid,
-                    user      : session.userid,
+                    fullName  : session.fullName,
+                    avatar    : session.avatar,
                     moderator : session.moderator,
                     admin     : session.admin
                 });
@@ -81,21 +82,21 @@ module.exports = {
                 if(me === false && approved.length === 0) {
                     reply.view('noPeople', {
                         userid    : session.userid,
-                        user      : user,
+                        fullName  : session.fullName,
+                        avatar    : session.avatar,
                         moderator : session.moderator,
                         admin     : session.admin
                     });
                 }
                 else {
-                    models.User.get(session.userid, function (err, sessionUser) {
-                        reply.view('listPeople', {
-                            people    : approved,
-                            me        : me,
-                            userid    : session.userid,
-                            user      : sessionUser,
-                            moderator : session.moderator,
-                            admin     : session.admin
-                        });
+                    reply.view('listPeople', {
+                        people    : approved,
+                        me        : me,
+                        userid    : session.userid,
+                        fullName  : session.fullName,
+                        avatar    : session.avatar,
+                        moderator : session.moderator,
+                        admin     : session.admin
                     });
                 }
             });
@@ -111,6 +112,8 @@ module.exports = {
                     interests : interests,
                     person    : person,
                     userid    : session.userid,
+                    fullName  : session.fullName,
+                    avatar    : session.avatar,
                     moderator : session.moderator,
                     admin     : session.admin
                 });
@@ -154,9 +157,6 @@ module.exports = {
     deletePerson: function (request, reply) {
         var session = request.auth.credentials;
         async.parallel({
-            user: function (done) {
-                models.User.get(session.userid, done);
-            },
             person: function (done) {
                 models.User.get(request.params.personKey, done);
             }
@@ -172,8 +172,8 @@ module.exports = {
                     var l = models.Log.create({ objType: 'person',
                                          editType: 'deleted',
                                          editorKey: session.userid,
-                                         editorName: context.user.fullName,
-                                         editorAvatar: context.user.avatar,
+                                         editorName: session.fullName,
+                                         editorAvatar: session.avatar,
                                          editedKey: request.params.personKey,
                                          editedName: request.params.personName });
                     l.save(function(err) {

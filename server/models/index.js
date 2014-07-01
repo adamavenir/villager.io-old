@@ -5,6 +5,7 @@ var Group = new require('./Group');
 var Interest = new require('./Interest');
 var GroupCategory = new require('./GroupCategory');
 var PlaceCategory = new require('./PlaceCategory');
+var List = new require('./List');
 
 var models = {
     User:   User,
@@ -13,7 +14,8 @@ var models = {
     Group:  Group,
     Interest: Interest,
     GroupCategory: GroupCategory,
-    PlaceCategory: PlaceCategory
+    PlaceCategory: PlaceCategory,
+    List : List
 };
 
 function attachDB(db) {
@@ -24,6 +26,7 @@ function attachDB(db) {
     models.GroupCategory.options.db = db;
     models.Interest.options.db = db;
     models.PlaceCategory.options.db = db;
+    models.List.options.db = db;
 }
 
 module.exports = {
