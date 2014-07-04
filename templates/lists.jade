@@ -1,0 +1,35 @@
+extends layout
+
+block body
+  body
+    include in/header
+
+    h1 Lists
+    ul.lists
+      if lists[0]
+        for list in lists[0]
+          li
+            //- a(href= '/groups/' + group.slug)
+            img.grav(src= list.image)
+            h3= list.name
+            a(href="/lists/delete/" + list.key) Delete this list
+            br
+            a(href="/lists/edit/" + list.slug) Edit this list
+
+    form(method="POST", action="/lists/add")
+      p Add new list
+      label(for="name") Name
+      input(name="name")
+      label(for="description") Description
+      input(name="description")
+      label(for="image") Image (optional)
+      input(name="image")
+      - var sections = ['groups', 'places', 'people']
+      ul.forWhat
+        each section in sections
+          li
+            input(name="what", type="radio", value=section)
+            | #{section}
+      button.small(type="submit") +
+
+    include in/footer

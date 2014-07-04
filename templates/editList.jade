@@ -1,0 +1,22 @@
+extends layout
+
+block body
+  body
+    include in/header
+
+    h1 Edit #{list.name}
+    form#addPlace(method="POST", action="/lists/update/" + list.key)
+      ul.pickList
+        each option in listOptions
+          - var inList = (optionsInList.indexOf(option.key) > -1)
+          li
+            if option.name
+              input(name=list.what, type="checkbox", checked=inList, value=option.key)
+              | #{option.name}
+            else if option.fullName
+              input(name=list.what, type="checkbox", checked=inList, value=option.key)
+              | #{option.fullName}
+      input(type="hidden", name="what", value=list.what)
+      button(name="submit", type="submit") Save List
+
+    include in/footer
