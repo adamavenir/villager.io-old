@@ -1,6 +1,5 @@
 var models = require('../models').models;
 var User = models.User;
-var _ = require('underscore');
 
 module.exports = {
 
@@ -34,13 +33,12 @@ module.exports = {
                 user.save(function (err) {
                     if (err) { throw err; }
                     console.log('Twitter user ' + t.displayName + ' created with key ' + user.key);
-                    var sessionObject = {userid: exists.key,
+                    var session = {userid: exists.key,
                                          fullName: exists.fullName,
                                          avatar: exists.avatar,
                                          admin: exists.admin,
                                          moderator: exists.moderator
                                         };
-                    var session = _.extend(request.auth.credentials, sessionObject);
                     var send = function (session) {
                         request.auth.session.set(session);
                         reply.redirect('/profile/edit/' + user.key);
@@ -53,13 +51,12 @@ module.exports = {
                 exists.save(function (err) {
                     if (err) { throw err; }
                     console.log('Twitter user ' + t.displayName + ' updated with key ' + exists.key);
-                    var sessionObject = {userid: exists.key,
+                    var session = {userid: exists.key,
                                          fullName: exists.fullName,
                                          avatar: exists.avatar,
                                          admin: exists.admin,
                                          moderator: exists.moderator
                                         };
-                    var session = _.extend(request.auth.credentials, sessionObject);
                     var send = function (session) {
                         request.auth.session.set(session);
                         console.log('cred=====', request.auth.credentials);
