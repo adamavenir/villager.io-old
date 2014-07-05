@@ -21,13 +21,17 @@ The project takes its name from [Jane Jacobs](http://en.wikipedia.org/wiki/Jane_
 - List pending submissions
 - Moderate submitted entries
 - Probably some other stuff
+- ★ for favorites
+- Curated lists
+
 
 ## Todo:
+- Show lists a place/group appears on
+- Show groups a person is a member of
+- Fallback avatars
 - Custom avatars, upload images
 - Projects
 - CSRF
-- ★ for favorites
-- Curated lists
 - Ability to be a member or admin of a group
 - Suggest changes
 - Email notifications
