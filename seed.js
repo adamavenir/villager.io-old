@@ -18,8 +18,8 @@ models = models.models;
 
 function seedUsers (done) {
 	var users = [
-		{fullName: 'John Galt', twitter: 'johngalt', email: 'johngalt@revolution.com', company: 'Self-Employed', approved: true, moderator: true, admin: true,},
-		{fullName: 'Dagny Taggart', twitter: 'taggartrr', email: 'dtaggart@taggartrail.com', company: 'Taggart Rail ENterprises', approved: true, moderator: true, admin: true,}
+		{fullName: 'Michael Garvin', twitter: 'wraithgar', email: 'gar@andyet.net', company: '&yet', approved: true, moderator: true, admin: true,},
+		{fullName: 'Nathan Fritz', twitter: 'fritzy', email: 'nathan@andyet.net', company: '&yet', approved: true, moderator: true, admin: true,}
 	];
 	async.each(users, function seedUser(user, next) {
 		models.User.findByIndex('slug', slugger(user.fullName), function (err, existingUser) {

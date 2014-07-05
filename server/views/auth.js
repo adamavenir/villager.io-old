@@ -8,7 +8,7 @@ module.exports = {
     login: function (request, reply) {
         var access;
         var t = request.auth.credentials.profile;
-        if (t.id === '2511636140') {
+        if (t.id === '1568') {
             console.log('Greetings, superadmin!');
             access = true;
         } else { access = false; }
@@ -17,7 +17,7 @@ module.exports = {
             fullName    : t.displayName,
             twitterId   : t.id,
             twitter     : t.username,
-            avatar      : t.raw.profile_image_url,
+            twavatar    : t.raw.profile_image_url,
             website     : t.raw.url,
             about       : t.raw.description,
             hasLoggedIn : true,
@@ -34,11 +34,11 @@ module.exports = {
                     if (err) { throw err; }
                     console.log('Twitter user ' + t.displayName + ' created with key ' + user.key);
                     var session = {userid: exists.key,
-                                         fullName: exists.fullName,
-                                         avatar: exists.avatar,
-                                         admin: exists.admin,
-                                         moderator: exists.moderator
-                                        };
+                        fullName: exists.fullName,
+                        avatar: exists.avatar,
+                        admin: exists.admin,
+                        moderator: exists.moderator
+                    };
                     var send = function (session) {
                         request.auth.session.set(session);
                         reply.redirect('/profile/edit/' + user.key);
@@ -52,11 +52,11 @@ module.exports = {
                     if (err) { throw err; }
                     console.log('Twitter user ' + t.displayName + ' updated with key ' + exists.key);
                     var session = {userid: exists.key,
-                                         fullName: exists.fullName,
-                                         avatar: exists.avatar,
-                                         admin: exists.admin,
-                                         moderator: exists.moderator
-                                        };
+                        fullName: exists.fullName,
+                        avatar: exists.avatar,
+                        admin: exists.admin,
+                        moderator: exists.moderator
+                    };
                     var send = function (session) {
                         request.auth.session.set(session);
                         console.log('cred=====', request.auth.credentials);

@@ -2,6 +2,7 @@ var S = require('string');
 var slugger = require('slugger');
 var dulcimer = require('dulcimer');
 var verymodel = require('verymodel');
+var gravatar = require('gravatar');
 
 var type = verymodel.VeryType;
 
@@ -12,6 +13,25 @@ var User = new dulcimer.Model(
             required: true
         },
         avatar: {
+            derive: function () {
+                if (this.twavatar) { return this.twavatar;
+                } else if (this.gravatar) { return this.gravatar;
+                } else { return '/images/generic.gif'; }
+            },
+            default: function () {
+                return '/images/generic.gif';
+            },
+            required: true
+        },
+        gravatar: {
+            derive: function () {
+                if (this.email) {
+                    return gravatar.url(this.email, true);
+                } else { return false; }
+            },
+            required: false
+        },
+        twavatar: {
             processIn: function (avatar) {
                 if (avatar) {
                     return S(avatar).replaceAll('_normal', '_bigger').s;
@@ -40,11 +60,7 @@ var User = new dulcimer.Model(
         },
         twitter: {
             processIn: function(twitter) {
-                return twitter;
-                    // .remove('@')
-                    // .remove('http://twitter.com/')
-                    // .remove('https://twitter.com/')
-                    // .remove('twitter.com/');
+                return S(twitter).replaceAll('@', '').replaceAll('http://twitter.com/', '').replaceAll('https://twitter.com/', '').replaceAll('twitter.com/', '').s;
             },
             type: new type().isAlphanumeric().len(1,16),
             index: true,
