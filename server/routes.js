@@ -23,80 +23,74 @@ module.exports = function _routes() {
     ////////////////////////////////// PEOPLE
     { method: 'GET',  
       path: '/people', 
+      config: { auth: false },
       handler: views.people.listPeople 
     },
     { method: 'GET',
       path: '/people/{person}',
+      config: { auth: false },
       handler: views.people.getPerson 
     },
     { method: 'GET',  
       path: '/people/add', 
       config: { auth: 'session' }, 
-      config: { auth: false }, 
       handler: views.people.addPerson 
     },
     { method: 'POST', 
       path: '/people/add', 
       config: { auth: 'session' }, 
-      config: { auth: false }, 
       handler: views.people.createPerson 
     },
     { method: 'GET',  
       path: '/profile/edit/{person}', 
       config: { auth: 'session' }, 
-      config: { auth: false }, 
       handler: views.people.editPerson 
     }, 
     { method: 'POST', 
       path: '/profile/update/{person}', 
       config: { auth: 'session' }, 
-      config: { auth: false }, 
       handler: views.people.updatePerson 
     },       
     { method: 'GET', 
       path: '/people/delete/{personKey}/{personName}', 
       config: { auth: 'session' }, 
-      config: { auth: false }, 
       handler: views.people.deletePerson 
     },
 
     ////////////////////////////////// PLACES
     { method: 'GET',  
       path: '/places', 
+      config: { auth: false },
       handler: views.places.listPlaces
     },
     { method: 'GET',
       path: '/places/{place}', 
+      config: { auth: false },
       handler: views.places.getPlace 
     },
     { method: 'GET',  
       path: '/places/add', 
       config: { auth: 'session' }, 
-      config: { auth: false }, 
       handler: views.places.addPlace 
     },
     { method: 'POST', 
       path: '/places/add', 
       config: { auth: 'session' }, 
-      config: { auth: false }, 
       handler: views.places.createPlace 
     },
     { method: 'GET',  
       path: '/places/edit/{place}', 
       config: { auth: 'session' }, 
-      config: { auth: false }, 
       handler: views.places.editPlace 
     }, 
     { method: 'POST', 
       path: '/place/update/{place}', 
       config: { auth: 'session' }, 
-      config: { auth: false }, 
       handler: views.places.updatePlace 
     },           
     { method: 'GET', 
       path: '/places/delete/{placeKey}/{placeName}', 
       config: { auth: 'session' }, 
-      config: { auth: false }, 
       handler: views.places.deletePlace
     },
 
@@ -104,40 +98,37 @@ module.exports = function _routes() {
     ////////////////////////////////// GROUPS
     { method: 'GET',  
       path: '/groups', 
+      config: { auth: false },
       handler: views.groups.listGroups
     },
     { method: 'GET',
       path: '/groups/{group}', 
+      config: { auth: false },
       handler: views.groups.getGroup 
     },
     { method: 'GET',  
       path: '/groups/add', 
       config: { auth: 'session' }, 
-      config: { auth: false }, 
       handler: views.groups.addGroup
     },
     { method: 'POST', 
       path: '/groups/add', 
       config: { auth: 'session' }, 
-      config: { auth: false }, 
       handler: views.groups.createGroup
     },
     { method: 'GET',  
       path: '/groups/edit/{group}', 
       config: { auth: 'session' }, 
-      config: { auth: false }, 
       handler: views.groups.editGroup
     }, 
     { method: 'POST', 
       path: '/groups/update/{group}', 
       config: { auth: 'session' }, 
-      config: { auth: false }, 
       handler: views.groups.updateGroup
     },       
     { method: 'GET', 
       path: '/groups/delete/{groupKey}/{groupName}', 
       config: { auth: 'session' }, 
-      config: { auth: false }, 
       handler: views.groups.deleteGroup
     },
 
@@ -145,39 +136,34 @@ module.exports = function _routes() {
     ////////////////////////////////// MODERATION
     { method: 'GET',  
       path: '/pending', 
-      config: { auth: 'session' }, 
+      // config: { auth: 'passport' }, 
       config: { auth: false },
       handler: views.moderation.listPending 
     },
     { method: 'GET', 
       path: '/people/approve/{person}', 
       config: { auth: 'session' }, 
-      config: { auth: false }, 
       handler: views.moderation.approvePerson
     },
     { method: 'GET', 
       path: '/places/approve/{place}', 
       config: { auth: 'session' }, 
-      config: { auth: false }, 
       handler: views.moderation.approvePlace
     },    
     { method: 'GET', 
       path: '/groups/approve/{group}', 
       config: { auth: 'session' }, 
-      config: { auth: false }, 
       handler: views.moderation.approveGroup
     },        
     { method: 'GET', 
       path: '/people/moderator/{person}', 
       config: { auth: 'session' }, 
-      config: { auth: false }, 
       handler: views.moderation.moderatorPerson 
     },
     { method: 'GET', 
       path: '/people/admin/{person}', 
       config: { auth: false },
       config: { auth: 'session' }, 
-      config: { auth: false }, 
       handler: views.moderation.adminPerson 
     },
 
@@ -191,8 +177,16 @@ module.exports = function _routes() {
         handler: views.auth.login
       },  
     },
-    { method: 'GET', path: '/session', handler: views.auth.session },
-    { method: 'GET', path: '/logout', handler: views.auth.logout }
+    { 
+      method: 'GET', 
+      path: '/session', 
+      handler: views.auth.session 
+    },
+    { 
+      method: 'GET', 
+      path: '/logout',
+      handler: views.auth.logout 
+    }
 
   ];
 

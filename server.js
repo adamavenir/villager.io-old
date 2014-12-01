@@ -16,8 +16,6 @@ server.connection({
     port: config.port 
 });
 
-server.route(routes(server));
-
 var serverOptions = {
     views: {
         path: 'templates',
@@ -46,6 +44,8 @@ server.register([Bell, Cookie], function (err) {
         redirectOnTry: false,
         isSecure: false
     })
+
+    server.route(routes(server));
     
     server.start(function (err) {
         console.log('triciti.es running at:', server.info.uri);
