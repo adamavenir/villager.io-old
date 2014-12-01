@@ -1,17 +1,22 @@
-var Hapi    = require('hapi');
-var models = require('./server/models');
-var routes  = require('./server/routes');
-var level   = require('level');
-var db      = level('./db', { valueEncoding: 'json' });
+var Hapi = require('hapi');
+var Bell = require('bell');
 var config = require('getconfig');
-var TwitterStrategy = require('passport-twitter').Strategy;
-
-var plugins = {
-    yar: config.session,
-    travelogue: config.auth
-};
+var Cookie = require('hapi-auth-cookie');
+var models = require('./server/models');
+var routes = require('./server/routes');
+var level = require('level');
+var db = level('./db', { valueEncoding: 'json' });
 
 models.attachDB(db);
+
+var server = new Hapi.Server();
+
+server.connection({ 
+    host: config.hostname, 
+    port: config.port 
+});
+
+server.route(routes(server));
 
 var serverOptions = {
     views: {
@@ -20,40 +25,35 @@ var serverOptions = {
     }
 };
 
-var server = new Hapi.Server(config.hostname, config.port, serverOptions);
+server.register([Bell, Cookie], function (err) {
+
+    if (err) {
+        throw err;
+    }
+
+    server.auth.strategy('twitter', 'bell', {
+        provider: 'twitter',
+        password: config.auth.twitter.password,
+        isSecure: false,
+        clientId: config.auth.twitter.clientId,
+        clientSecret: config.auth.twitter.clientSecret
+    });
+
+    server.auth.strategy('session', 'cookie', {
+        password: config.session.cookieOptions.password,
+        cookie: 'sid',
+        redirectTo: '/login',
+        redirectOnTry: false,
+        isSecure: false
+    })
+    
+    server.start(function (err) {
+        console.log('triciti.es running at:', server.info.uri);
+    });
+});
 
 if (process.env.DEBUG) {
     server.on('internalError', function (event) {
         console.log('um', event);
     });
 }
-
-server.route(routes(server));
-
-server.pack.require(plugins, function(err) {
-    if (err) {
-        throw err;
-    }
-
-    server.auth.strategy('passport', 'passport', true);
-
-    var Passport = server.plugins.travelogue.passport;
-
-    Passport.use(new TwitterStrategy(config.auth.twitter, function (accessToken, refreshToken, profile, done) {   
-        return done(null, profile);
-    }));
-
-    Passport.serializeUser(function(user, done) {
-        done(null, user);
-    });
-
-    Passport.deserializeUser(function(obj, done) {
-        done(null, obj);
-    });
-
-    server.start(function (err) {
-        if (err) { throw err; }
-        console.log('triciti.es running on ', 'http://' + config.hostname + ':' + config.port);
-    });
-
-});
