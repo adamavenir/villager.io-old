@@ -1,4 +1,4 @@
-var views     = require('./views');
+var views = require('./views');
 
 module.exports = function _routes() {
 
