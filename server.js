@@ -2,7 +2,6 @@ var Hapi = require('hapi');
 var Bell = require('bell');
 var config = require('getconfig');
 var Cookie = require('hapi-auth-cookie');
-var models = require('./server/models');
 var routes = require('./server/routes');
 var Dulcimer = require('dulcimer');
 Dulcimer.connect({type: 'level', path: './db'});
@@ -15,12 +14,10 @@ server.connection({
     port: config.port 
 });
 
-var serverOptions = {
-    views: {
-        path: 'templates',
-        engines: { jade: 'jade' }
-    }
-};
+server.views({
+    engines: { jade: require('jade') },
+    path: __dirname + '/templates'
+});
 
 server.register([Bell, Cookie], function (err) {
 

@@ -13,7 +13,7 @@ header(class="mod" + moderator)
       a(href="/logout") Log out
       a(href="/profile/edit/" + userid) Edit profile
     if !user
-      a(href="/auth/twitter") Log in
+      a(href="/login") Log in
   if user
     span.user= user.displayName
       img(src= user._json.profile_image_url)
