@@ -4,10 +4,9 @@ var config = require('getconfig');
 var Cookie = require('hapi-auth-cookie');
 var models = require('./server/models');
 var routes = require('./server/routes');
-var level = require('level');
-var db = level('./db', { valueEncoding: 'json' });
+var Dulcimer = require('dulcimer');
+Dulcimer.connect({type: 'level', path: './db'});
 
-models.attachDB(db);
 
 var server = new Hapi.Server();
 
