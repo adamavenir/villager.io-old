@@ -74,34 +74,51 @@ module.exports = {
     listPeople: function (request, reply) {
         var session = request.auth.credentials;
         // console.log('\n in listPeople request.auth  is',request.auth);
-        models.User.get(session.userid, function (err, user) {
-            var me;
-            if (err) { throw err; }
-            if (user && user.approved === false) { me = user; } else { me = false; }
+        if (session && session.userid) {
+            models.User.get(session.userid, function (err, user) {
+                var me;
+                if (err) { throw err; }
+                if (user && user.approved === false) { 
+                    me = user; 
+                } else { 
+                    me = false; 
+                }
+                models.User.all(function(err, data) {
+                    var approved = _.where(data, { approved: true });
+                    if(me === false && approved.length === 0) {
+                        reply.view('noPeople', {
+                            userid    : session.userid,
+                            fullName  : session.fullName,
+                            avatar    : session.avatar,
+                            moderator : session.moderator,
+                            admin     : session.admin
+                        });
+                    }
+                    else {
+                        reply.view('listPeople', {
+                            people    : approved,
+                            me        : me,
+                            userid    : session.userid,
+                            fullName  : session.fullName,
+                            avatar    : session.avatar,
+                            moderator : session.moderator,
+                            admin     : session.admin
+                        });
+                    }
+                });
+            });            
+        } else {
             models.User.all(function(err, data) {
                 var approved = _.where(data, { approved: true });
-                if(me === false && approved.length === 0) {
-                    reply.view('noPeople', {
-                        userid    : session.userid,
-                        fullName  : session.fullName,
-                        avatar    : session.avatar,
-                        moderator : session.moderator,
-                        admin     : session.admin
-                    });
-                }
-                else {
+                if (approved.length === 0) {
+                    reply.view('listPeople');  
+                } else {
                     reply.view('listPeople', {
-                        people    : approved,
-                        me        : me,
-                        userid    : session.userid,
-                        fullName  : session.fullName,
-                        avatar    : session.avatar,
-                        moderator : session.moderator,
-                        admin     : session.admin
+                        people : approved
                     });
                 }
             });
-        });
+        }
     },
 
     editPerson: function (request, reply) {

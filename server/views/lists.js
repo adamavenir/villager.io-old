@@ -20,13 +20,15 @@ module.exports = {
             }
         }, function (err, context) {
             if (err) { throw err; }
-            context = _.extend(context, {
-                userid    : session.userid,
-                fullName  : session.fullName,
-                avatar    : session.avatar,
-                moderator : session.moderator,
-                admin     : session.admin
-            });
+            if (session && session.userid) {
+                context = _.extend(context, {
+                    userid    : session.userid,
+                    fullName  : session.fullName,
+                    avatar    : session.avatar,
+                    moderator : session.moderator,
+                    admin     : session.admin
+                });
+            }
             reply.view('lists', context);
         });
     },

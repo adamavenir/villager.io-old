@@ -73,4 +73,36 @@ lab.experiment('main tests', function () {
         });
     });
 
+    lab.test('load people list', function (done) {
+        var options = { method: 'GET', url: '/people' };
+        server.inject(options, function (response) {
+            expect(response.statusCode).to.equal(200);
+            done();
+        });
+    });
+
+    lab.test('load places list', function (done) {
+        var options = { method: 'GET', url: '/places' };
+        server.inject(options, function (response) {
+            expect(response.statusCode).to.equal(200);
+            done();
+        });
+    });
+
+    // lab.test('load lists list', function (done) {
+    //     var options = { method: 'GET', url: '/lists' };
+    //     server.inject(options, function (response) {
+    //         expect(response.statusCode).to.equal(200);
+    //         done();
+    //     });
+    // });
+
+    lab.test('load groups list', function (done) {
+        var options = { method: 'GET', url: '/groups' };
+        server.inject(options, function (response) {
+            expect(response.statusCode).to.equal(200);
+            done();
+        });
+    });
+
 });    

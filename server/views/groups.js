@@ -26,26 +26,38 @@ module.exports = {
             }
         }, function (err, context) {
             var approved = _.where(context.groups[0], { approved: true });
-            var mine = _.where(context.groups[0], { creatorKey: session.userid, approved: false });
-            if(mine.length + approved.length === 0) {
-                reply.view('noGroups', {
-                    fullName  : session.fullName,
-                    avatar    : session.avatar,
-                    userid    : session.userid,
-                    moderator : session.moderator,
-                    admin     : session.admin
-                });
+            if (session && session.userid) {
+                var mine = _.where(context.groups[0], { creatorKey: session.userid, approved: false });
+                if(mine.length + approved.length === 0) {
+                    reply.view('noGroups', {
+                        fullName  : session.fullName,
+                        avatar    : session.avatar,
+                        userid    : session.userid,
+                        moderator : session.moderator,
+                        admin     : session.admin
+                    });
+                }
+                else {
+                    reply.view('listGroups', {
+                        groups    : approved,
+                        mine      : mine,
+                        fullName  : session.fullName,
+                        avatar    : session.avatar,
+                        userid    : session.userid,
+                        moderator : session.moderator,
+                        admin     : session.admin
+                    });
+                }
             }
             else {
-                reply.view('listGroups', {
-                    groups    : approved,
-                    mine      : mine,
-                    fullName  : session.fullName,
-                    avatar    : session.avatar,
-                    userid    : session.userid,
-                    moderator : session.moderator,
-                    admin     : session.admin
-                });
+                if (approved.length === 0) {
+                    reply.view('noGroups');
+                }
+                else {
+                    reply.view('listGroups', {
+                        groups : approved
+                    });
+                }
             }
         });
     },

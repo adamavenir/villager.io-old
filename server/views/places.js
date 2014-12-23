@@ -87,6 +87,7 @@ module.exports = {
             //     });
             // }
             //else {
+            if (session && session.userid) {
                 reply.view('listPlaces', {
                     places    : context.places[0],
                     //mine      : mine,
@@ -96,6 +97,14 @@ module.exports = {
                     moderator : session.moderator,
                     admin     : session.admin
                 });
+            }
+
+            else {
+                reply.view('listPlaces', {
+                    places    : context.places[0],
+                });
+            }
+
             //}
         });
     },
