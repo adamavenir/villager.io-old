@@ -1,18 +1,17 @@
 var config = require('getconfig');
 var slugger = require('slugger');
+var models = require('./server/models');
+var Dulcimer = require('dulcimer');
 
 if (config.getconfig.env !== 'dev') {
     console.log('Devs only');
     process.exit(1);
 }
 
-var level = require('level');
-var models = require('./server/models');
-var db = level(config.db || './db', { valueEncoding: 'json' });
+Dulcimer.connect({type: 'level', path: './db'});
+
 //var _ = require('underscore');
 var async = require('async');
-
-models.attachDB(db);
 
 models = models.models;
 
