@@ -7,10 +7,10 @@ module.exports = {
 
     addPerson: function (request, reply) {
         reply.view('addPerson', { 
-            userid    : request.session.userid,
-            user      : request.session.user, 
-            moderator : request.session.moderator, 
-            admin     : request.session.admin
+            userid    : request.auth.credentials.userid,
+            user      : request.auth.credentials.user, 
+            moderator : request.auth.credentials.moderator, 
+            admin     : request.auth.credentials.admin
         });
     },
 
@@ -30,7 +30,15 @@ module.exports = {
             User.load(p.key, function (err, person) {
                 if (err) { throw err; }
                 reply().code(201).redirect('/people/' + person.slug);
-                var l = Log.create({ objType: 'person', editType: 'created', editorKey: request.session.userid, editorName: request.session.user.displayName, editorAvatar: request.session.user._json.profile_image_url, editedKey: person.key, editedName: person.fullName });
+                var l = Log.create({ 
+                    objType: 'person', 
+                    editType: 'created', 
+                    editorKey: request.auth.credentials.userid, 
+                    editorName: request.auth.credentials.fullName, 
+                    editorAvatar: request.auth.credentials.avatar, 
+                    editedKey: person.key, 
+                    editedName: person.fullName 
+                });
                 l.save(function () { console.log('logging'); });
             });
         });
@@ -44,17 +52,19 @@ module.exports = {
             else {
                 reply.view('person', { 
                     person    : value, 
-                    userid    : request.session.userid,
-                    user      : request.session.user, 
-                    moderator : request.session.moderator, 
-                    admin     : request.session.admin 
+                    userid    : request.auth.credentials.userid,
+                    user      : request.auth.credentials.user, 
+                    moderator : request.auth.credentials.moderator, 
+                    admin     : request.auth.credentials.admin 
                 });
             }
         });
     },
 
     listPeople: function (request, reply) {
-        User.get(request.session.userid, function (err, user) {
+        console.log('listPeople session', request.auth.isAuthenticated);
+        console.log(JSON.stringify(request.auth.credentials, null, 2));
+        User.get(request.auth.credentials.userid, function (err, user) {
             var me;
             if (err) { throw err; }
             if (user && user.approved === false) { me = user; } else { me = false; }
@@ -62,20 +72,20 @@ module.exports = {
                 var approved = _.where(data, { approved: true });
                 if(me === false && approved.length === 0) {
                     reply.view('noPeople', { 
-                        userid    : request.session.userid,
-                        user      : request.session.user, 
-                        moderator : request.session.moderator, 
-                        admin     : request.session.admin 
+                        userid    : request.auth.credentials.userid,
+                        user      : request.auth.credentials.user, 
+                        moderator : request.auth.credentials.moderator, 
+                        admin     : request.auth.credentials.admin 
                     });
                 }
                 else {
                     reply.view('listPeople', { 
                         people    : approved, 
                         me        : me,
-                        userid    : request.session.userid,
-                        user      : request.session.user, 
-                        moderator : request.session.moderator, 
-                        admin     : request.session.admin 
+                        userid    : request.auth.credentials.userid,
+                        user      : request.auth.credentials.user, 
+                        moderator : request.auth.credentials.moderator, 
+                        admin     : request.auth.credentials.admin 
                     });  
                 }
             });
@@ -86,10 +96,10 @@ module.exports = {
         User.get(request.params.person, function(err, person) {
             reply.view('editPerson', { 
                 person    : person,
-                userid    : request.session.userid,
-                user      : request.session.user, 
-                moderator : request.session.moderator, 
-                admin     : request.session.admin
+                userid    : request.auth.credentials.userid,
+                user      : request.auth.credentials.user, 
+                moderator : request.auth.credentials.moderator, 
+                admin     : request.auth.credentials.admin
             });
         });
     },
@@ -107,7 +117,15 @@ module.exports = {
             if (err) { throw err; }
             else {
                 reply().code(201).redirect('/people');
-                var l = Log.create({ objType: 'person', editType: 'updated', editorKey: request.session.userid, editorName: request.session.user.displayName, editorAvatar: request.session.user._json.profile_image_url, editedKey: p.key, editedName: p.fullName });
+                var l = Log.create({ 
+                    objType: 'person', 
+                    editType: 'updated', 
+                    editorKey: request.auth.credentials.userid, 
+                    editorName: request.auth.credentials.fullName, 
+                    editorAvatar: request.auth.credentials.avatar, 
+                    editedKey: p.key, 
+                    editedName: p.fullName 
+                });
                 l.save(function(err) { 
                     if (err) { throw err; }
                     console.log('logging'); 
@@ -117,10 +135,18 @@ module.exports = {
     },
 
     deletePerson: function (request, reply) {
-        if (request.session.moderator) {
+        if (request.auth.credentials.moderator) {
             User.delete(request.params.person, function(err) {
                 if (err) { throw err; }
-                var l = Log.create({ objType: 'person', editType: 'deleted', editorKey: request.session.userid, editorName: request.session.user.displayName, editorAvatar: request.session.user._json.profile_image_url, editedKey: request.params.person, editedName: '' });
+                var l = Log.create({ 
+                    objType: 'person', 
+                    editType: 'deleted', 
+                    editorKey: request.auth.credentials.userid, 
+                    editorName: request.auth.credentials.fullName, 
+                    editorAvatar: request.auth.credentials.avatar, 
+                    editedKey: request.params.person, 
+                    editedName: '' 
+                });
                 l.save(function(err) { 
                     if (err) { throw err; }
                     console.log('logging'); 

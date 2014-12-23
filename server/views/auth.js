@@ -5,7 +5,7 @@ var User = models.User;
 module.exports = {
 
     login: function (request, reply) {
-        var access;
+        var access, newSession;
         var t = request.auth.credentials.profile;
         console.log('signed in as', t.username);
 
@@ -14,7 +14,7 @@ module.exports = {
             access = true;
         } else { access = false; }
 
-        var user = User.create({
+        var profile = {
             fullName    : t.displayName,
             twitterId   : t.id,
             twitter     : t.username,
@@ -25,12 +25,9 @@ module.exports = {
             approved    : access,
             admin       : access,
             moderator   : access,
-        });
+        };
 
-        var newSession = _.extend(user, {
-            token: t.token,
-            secret: t.secret
-        });
+        var user = User.create(profile);
 
         User.findByIndex('twitterId', t.id, function (err, exists) {
             request.auth.session.clear();
@@ -40,9 +37,10 @@ module.exports = {
                 user.save(function (err) {
                     if (err) { throw err; }
                     console.log('Twitter user ' + t.displayName + ' created with key ' + user.key);
-                    newSession = _.extend(newSession, {
+                    newSession = _.extend(profile, {
                         userid: user.key
                     });
+                    request.auth.session.clear();
                     request.auth.session.set(newSession);
                     reply().code(201).redirect('/profile/edit/' + user.key);
                 });
@@ -52,11 +50,12 @@ module.exports = {
                 exists.save(function (err) {
                     if (err) { throw err; }
                     console.log('Twitter user ' + t.displayName + ' updated with key ' + exists.key);
-                    newSession = _.extend(newSession, {
+                    newSession = _.extend(profile, {
                         userid: exists.key,
                         admin: exists.admin,
                         moderator: exists.moderator
                     });
+                    request.auth.session.clear();
                     request.auth.session.set(newSession);
                     reply().code(201).redirect('/people');
                 });
@@ -76,7 +75,7 @@ module.exports = {
             reply('<h1>Session</h1><pre>' + JSON.stringify(request.auth.credentials, null, 4) + '</pre>');
         }
         else {
-            reply('<h1>Session</h1>' + '<pre>' + JSON.stringify(request.auth.session, null, 4) + '</pre>' + '<p>You should <a href="/login">log in</a>.</p>');
+            reply('<h1>Session</h1>' + '<pre>' + JSON.stringify(request.auth.credentials, null, 4) + '</pre>' + '<p>You should <a href="/login">log in</a>.</p>');
         }
         
     } 
