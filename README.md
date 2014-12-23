@@ -26,6 +26,7 @@ The project takes its name from [Jane Jacobs](http://en.wikipedia.org/wiki/Jane_
 
 
 ## Todo:
+- Write tests
 - Show lists a place/group appears on
 - Show groups a person is a member of
 - Fallback avatars
