@@ -195,13 +195,15 @@ module.exports = {
             if (err) { throw err; }
             context.place.delete(function (err) {
                 if (err) { throw err; }
-                var l = models.Log.create({ objType: 'person',
-                                    editType: 'deleted',
-                                    editorKey: session.userid,
-                                    editorName: context.user.fullName,
-                                    editorAvatar: context.user.avatar,
-                                    editedKey: request.params.placeKey,
-                                    editedName: request.params.placeName });
+                var l = models.Log.create({ 
+                    objType: 'person',
+                    editType: 'deleted',
+                    editorKey: session.userid,
+                    editorName: context.user.fullName,
+                    editorAvatar: context.user.avatar,
+                    editedKey: request.params.placeKey,
+                    editedName: request.params.placeName 
+                });
                 l.save(function(err) {
                     if (err) { throw err; }
                     console.log('logging');
