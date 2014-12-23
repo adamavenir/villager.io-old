@@ -58,13 +58,17 @@ lab.experiment('main tests', function () {
     });
 
     lab.test('load home page', function (done) {
-        var options = {
-            method: 'GET',
-            url: '/'
-        };
-     
+        var options = { method: 'GET', url: '/' };
         server.inject(options, function (response) {
             expect(response.statusCode).to.equal(200);
+            done();
+        });
+    });
+
+    lab.test('404 error', function (done) {
+        var options = { method: 'GET', url: '/chumbawumba' };
+        server.inject(options, function (response) {
+            expect(response.statusCode).to.equal(404);
             done();
         });
     });
