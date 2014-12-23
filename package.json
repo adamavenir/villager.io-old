@@ -7,20 +7,25 @@
     "url": "https://github.com/adambrault/villager.io/issues"
   },
   "dependencies": {
-    "twitface": "^0.1.1",
-    "slugger": "^1.0.0",
-    "underscore": "^1.7.0",
-    "string": "^3.0.0",
-    "verymodel": "^1.10.1",
-    "level": "^0.18.0",
-    "getconfig": "^1.0.0",
+    "async": "^0.9.0",
     "bell": "^2.0.0",
-    "hapi": "^8.0.0",
     "dulcimer": "^2.5.0",
-    "hapi-auth-cookie": "^2.0.0",
-    "precommit-hook": "^1.0.7",
+    "getconfig": "^1.0.0",
     "gravatar": "^1.1.0",
-    "async": "^0.9.0"
+    "hapi": "^8.0.0",
+    "hapi-auth-cookie": "^2.0.0",
+    "lab": "^5.1.1",
+    "level": "^0.18.0",
+    "precommit-hook": "^1.0.7",
+    "slugger": "^1.0.0",
+    "string": "^3.0.0",
+    "twitface": "^0.1.1",
+    "underscore": "^1.7.0",
+    "verymodel": "^1.10.1"
+  },
+  "devDependencies": {
+    "lab": "^5.1.1",
+    "code": "^1.2.1"
   },
   "homepage": "https://github.com/adambrault/villager.io",
   "license": "MIT",
@@ -31,6 +36,6 @@
   },
   "scripts": {
     "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "make test"
   }
 }
