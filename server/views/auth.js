@@ -1,49 +1,47 @@
+var _ = require('underscore');
 var models = require('../models').models;
 var User = models.User;
 
 module.exports = {
 
-    ///////////////// AUTH
-
     login: function (request, reply) {
-        var access;
+        var access, newSession;
         var t = request.auth.credentials.profile;
+        console.log('signed in as', t.username);
         if (t.id === '1568') {
             console.log('Greetings, superadmin!');
             access = true;
         } else { access = false; }
 
-        var user = User.create({
+        var profile = {
             fullName    : t.displayName,
             twitterId   : t.id,
             twitter     : t.username,
             twavatar    : t.raw.profile_image_url,
-            website     : t.raw.url,
+            website     : t.raw.entities.url.urls[0].expanded_url,
             about       : t.raw.description,
             hasLoggedIn : true,
             approved    : access,
             admin       : access,
             moderator   : access,
-        });
+        };
+
+        var user = User.create(profile);
 
         User.findByIndex('twitterId', t.id, function (err, exists) {
+            request.auth.session.clear();
             console.log('looking up', t.id);
             if (err || !exists) {
                 // new user
                 user.save(function (err) {
                     if (err) { throw err; }
                     console.log('Twitter user ' + t.displayName + ' created with key ' + user.key);
-                    var session = {userid: exists.key,
-                        fullName: exists.fullName,
-                        avatar: exists.avatar,
-                        admin: exists.admin,
-                        moderator: exists.moderator
-                    };
-                    var send = function (session) {
-                        request.auth.session.set(session);
-                        reply.redirect('/profile/edit/' + user.key);
-                    };
-                    return send(session);
+                    newSession = _.extend(profile, {
+                        userid: user.key
+                    });
+                    request.auth.session.clear();
+                    request.auth.session.set(newSession);
+                    reply().code(201).redirect('/profile/edit/' + user.key);
                 });
             } else {
                 // update user
@@ -51,39 +49,32 @@ module.exports = {
                 exists.save(function (err) {
                     if (err) { throw err; }
                     console.log('Twitter user ' + t.displayName + ' updated with key ' + exists.key);
-                    var session = {userid: exists.key,
-                        fullName: exists.fullName,
-                        avatar: exists.avatar,
+                    newSession = _.extend(profile, {
+                        userid: exists.key,
                         admin: exists.admin,
                         moderator: exists.moderator
-                    };
-                    var send = function (session) {
-                        request.auth.session.set(session);
-                        console.log('cred=====', request.auth.credentials);
-                        reply.redirect('/people');
-                    };
-                    return send(session);
+                    });
+                    request.auth.session.clear();
+                    request.auth.session.set(newSession);
+                    reply().code(201).redirect('/people');
                 });
             }
         });
     },
 
     logout: function (request, reply) {
-        var session = request.auth.credentials;
         request.auth.session.clear();
-        // request.session._logOut();
-        session.admin = session.userid = session.moderator = '';
-        return reply().redirect('/');
+        reply().redirect('/');
     },
 
     session: function (request, reply) {
-        var session = request.auth.credentials;
-        // console.log('credentials', request.auth.credentials);
-        var html = '<a href="/auth/twitter">Login with Twitter</a>';
-        if (session) {
-            html += '<br/><br/><pre><span style="background-color: #eee">session: ' + JSON.stringify(session, null, 2) + '</span></pre>';
+        if (request.auth.isAuthenticated) {
+            reply('<h1>Session</h1><pre>' + JSON.stringify(request.auth.credentials, null, 4) + '</pre>');
         }
-        reply(html);
-    }
+        else {
+            reply('<h1>Session</h1>' + '<pre>' + JSON.stringify(request.auth.credentials, null, 4) + '</pre>' + '<p>You should <a href="/login">log in</a>.</p>');
+        }
+        
+    } 
 
 };

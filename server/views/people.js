@@ -8,15 +8,14 @@ module.exports = {
         var session = request.auth.credentials;
         models.Interest.all(function (err, interests) {
             reply.view('addPerson', {
-                interests : interests,
                 userid    : session.userid,
                 fullName  : session.fullName,
                 avatar    : session.avatar,
+                interests : interests,
                 moderator : session.moderator,
                 admin     : session.admin
             });
         });
-
     },
 
     createPerson: function (request, reply) {
@@ -38,13 +37,15 @@ module.exports = {
                 models.User.load(p.key, function (err, person) {
                     if (err) { throw err; }
                     reply().code(201).redirect('/people/' + person.slug);
-                    var l = models.Log.create({ objType: 'person',
-                                         editType: 'created',
-                                         editorKey: session.userid,
-                                         editorName: user.fullName,
-                                         editorAvatar: user.avatar,
-                                         editedKey: person.key,
-                                         editedName: person.fullName });
+                    var l = models.Log.create({ 
+                        objType: 'person',
+                        editType: 'created',
+                        editorKey: session.userid,
+                        editorName: user.fullName,
+                        editorAvatar: user.avatar,
+                        editedKey: person.key,
+                        editedName: person.fullName 
+                    });
                     l.save(function () { console.log('logging'); });
                 });
             });
@@ -138,13 +139,15 @@ module.exports = {
             else {
                 reply().code(201).redirect('/people');
                 models.User.get(session.userid, function (err, sessionUser) {
-                    var l = models.Log.create({ objType: 'person',
-                                         editType: 'updated',
-                                         editorKey: session.userid,
-                                         editorName: sessionUser.fullName,
-                                         editorAvatar: sessionUser.avatar,
-                                         editedKey: p.key,
-                                         editedName: p.fullName });
+                    var l = models.Log.create({ 
+                        objType: 'person',
+                        editType: 'updated',
+                        editorKey: session.userid,
+                        editorName: sessionUser.fullName,
+                        editorAvatar: sessionUser.avatar,
+                        editedKey: p.key,
+                        editedName: p.fullName 
+                    });
                     l.save(function(err) {
                         if (err) { throw err; }
                         console.log('logging');
@@ -169,13 +172,15 @@ module.exports = {
             if (session.moderator && !context.person.admin) {
                 context.person.delete(function (err) {
                     if (err) { throw err; }
-                    var l = models.Log.create({ objType: 'person',
-                                         editType: 'deleted',
-                                         editorKey: session.userid,
-                                         editorName: session.fullName,
-                                         editorAvatar: session.avatar,
-                                         editedKey: request.params.personKey,
-                                         editedName: request.params.personName });
+                    var l = models.Log.create({ 
+                        objType: 'person',
+                        editType: 'deleted',
+                        editorKey: session.userid,
+                        editorName: session.fullName,
+                        editorAvatar: session.avatar,
+                        editedKey: request.params.personKey,
+                        editedName: request.params.personName 
+                    });
                     l.save(function(err) {
                         if (err) { throw err; }
                         console.log('logging');

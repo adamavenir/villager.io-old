@@ -5,9 +5,9 @@ var _ = require('underscore');
 module.exports = {
 
     index: function (request, reply) {
-        var session = request.auth.credentials;
         //console.log('\n====in pages.js request.auth%j', request.auth);
-        if (session.userid) {
+        if (request.auth.isAuthenticated && request.auth.credentials.userid) {
+            var session = request.auth.credentials;
             models.Log.all(function(err, log) {
                 if (err) { console.log(err); }
                 reply.view('index', {

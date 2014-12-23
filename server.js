@@ -1,57 +1,58 @@
-var Hapi    = require('hapi');
-var models = require('./server/models');
-var routes  = require('./server/routes');
-var level   = require('level');
-var db      = level('./db', { valueEncoding: 'json' });
+var Hapi = require('hapi');
+var Bell = require('bell');
 var config = require('getconfig');
+var Cookie = require('hapi-auth-cookie');
+var routes = require('./server/routes');
+var Dulcimer = require('dulcimer');
+Dulcimer.connect({type: 'level', path: './db'});
 
-var plugins = [
-    {plugin: require('bell')},
-    {plugin: require('good')},
-    {plugin: require('hapi-auth-cookie')}
-    ];
 
-models.attachDB(db);
+var server = new Hapi.Server();
 
-var serverOptions = {
-    views: {
-        path: 'templates',
-        engines: { jade: require('jade') }
-    }
-};
+server.connection({ 
+    host: config.hostname, 
+    port: config.port 
+});
 
-var server = new Hapi.Server(config.hostname, config.port, serverOptions);
+server.views({
+    engines: { jade: require('jade') },
+    path: __dirname + '/templates'
+});
 
-if (process.env.DEBUG) {
-    server.on('internalError', function (event) {
-        console.log('um', event);
-    });
-}
+server.register([Bell, Cookie], function (err) {
 
-server.pack.register(plugins, function (err) {
     if (err) {
         throw err;
     }
+
     server.auth.strategy('twitter', 'bell', {
         provider: 'twitter',
-        password: config.session.cookieOptions.password,
-        clientId: config.auth.twitter.consumerKey,
-        clientSecret: config.auth.twitter.consumerSecret,
-        isSecure: false
+        password: config.auth.twitter.password,
+        isSecure: false,
+        clientId: config.auth.twitter.clientId,
+        clientSecret: config.auth.twitter.clientSecret
     });
 
-    server.auth.strategy('session', 'cookie', 'required', {
+    server.auth.strategy('session', 'cookie', {
         password: config.session.cookieOptions.password,
         cookie: 'sid',
-        redirectTo: '/auth/twitter',
+        redirectTo: '/login',
+        redirectOnTry: false,
         isSecure: false
     });
 
     server.route(routes(server));
 
     server.start(function (err) {
-        if (err) { throw err; }
-        console.log('triciti.es running on ', 'http://' + config.hostname + ':' + config.port);
+        if (err) {
+            console.log('error: ', err);
+        }
+        console.log('triciti.es running at:', server.info.uri);
     });
-
 });
+
+if (process.env.DEBUG) {
+    server.on('internalError', function (event) {
+        console.log('um', event);
+    });
+}
