@@ -89,13 +89,13 @@ lab.experiment('main tests', function () {
         });
     });
 
-    // lab.test('load lists list', function (done) {
-    //     var options = { method: 'GET', url: '/lists' };
-    //     server.inject(options, function (response) {
-    //         expect(response.statusCode).to.equal(200);
-    //         done();
-    //     });
-    // });
+    lab.test('load lists list', function (done) {
+        var options = { method: 'GET', url: '/lists' };
+        server.inject(options, function (response) {
+            expect(response.statusCode).to.equal(200);
+            done();
+        });
+    });
 
     lab.test('load groups list', function (done) {
         var options = { method: 'GET', url: '/groups' };
