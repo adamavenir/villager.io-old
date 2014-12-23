@@ -67,22 +67,32 @@ module.exports = function _routes() {
 
     { method: 'GET',
       path: '/lists',
-      handler: views.lists.main
+      config: { 
+        auth: { 
+          strategy: 'session',
+          mode: 'try'
+        },
+        handler: views.lists.listLists 
+      }
     },
     { method: 'POST',
       path: '/lists/add',
+      config: { auth: 'session' },
       handler: views.lists.addList
     },
     { method: 'GET',
       path: '/lists/edit/{listSlug}',
+      config: { auth: 'session' },
       handler: views.lists.editList
     },
     { method: 'POST',
       path: '/lists/update/{listKey}',
+      config: { auth: 'session' },
       handler: views.lists.updateList
     },
     { method: 'GET',
       path: '/lists/delete/{listKey}',
+      config: { auth: 'session' },
       handler: views.lists.deleteList
     },
 

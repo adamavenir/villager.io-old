@@ -3,7 +3,7 @@ var async = require('async');
 var _ = require('underscore');
 
 module.exports = {
-    main: function (request, reply) {
+    listLists: function (request, reply) {
         var session = request.auth.credentials;
         async.parallel({
             places: function (done) {

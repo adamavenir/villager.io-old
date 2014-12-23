@@ -69,7 +69,6 @@ module.exports = {
 
     listPlaces: function (request, reply) {
         var session = request.auth.credentials;
-        if (session) {console.log('we have a session');}
         async.parallel({
             places: function (done) {
                 models.Place.all(done);
