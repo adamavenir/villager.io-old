@@ -3,19 +3,31 @@ extends ../layout
 block body
   body
     include ../in/header
-
-    h1 Add a group
-    form#addPlace(method="POST", action="/groups/add")
-      label(for="type") Type of place:
-      select#inputType(name="type")
-        option(value="") -- Select a Category --
-        each cat in groupCategories
-          option(value=cat.key) #{cat.name}
-      input#inputName(name="name", type="text", placeholder="Name of the group")
-      input#inputWebsite(name="website", type="text", placeholder="http://placewebsite.com")
-      input#inputTwitter(name="twitter", type="text", placeholder="Twitter username")
-      input#inputImage(name="image", type="text", placeholder="link to an image")
-      textarea#inputAbout(name="about", type="text", maxlength="160", placeholder="Describe this group (160 characters max)")
-      button(name="submit", type="submit") Add this group
+    
+    form(method="POST", action="/groups/add")
+      fieldset
+        legend Add a group
+        .form-element
+            label(for="type") Type of group:
+            select.form-input(name="type")
+              option(value="") -- Select a Category --
+              each cat in groupCategories
+                option(value=cat.key) #{cat.name}
+        .form-element
+          label(for="name") Group name
+          input.form-input(name="name", type="text", placeholder="Name of the group")
+        .form-element
+          label(for="website") Website
+          input.form-input(name="website", type="text", placeholder="http://placewebsite.com")
+        .form-element
+          label(for="twitter") Twitter handle
+          input.form-input(name="twitter", type="text", placeholder="Twitter username")
+        .form-element
+          label(for="image") Link to image
+          input.form-input(name="image", type="text", placeholder="link to an image")
+        .form-element
+          label(for="about") Description
+          textarea.form-input(name="about", type="text", maxlength="160", placeholder="Describe this group (160 characters max)")
+        button.button.button-primary(name="submit", type="submit") Add this group
 
     include ../in/footer
