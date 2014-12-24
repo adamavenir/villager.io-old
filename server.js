@@ -44,9 +44,7 @@ server.register([Bell, Cookie], function (err) {
     server.route(routes(server));
 
     server.start(function (err) {
-        if (err) {
-            console.log('error: ', err);
-        }
+        if (err) { console.log('error: ', err); }
         console.log('triciti.es running at:', server.info.uri);
     });
 });
