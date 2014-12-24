@@ -2,78 +2,8 @@ var _ = require('underscore');
 var models = require('../models').models;
 var async = require('async');
 
-exports.addPlace = {
-    auth: 'session',
-    handler: function (request, reply) {
-        var session = request.auth.credentials;
-        models.PlaceCategory.all(function (err, placeCategories) {
-            reply.view('addPlace', {
-                placeCategories: placeCategories,
-                userid    : session.userid,
-                fullName  : session.fullName,
-                avatar    : session.avatar,
-                moderator : session.moderator,
-                admin     : session.admin
-            });
-        });
-    }
-};
-
-exports.createPlace = {
-    auth: 'session',
-    handler: function (request, reply) {
-        var session = request.auth.credentials;
-        var form = request.payload;
-        var p = models.Place.create({
-            type    : form.type,
-            name    : form.name,
-            address : form.address,
-            city    : form.city,
-            image   : form.image,
-            twitter : form.twitter,
-            website : form.website,
-            about   : form.about,
-            creatorKey : session.userid
-        });
-        p.save(function (err) {
-            if (err) { throw err; }
-            models.Place.load(p.key, function (err, place) {
-                if (err) { throw err; }
-                reply().code(201).redirect('/places/' + place.slug);
-            });
-        });
-    }
-};
-
-exports.getPlace = {
-    auth: { strategy: 'session', mode: 'try' }
-    handler: function (request, reply) {
-        var session = request.auth.credentials;
-        models.Place.findByIndex('slug', request.params.place, function(err, place) {
-            var thismod;
-            //console.log('place is%j', _.pluck(place, 'starredBy'));
-            if (err) {
-                reply.view('404');
-            }
-            else {
-                if (place.creatorKey === session.userid) { thismod = true; }
-                else { thismod = false; }
-                reply.view('place', {
-                    place     : place,
-                    thismod   : thismod,
-                    fullName  : session.fullName,
-                    avatar    : session.avatar,
-                    userid    : session.userid,
-                    moderator : session.moderator,
-                    admin     : session.admin
-                });
-            }
-        });
-    }
-};
-
-exports.listPlaces = {
-    auth: { strategy: 'session', mode: 'try' }
+exports.list = {
+    auth: { strategy: 'session', mode: 'try' },
     handler: function (request, reply) {
         var session = request.auth.credentials;
         async.parallel({
@@ -117,7 +47,77 @@ exports.listPlaces = {
     }
 };
 
-exports.editPlace = {
+exports.get = {
+    auth: { strategy: 'session', mode: 'try' },
+    handler: function (request, reply) {
+        var session = request.auth.credentials;
+        models.Place.findByIndex('slug', request.params.place, function(err, place) {
+            var thismod;
+            //console.log('place is%j', _.pluck(place, 'starredBy'));
+            if (err) {
+                reply.view('404');
+            }
+            else {
+                if (place.creatorKey === session.userid) { thismod = true; }
+                else { thismod = false; }
+                reply.view('place', {
+                    place     : place,
+                    thismod   : thismod,
+                    fullName  : session.fullName,
+                    avatar    : session.avatar,
+                    userid    : session.userid,
+                    moderator : session.moderator,
+                    admin     : session.admin
+                });
+            }
+        });
+    }
+};
+
+exports.add = {
+    auth: 'session',
+    handler: function (request, reply) {
+        var session = request.auth.credentials;
+        models.PlaceCategory.all(function (err, placeCategories) {
+            reply.view('addPlace', {
+                placeCategories: placeCategories,
+                userid    : session.userid,
+                fullName  : session.fullName,
+                avatar    : session.avatar,
+                moderator : session.moderator,
+                admin     : session.admin
+            });
+        });
+    }
+};
+
+exports.create = {
+    auth: 'session',
+    handler: function (request, reply) {
+        var session = request.auth.credentials;
+        var form = request.payload;
+        var p = models.Place.create({
+            type    : form.type,
+            name    : form.name,
+            address : form.address,
+            city    : form.city,
+            image   : form.image,
+            twitter : form.twitter,
+            website : form.website,
+            about   : form.about,
+            creatorKey : session.userid
+        });
+        p.save(function (err) {
+            if (err) { throw err; }
+            models.Place.load(p.key, function (err, place) {
+                if (err) { throw err; }
+                reply().code(201).redirect('/places/' + place.slug);
+            });
+        });
+    }
+};
+
+exports.edit = {
     auth: 'session',
     handler: function (request, reply) {
         var session = request.auth.credentials;
@@ -143,7 +143,7 @@ exports.editPlace = {
     }
 };
 
-exports.updatePlace = {
+exports.update = {
     auth: 'session',
     handler: function (request, reply) {
         var session = request.auth.credentials;
@@ -165,7 +165,28 @@ exports.updatePlace = {
     }
 };
 
-exports.starPlace = {
+exports.delete = {
+    auth: 'session',
+    handler: function (request, reply) {
+        var session = request.auth.credentials;
+        async.parallel({
+            user: function (done) {
+                models.User.get(session.userid, done);
+            },
+            place: function (done) {
+                models.Place.get(request.params.placeKey, done);
+            }
+        }, function (err, context) {
+            if (err) { throw err; }
+            context.place.delete(function (err) {
+                if (err) { throw err; }
+                reply.view('deleted').redirect('/places');
+            });
+        });
+    }
+};
+
+exports.star = {
     auth: 'session',
     handler: function (request, reply) {
         var session = request.auth.credentials;
@@ -196,23 +217,16 @@ exports.starPlace = {
     }
 };
 
-exports.deletePlace = {
+exports.approve = {
     auth: 'session',
     handler: function (request, reply) {
         var session = request.auth.credentials;
-        async.parallel({
-            user: function (done) {
-                models.User.get(session.userid, done);
-            },
-            place: function (done) {
-                models.Place.get(request.params.placeKey, done);
-            }
-        }, function (err, context) {
-            if (err) { throw err; }
-            context.place.delete(function (err) {
-                if (err) { throw err; }
-                reply.view('deleted').redirect('/places');
+        if (session.moderator) {
+            models.Place.update(request.params.place, { approved: true }, function () {
+                //console.log('approved:', place.key);
+                reply.redirect('/places');
             });
-        });
+        }
+        else { reply.redirect('/'); }
     }
 };

@@ -2,8 +2,8 @@ var models = require('../models').models;
 var async = require('async');
 var _ = require('underscore');
 
-exports.listLists = {
-    auth: { strategy: 'session', mode: 'try' }
+exports.list = {
+    auth: { strategy: 'session', mode: 'try' },
     handler: function (request, reply) {
         var session = request.auth.credentials;
         async.parallel({
@@ -35,7 +35,7 @@ exports.listLists = {
     }
 };
 
-exports.addList = {
+exports.add = {
     auth: 'session',
     handler: function (request, reply) {
         var form = request.payload;
@@ -50,7 +50,7 @@ exports.addList = {
     }
 };
 
-exports.editList = {
+exports.edit = {
     auth: 'session',
     handler: function (request, reply) {
         var session = request.auth.credentials;
@@ -102,7 +102,7 @@ exports.editList = {
     }
 };
 
-exports.updateList = {
+exports.update = {
     auth: 'session',
     handler: function (request, reply) {
         var form = request.payload;
@@ -123,7 +123,7 @@ exports.updateList = {
     }
 };
 
-exports.deleteList = {
+exports.delete = {
     auth: 'session',
     handler: function (request, reply) {
         models.List.delete(request.params.listKey, function (err) {

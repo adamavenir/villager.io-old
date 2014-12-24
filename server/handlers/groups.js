@@ -2,25 +2,8 @@ var models = require('../models').models;
 var _ = require('underscore');
 var async = require('async');
 
-exports.addGroup = {
-    auth: 'session',
-    handler: function (request, reply) {
-        var session = request.auth.credentials;
-        models.GroupCategory.all(function (err, groupCategories) {
-            reply.view('addGroup', {
-                userid    : session.userid,
-                fullName  : session.fullName,
-                avatar    : session.avatar,
-                moderator : session.moderator,
-                admin     : session.admin,
-                groupCategories : groupCategories
-            });
-        });
-    }
-};
-
-exports.listGroups = {
-    auth: { strategy: 'session', mode: 'try' }
+exports.list = {
+    auth: { strategy: 'session', mode: 'try' },
     handler: function (request, reply) {
         var session = request.auth.credentials;
         async.parallel({
@@ -66,8 +49,8 @@ exports.listGroups = {
     }
 };
 
-exports.getGroup = {
-    auth: { strategy: 'session', mode: 'try' }
+exports.get = {
+    auth: { strategy: 'session', mode: 'try' },
     handler: function (request, reply) {
         var session = request.auth.credentials;
         models.Group.findByIndex('slug', request.params.group, function(err, group) {
@@ -92,7 +75,24 @@ exports.getGroup = {
     }
 };
 
-exports.createGroup = {
+exports.add = {
+    auth: 'session',
+    handler: function (request, reply) {
+        var session = request.auth.credentials;
+        models.GroupCategory.all(function (err, groupCategories) {
+            reply.view('addGroup', {
+                userid    : session.userid,
+                fullName  : session.fullName,
+                avatar    : session.avatar,
+                moderator : session.moderator,
+                admin     : session.admin,
+                groupCategories : groupCategories
+            });
+        });
+    }
+};
+
+exports.create = {
     auth: 'session',
     handler: function (request, reply) {
         var session = request.auth.credentials;
@@ -117,7 +117,7 @@ exports.createGroup = {
     }
 };
 
-exports.editGroup = {
+exports.edit = {
     auth: 'session',
     handler: function (request, reply) {
         var session = request.auth.credentials;
@@ -142,7 +142,7 @@ exports.editGroup = {
     }
 };
 
-exports.updateGroup = {
+exports.update = {
     auth: 'session',
     handler: function (request, reply) {
         var session = request.auth.credentials;
@@ -162,7 +162,28 @@ exports.updateGroup = {
     }
 };
 
-exports.starGroup = {
+exports.delete = {
+    auth: 'session',
+    handler: function (request, reply) {
+        var session = request.auth.credentials;
+        async.parallel({
+            user: function (done) {
+                models.User.get(session.userid, done);
+            },
+            group: function (done) {
+                models.Group.get(request.params.groupKey, done);
+            }
+        }, function (err, context) {
+            if (err) { throw err; }
+            context.group.delete(function (err) {
+                if (err) { throw err; }
+                reply.view('deleted').redirect('/groups');
+            });
+        });
+    }
+};
+
+exports.star = {
     auth: 'session',
     handler: function (request, reply) {
         var session = request.auth.credentials;
@@ -192,23 +213,16 @@ exports.starGroup = {
     }
 };
 
-exports.deleteGroup = {
+exports.approve = {
     auth: 'session',
     handler: function (request, reply) {
         var session = request.auth.credentials;
-        async.parallel({
-            user: function (done) {
-                models.User.get(session.userid, done);
-            },
-            group: function (done) {
-                models.Group.get(request.params.groupKey, done);
-            }
-        }, function (err, context) {
-            if (err) { throw err; }
-            context.group.delete(function (err) {
-                if (err) { throw err; }
-                reply.view('deleted').redirect('/groups');
+        if (session.moderator) {
+            models.Group.update(request.params.group, { approved: true }, function (err, group) {
+                console.log('approved:', group.key);
+                reply.redirect('/groups');
             });
-        });
+        }
+        else { reply.redirect('/'); }
     }
 };

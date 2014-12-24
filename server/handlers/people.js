@@ -2,7 +2,7 @@ var models = require('../models').models;
 var _ = require('underscore');
 var async = require('async');
 
-exports.addPerson = {
+exports.add = {
     auth: 'session',
     handler: function (request, reply) {
         var session = request.auth.credentials;
@@ -19,7 +19,7 @@ exports.addPerson = {
     }
 };
 
-exports.createPerson = {
+exports.create = {
     auth: 'session',
     handler: function (request, reply) {
         var form = request.payload;
@@ -43,8 +43,8 @@ exports.createPerson = {
     }
 };
 
-exports.getPerson = {
-    auth: { strategy: 'session', mode: 'try' }
+exports.get = {
+    auth: { strategy: 'session', mode: 'try' },
     handler: function (request, reply) {
         var session = request.auth.credentials;
         models.User.findByIndex('slug', request.params.person, function(err, value) {
@@ -69,8 +69,8 @@ exports.getPerson = {
     }
 };
 
-exports.listPeople = {
-    auth: { strategy: 'session', mode: 'try' }
+exports.list = {
+    auth: { strategy: 'session', mode: 'try' },
     handler: function (request, reply) {
         var session = request.auth.credentials;
         // console.log('\n in listPeople request.auth  is',request.auth);
@@ -122,7 +122,7 @@ exports.listPeople = {
     }
 };
 
-exports.editPerson = {
+exports.edit = {
     auth: 'session',
     handler: function (request, reply) {
         var session = request.auth.credentials;
@@ -143,7 +143,7 @@ exports.editPerson = {
     }
 };
 
-exports.updatePerson = {
+exports.update = {
     auth: 'session',
     handler: function (request, reply) {
         var form = request.payload;
@@ -165,7 +165,7 @@ exports.updatePerson = {
     }
 };
 
-exports.deletePerson = {
+exports.delete = {
     auth: 'session',
     handler: function (request, reply) {
         var session = request.auth.credentials;
@@ -187,5 +187,47 @@ exports.deletePerson = {
             }
             else { reply().code(401).redirect('/'); }
         });
+    }
+};
+
+exports.approve = {
+    auth: 'session',
+    handler: function (request, reply) {
+        var session = request.auth.credentials;
+        if (session.moderator) {
+            models.User.update(request.params.person, { approved: true }, function (person) {
+                console.log('approved:', person.key);
+                reply.redirect('/people');
+            });
+        }
+        else { reply.redirect('/'); }
+    }
+};
+
+exports.admin = {
+    auth: 'session',
+    handler: function (request, reply) {
+        var session = request.auth.credentials;
+        if (session.admin) {
+            models.User.update(request.params.person, { admin: true, moderator: true, approved: true }, function (person) {
+                console.log('made admin:', person.key);
+                reply().code(200).redirect('/people');
+            });
+        }
+        else { reply().code(401).redirect('/'); }
+    }
+};
+
+exports.moderator = {
+    auth: 'session',
+    handler: function (request, reply) {
+        var session = request.auth.credentials;
+        if (session.admin) {
+            models.User.update(request.params.person, { moderator: true, approved: true }, function (person) {
+                console.log('made moderator:', person.key);
+                reply().code(200).redirect('/people');
+            });
+        }
+        else { reply().code(401).redirect('/'); }
     }
 };

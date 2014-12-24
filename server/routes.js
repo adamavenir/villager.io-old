@@ -1,312 +1,92 @@
-var views = require('./views');
+var auth = require('./handlers/auth');
+var categories = require('./handlers/categories');
+var groups = require('./handlers/groups');
+var lists = require('./handlers/lists');
+var pages = require('./handlers/pages');
+var pending = require('./handlers/pending');
+var people = require('./handlers/people');
+var places = require('./handlers/places');
 
 module.exports = function _routes() {
 
   var routes = [
 
     ////////////////////////////////// STATIC
-    { method: 'GET',  path: '/{path*}',
-      handler: {
-        directory: {
-          path: './public',
-          listing: false,
-          index: true
-        }
-      }
+
+    { method: 'GET', path: '/{path*}',
+      handler: { directory: { path: './public', listing: false, index: true } } 
     },
 
-    { method: 'GET',
-      path: '/',
-      handler: views.pages.index,
-      config: {
-        auth: {
-          strategy: 'session',
-          mode: 'try'
-        }
-      }
-    },
+    ////////////////////////////////// HOME 
+
+    { method: 'GET',  path: '/', config: pages.index, },
+
     ////////////////////////////////// TINKER
 
-    { method: 'GET',
-      path: '/tinker',
-      config: { auth: 'session' }, 
-      handler: views.pages.tinker
-    },
-    { method: 'POST',
-      path: '/tinker/add-interest',
-      config: { auth: 'session' }, 
-      handler: views.categories.addInterest
-    },
-    { method: 'POST',
-      path: '/tinker/add-group-category',
-      config: { auth: 'session' }, 
-      handler: views.categories.addGroupCategory
-    },
-    { method: 'POST',
-      path: '/tinker/add-place-category',
-      config: { auth: 'session' }, 
-      handler: views.categories.addPlaceCategory
-    },
-    { method: 'GET',
-      path: '/tinker/delete/{categoryType}/{modelSlug}',
-      config: { auth: 'session' }, 
-      handler: views.categories.delete
-    },
-    { method: 'GET',
-      path: '/tinker/edit/{categoryType}/{modelSlug}',
-      config: { auth: 'session' }, 
-      handler: views.categories.edit
-    },
-    { method: 'POST',
-      path: '/tinker/update/{categoryType}/{modelKey}',
-      config: { auth: 'session' }, 
-      handler: views.categories.update
-    },
+    { method: 'GET',  path: '/tinker', config: pages.tinker },
+    { method: 'GET',  path: '/tinker/delete/{categoryType}/{modelSlug}', config: categories.delete },
+    { method: 'GET',  path: '/tinker/edit/{categoryType}/{modelSlug}', config: categories.edit },
+    { method: 'POST', path: '/tinker/update/{categoryType}/{modelKey}', config: categories.update },
+
+    // move these
+    { method: 'POST', path: '/tinker/add-interest', config: categories.addInterest },    
+    { method: 'POST', path: '/tinker/add-group-category', config: categories.addGroupCategory },
+    { method: 'POST', path: '/tinker/add-place-category', config: categories.addPlaceCategory },
 
     ////////////////////////////////// LISTS
 
-    { method: 'GET',
-      path: '/lists',
-      config: { 
-        auth: { 
-          strategy: 'session',
-          mode: 'try'
-        },
-        handler: views.lists.listLists 
-      }
-    },
-    { method: 'POST',
-      path: '/lists/add',
-      config: { auth: 'session' },
-      handler: views.lists.addList
-    },
-    { method: 'GET',
-      path: '/lists/edit/{listSlug}',
-      config: { auth: 'session' },
-      handler: views.lists.editList
-    },
-    { method: 'POST',
-      path: '/lists/update/{listKey}',
-      config: { auth: 'session' },
-      handler: views.lists.updateList
-    },
-    { method: 'GET',
-      path: '/lists/delete/{listKey}',
-      config: { auth: 'session' },
-      handler: views.lists.deleteList
-    },
+    { method: 'GET',  path: '/lists', config: lists.list },
+    { method: 'POST', path: '/lists/add', config: lists.add },
+    { method: 'GET',  path: '/lists/edit/{listSlug}', config: lists.edit },
+    { method: 'POST', path: '/lists/update/{listKey}', config: lists.update },
+    { method: 'GET',  path: '/lists/delete/{listKey}', config: lists.delete },
 
     ////////////////////////////////// PEOPLE
 
-    { method: 'GET',  
-      path: '/people', 
-      config: { 
-        auth: { 
-          strategy: 'session',
-          mode: 'try'
-        },
-        handler: views.people.listPeople 
-      }
-    },
-    { method: 'GET',
-      path: '/people/{person}',
-      config: { 
-        auth: { 
-          strategy: 'session',
-          mode: 'try' 
-        },
-        handler: views.people.getPerson
-      } 
-    },
-    { method: 'GET',
-      path: '/people/add',
-      config: { auth: 'session' }, 
-      handler: views.people.addPerson
-    },
-    { method: 'POST',
-      path: '/people/add',
-
-      handler: views.people.createPerson
-    },
-    { method: 'GET',
-      path: '/profile/edit/{person}',
-      config: { auth: 'session' }, 
-      handler: views.people.editPerson
-    },
-    { method: 'POST',
-      path: '/profile/update/{person}',
-      config: { auth: 'session' }, 
-      handler: views.people.updatePerson
-    },
-    { method: 'GET',
-      path: '/people/delete/{personKey}/{personName}',
-      config: { auth: 'session' }, 
-      handler: views.people.deletePerson
-    },
+    { method: 'GET',  path: '/people', config: people.list },
+    { method: 'GET',  path: '/people/{person}', config: people.get },
+    { method: 'GET',  path: '/people/add', config: people.add },
+    { method: 'POST', path: '/people/add', config: people.create },
+    { method: 'GET',  path: '/profile/edit/{person}', config: people.edit },
+    { method: 'POST', path: '/profile/update/{person}', config: people.update },
+    { method: 'GET',  path: '/people/delete/{personKey}/{personName}', config: people.delete },
+    { method: 'GET',  path: '/people/approve/{person}', config: people.approve },
+    { method: 'GET',  path: '/people/moderator/{person}', config: people.moderator },
+    { method: 'GET',  path: '/people/admin/{person}', config: people.admin },
 
     ////////////////////////////////// PLACES
-    { method: 'GET',  
-      path: '/places',
-      config: { 
-        auth: { 
-          strategy: 'session',
-          mode: 'try'
-        },
-        handler: views.places.listPlaces
-      }
-    },
-    { method: 'GET',
-      path: '/places/{place}', 
-      config: { 
-        auth: { 
-          strategy: 'session',
-          mode: 'try' 
-        },
-        handler: views.places.getPlace
-      }
-    },
-    { method: 'GET',
-      path: '/places/add',
-      config: { auth: 'session' }, 
-      handler: views.places.addPlace
-    },
-    { method: 'POST',
-      path: '/places/add',
-      config: { auth: 'session' }, 
-      handler: views.places.createPlace
-    },
-    { method: 'GET',
-      path: '/places/edit/{placeSlug}',
-      config: { auth: 'session' }, 
-      handler: views.places.editPlace
-    },
-    { method: 'POST',
-      path: '/places/update/{placeKey}',
-      config: { auth: 'session' }, 
-      handler: views.places.updatePlace
-    },
-    { method: 'GET',
-      path: '/places/star/{placeKey}',
-      handler: views.places.starPlace
-    },
-    { method: 'GET',
-      path: '/places/delete/{placeKey}/{placeName}',
-      config: { auth: 'session' }, 
-      handler: views.places.deletePlace
-    },
 
+    { method: 'GET',  path: '/places', config: places.list },
+    { method: 'GET',  path: '/places/{place}', config: places.get },
+    { method: 'GET',  path: '/places/add', config: places.add },
+    { method: 'POST', path: '/places/add', config: places.create },
+    { method: 'GET',  path: '/places/edit/{placeSlug}', config: places.edit },
+    { method: 'POST', path: '/places/update/{placeKey}', config: places.update },
+    { method: 'GET',  path: '/places/star/{placeKey}', config: places.star },
+    { method: 'GET',  path: '/places/approve/{place}', config: places.approve },
+    { method: 'GET',  path: '/places/delete/{placeKey}/{placeName}', config: places.delete },
 
     ////////////////////////////////// GROUPS
-    { method: 'GET',  
-      path: '/groups', 
-      config: { 
-        auth: { 
-          strategy: 'session',
-          mode: 'try'
-        },
-        handler: views.groups.listGroups
-      }
-    },
-    { method: 'GET',
-      path: '/groups/{group}',
-      config: { 
-        auth: { 
-          strategy: 'session',
-          mode: 'try'
-        },
-        handler: views.groups.getGroup
-      }
-    },
-    { method: 'GET',
-      path: '/groups/add',
-      config: { auth: 'session' }, 
-      handler: views.groups.addGroup
-    },
-    { method: 'POST',
-      path: '/groups/add',
-      config: { auth: 'session' }, 
-      handler: views.groups.createGroup
-    },
-    { method: 'GET',
-      path: '/groups/edit/{groupSlug}',
-      config: { auth: 'session' }, 
-      handler: views.groups.editGroup
-    },
-    { method: 'POST',
-      path: '/groups/update/{groupKey}',
-      config: { auth: 'session' }, 
-      handler: views.groups.updateGroup
-    },
-    { method: 'GET',
-      path: '/groups/star/{groupKey}',
-      handler: views.groups.starGroup
-    },
-    { method: 'GET',
-      path: '/groups/delete/{groupKey}/{groupName}', 
-      config: { auth: 'session' }, 
-      handler: views.groups.deleteGroup
-    },
 
+    { method: 'GET',  path: '/groups', config: groups.list },
+    { method: 'GET',  path: '/groups/{group}', config: groups.get },
+    { method: 'GET',  path: '/groups/add', config: groups.add },
+    { method: 'POST', path: '/groups/add', config: groups.create },
+    { method: 'GET',  path: '/groups/edit/{groupSlug}', config: groups.edit },
+    { method: 'POST', path: '/groups/update/{groupKey}', config: groups.update },
+    { method: 'GET',  path: '/groups/star/{groupKey}', config: groups.star },
+    { method: 'GET',  path: '/groups/approve/{group}', config: groups.approve },
+    { method: 'GET',  path: '/groups/delete/{groupKey}/{groupName}', config: groups.delete },
 
-    ////////////////////////////////// MODERATION
+    ////////////////////////////////// PENDING
 
-    { method: 'GET',  
-      path: '/pending', 
-      config: { 
-        auth: { 
-          strategy: 'session',
-          mode: 'try'
-        },
-        handler: views.moderation.listPending
-      }
-    },
-    { method: 'GET',
-      path: '/people/approve/{person}',
-      config: { auth: 'session' },
-      handler: views.moderation.approvePerson
-    },
-    { method: 'GET',
-      path: '/places/approve/{place}',
-      config: { auth: 'session' },
-      handler: views.moderation.approvePlace
-    },
-    { method: 'GET',
-      path: '/groups/approve/{group}',
-      config: { auth: 'session' },
-      handler: views.moderation.approveGroup
-    },
-    { method: 'GET',
-      path: '/people/moderator/{person}',
-      config: { auth: 'session' },
-      handler: views.moderation.moderatorPerson
-    },
-    { method: 'GET',
-      path: '/people/admin/{person}',
-      config: { auth: 'session' },
-      handler: views.moderation.adminPerson
-
-    },
+    { method: 'GET',  path: '/pending', config: pending.list },
 
     ////////////////////////////////// AUTH
 
-    { 
-      method: ['GET', 'POST'], 
-      path: '/auth/twitter', 
-      config: { 
-        auth: 'twitter',
-        handler: views.auth.login
-      },  
-    },
-    { 
-      method: 'GET', 
-      path: '/session', 
-      handler: views.auth.session 
-    },
-    { 
-      method: 'GET', 
-      path: '/logout',
-      handler: views.auth.logout 
-    }
+    { method: ['GET', 'POST'], path: '/auth/twitter', config: auth.login },
+    { method: 'GET', path: '/session', config: auth.session },
+    { method: 'GET', path: '/logout', config: auth.logout }
 
   ];
 

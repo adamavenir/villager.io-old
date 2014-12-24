@@ -1,6 +1,6 @@
 module.exports = {
     auth:       require('./auth'),
-    moderation: require('./moderation'),
+    pending:    require('./pending'),
     pages:      require('./pages'),
     people:     require('./people'),
     places:     require('./places'),

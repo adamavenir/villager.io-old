@@ -3,7 +3,7 @@ var async = require('async');
 var _ = require('underscore');
 
 exports.index = {
-    auth: 'session',
+    auth: { strategy: 'session', mode: 'try' },
     handler: function (request, reply) {
         if (request.auth.isAuthenticated && request.auth.credentials.userid) {
             var session = request.auth.credentials;
@@ -51,4 +51,4 @@ exports.notFound = {
     handler: function (request, reply) {
         reply('404');
     },
-}
+};
