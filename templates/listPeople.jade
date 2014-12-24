@@ -6,35 +6,36 @@ block body
 
     h1 People
     ul.people
-      for person in people
-        li(class= person.approved)
-          a(href= '/people/' + person.slug)
-            img.grav(src= person.avatar)
-            h3= person.fullName
-            if moderator
+      if people
+        for person in people
+          li(class= person.approved)
+            a(href= '/people/' + person.slug)
+              img.grav(src= person.avatar)
+              h3= person.fullName
+              if moderator
+                p
+                  if !person.approved
+                    | Pending
+                  if person.approved
+                    | √
+                  if person.moderator
+                    | M
+                  if person.admin
+                    | A
+        if me
+          li(class="pending")
+            a(href="/people/" + me.slug)
+              img.grav(src= me.avatar)
+              h3= me.fullName
               p
-                if !person.approved
+                if !me.approved
                   | Pending
-                if person.approved
-                  | √
-                if person.moderator
-                  | M
-                if person.admin
-                  | A
-      if me
-        li(class="pending")
-          a(href="/people/" + me.slug)
-            img.grav(src= me.avatar)
-            h3= me.fullName
-            p
-              if !me.approved
-                | Pending
 
-      if moderator
-        li
-          a.andOne(href="/people/add") +
-      if !userid
-        li
-          a.andMe(href="/auth/twitter") + me
+        if moderator
+          li
+            a.andOne(href="/people/add") +
+        if !userid
+          li
+            a.andMe(href="/auth/twitter") + me
 
     include in/footer

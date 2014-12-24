@@ -2,72 +2,6 @@ var models = require('../models').models;
 var _ = require('underscore');
 var async = require('async');
 
-exports.add = {
-    auth: 'session',
-    handler: function (request, reply) {
-        var session = request.auth.credentials;
-        models.Interest.all(function (err, interests) {
-            reply.view('addPerson', {
-                userid    : session.userid,
-                fullName  : session.fullName,
-                avatar    : session.avatar,
-                interests : interests,
-                moderator : session.moderator,
-                admin     : session.admin
-            });
-        });
-    }
-};
-
-exports.create = {
-    auth: 'session',
-    handler: function (request, reply) {
-        var form = request.payload;
-        var p = models.User.create({
-            fullName  : form.fullName,
-            email     : form.email,
-            twitter   : form.twitter,
-            website   : form.website,
-            company   : form.company,
-            about     : form.about,
-            interests : form.interests,
-            approved  : true
-        });
-        p.save(function (err) {
-            if (err) { throw err; }
-            models.User.load(p.key, function (err, person) {
-                if (err) { throw err; }
-                reply().code(201).redirect('/people/' + person.slug);
-            });
-        });
-    }
-};
-
-exports.get = {
-    auth: { strategy: 'session', mode: 'try' },
-    handler: function (request, reply) {
-        var session = request.auth.credentials;
-        models.User.findByIndex('slug', request.params.person, function(err, value) {
-            if (err) {
-                reply.view('404');
-            }
-            else {
-                if (session && session.userid) {
-                    reply.view('person', {
-                        person    : value,
-                        userid    : session.userid,
-                        fullName  : session.fullName,
-                        avatar    : session.avatar,
-                        moderator : session.moderator,
-                        admin     : session.admin
-                    });
-                } else {
-                    reply.view('person', { person: value });
-                }
-            }
-        });
-    }
-};
 
 exports.list = {
     auth: { strategy: 'session', mode: 'try' },
@@ -119,6 +53,73 @@ exports.list = {
                 }
             });
         }
+    }
+};
+
+exports.get = {
+    auth: { strategy: 'session', mode: 'try' },
+    handler: function (request, reply) {
+        var session = request.auth.credentials;
+        models.User.findByIndex('slug', request.params.person, function(err, value) {
+            if (err) {
+                reply.view('404');
+            }
+            else {
+                if (session && session.userid) {
+                    reply.view('person', {
+                        person    : value,
+                        userid    : session.userid,
+                        fullName  : session.fullName,
+                        avatar    : session.avatar,
+                        moderator : session.moderator,
+                        admin     : session.admin
+                    });
+                } else {
+                    reply.view('person', { person: value });
+                }
+            }
+        });
+    }
+};
+
+exports.add = {
+    auth: 'session',
+    handler: function (request, reply) {
+        var session = request.auth.credentials;
+        models.Interest.all(function (err, interests) {
+            reply.view('addPerson', {
+                userid    : session.userid,
+                fullName  : session.fullName,
+                avatar    : session.avatar,
+                interests : interests,
+                moderator : session.moderator,
+                admin     : session.admin
+            });
+        });
+    }
+};
+
+exports.create = {
+    auth: 'session',
+    handler: function (request, reply) {
+        var form = request.payload;
+        var p = models.User.create({
+            fullName  : form.fullName,
+            email     : form.email,
+            twitter   : form.twitter,
+            website   : form.website,
+            company   : form.company,
+            about     : form.about,
+            interests : form.interests,
+            approved  : true
+        });
+        p.save(function (err) {
+            if (err) { throw err; }
+            models.User.load(p.key, function (err, person) {
+                if (err) { throw err; }
+                reply().code(201).redirect('/people/' + person.slug);
+            });
+        });
     }
 };
 
