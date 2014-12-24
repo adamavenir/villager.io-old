@@ -20,7 +20,7 @@ exports.list = {
                 models.User.all(function(err, data) {
                     var approved = _.where(data, { approved: true });
                     if(me === false && approved.length === 0) {
-                        reply.view('noPeople', {
+                        reply.view('people/noPeople', {
                             userid    : session.userid,
                             fullName  : session.fullName,
                             avatar    : session.avatar,
@@ -29,7 +29,7 @@ exports.list = {
                         });
                     }
                     else {
-                        reply.view('listPeople', {
+                        reply.view('people/listPeople', {
                             people    : approved,
                             me        : me,
                             userid    : session.userid,
@@ -45,9 +45,9 @@ exports.list = {
             models.User.all(function(err, data) {
                 var approved = _.where(data, { approved: true });
                 if (approved.length === 0) {
-                    reply.view('listPeople');  
+                    reply.view('people/noPeople');  
                 } else {
-                    reply.view('listPeople', {
+                    reply.view('people/listPeople', {
                         people : approved
                     });
                 }
@@ -66,7 +66,7 @@ exports.get = {
             }
             else {
                 if (session && session.userid) {
-                    reply.view('person', {
+                    reply.view('people/person', {
                         person    : value,
                         userid    : session.userid,
                         fullName  : session.fullName,
@@ -75,7 +75,7 @@ exports.get = {
                         admin     : session.admin
                     });
                 } else {
-                    reply.view('person', { person: value });
+                    reply.view('people/person', { person: value });
                 }
             }
         });
@@ -87,7 +87,7 @@ exports.add = {
     handler: function (request, reply) {
         var session = request.auth.credentials;
         models.Interest.all(function (err, interests) {
-            reply.view('addPerson', {
+            reply.view('people/addPerson', {
                 userid    : session.userid,
                 fullName  : session.fullName,
                 avatar    : session.avatar,
@@ -130,7 +130,7 @@ exports.edit = {
         models.User.get(request.params.person, function (err, person) {
             models.Interest.all(function (err, interests) {
                 person.interests = _.pluck(person.interests, 'key');
-                reply.view('editPerson', {
+                reply.view('people/editPerson', {
                     interests : interests,
                     person    : person,
                     userid    : session.userid,

@@ -30,7 +30,7 @@ exports.list = {
                     admin     : session.admin
                 });
             }
-            reply.view('lists', context);
+            reply.view('lists/lists', context);
         });
     }
 };
@@ -97,7 +97,7 @@ exports.edit = {
                 admin     : session.admin
             });
             console.log('context%j', context.optionsInList);
-            reply.view('editList', context);
+            reply.view('lists/editList', context);
         });
     }
 };

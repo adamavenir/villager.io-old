@@ -1,8 +1,8 @@
-extends layout
+extends ../layout
 
 block body
   body
-    include in/header
+    include ../in/header
 
     h1 Edit #{place.name}
     form#addPlace(method="POST", action="/places/update/" + place.key)
@@ -23,4 +23,4 @@ block body
       textarea#inputAbout(name="about", type="text", maxlength="160", placeholder="Describe this place (160 characters max)") #{place.about}
       button(name="submit", type="submit") Update
 
-    include in/footer
+    include ../in/footer

@@ -1,8 +1,8 @@
-extends layout
+extends ../layout
 
 block body
   body
-    include in/header
+    include ../in/header
 
     h1 Add a group
     form#addPlace(method="POST", action="/groups/add")
@@ -18,4 +18,4 @@ block body
       textarea#inputAbout(name="about", type="text", maxlength="160", placeholder="Describe this group (160 characters max)")
       button(name="submit", type="submit") Add this group
 
-    include in/footer
+    include ../in/footer

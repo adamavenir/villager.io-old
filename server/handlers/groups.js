@@ -15,7 +15,7 @@ exports.list = {
             if (session && session.userid) {
                 var mine = _.where(context.groups[0], { creatorKey: session.userid, approved: false });
                 if(mine.length + approved.length === 0) {
-                    reply.view('noGroups', {
+                    reply.view('groups/noGroups', {
                         fullName  : session.fullName,
                         avatar    : session.avatar,
                         userid    : session.userid,
@@ -24,7 +24,7 @@ exports.list = {
                     });
                 }
                 else {
-                    reply.view('listGroups', {
+                    reply.view('groups/listGroups', {
                         groups    : approved,
                         mine      : mine,
                         fullName  : session.fullName,
@@ -37,10 +37,10 @@ exports.list = {
             }
             else {
                 if (approved.length === 0) {
-                    reply.view('noGroups');
+                    reply.view('groups/noGroups');
                 }
                 else {
-                    reply.view('listGroups', {
+                    reply.view('groups/listGroups', {
                         groups : approved
                     });
                 }
@@ -63,7 +63,7 @@ exports.get = {
                 var thismod;
                 if (group.creatorKey === session.userid) { thismod = true; }
                 else { thismod = false; }
-                reply.view('group', {
+                reply.view('groups/group', {
                     group     : group,
                     thismod   : thismod,
                     userid    : session.userid,
@@ -80,7 +80,7 @@ exports.add = {
     handler: function (request, reply) {
         var session = request.auth.credentials;
         models.GroupCategory.all(function (err, groupCategories) {
-            reply.view('addGroup', {
+            reply.view('groups/addGroup', {
                 userid    : session.userid,
                 fullName  : session.fullName,
                 avatar    : session.avatar,
@@ -137,7 +137,7 @@ exports.edit = {
                 moderator : session.moderator,
                 admin     : session.admin
             });
-            reply.view('editGroup', context);
+            reply.view('groups/editGroup', context);
         });
     }
 };

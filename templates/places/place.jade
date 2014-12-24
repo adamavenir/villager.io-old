@@ -1,8 +1,8 @@
-extends layout
+extends ../layout
 
 block body
   body
-    include in/header
+    include ../in/header
     div.place
       a(href= place.website)
         img.grav(src= place.image)
@@ -25,4 +25,4 @@ block body
                   h6= person.fullName
         if !place.stars
           a.starThis(href='star/' + place.key) ☆
-    include in/footer
+    include ../in/footer

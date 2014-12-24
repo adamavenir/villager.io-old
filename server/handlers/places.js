@@ -25,7 +25,7 @@ exports.list = {
             // }
             //else {
             if (session && session.userid) {
-                reply.view('listPlaces', {
+                reply.view('places/listPlaces', {
                     places    : context.places[0],
                     //mine      : mine,
                     userid    : session.userid,
@@ -37,7 +37,7 @@ exports.list = {
             }
 
             else {
-                reply.view('listPlaces', {
+                reply.view('places/listPlaces', {
                     places    : context.places[0],
                 });
             }
@@ -60,7 +60,7 @@ exports.get = {
             else {
                 if (place.creatorKey === session.userid) { thismod = true; }
                 else { thismod = false; }
-                reply.view('place', {
+                reply.view('places/place', {
                     place     : place,
                     thismod   : thismod,
                     fullName  : session.fullName,
@@ -79,7 +79,7 @@ exports.add = {
     handler: function (request, reply) {
         var session = request.auth.credentials;
         models.PlaceCategory.all(function (err, placeCategories) {
-            reply.view('addPlace', {
+            reply.view('places/addPlace', {
                 placeCategories: placeCategories,
                 userid    : session.userid,
                 fullName  : session.fullName,
@@ -138,7 +138,7 @@ exports.edit = {
                 moderator : session.moderator,
                 admin     : session.admin
             });
-            reply.view('editPlace', context);
+            reply.view('places/editPlace', context);
         });
     }
 };

@@ -1,8 +1,8 @@
-extends layout
+extends ../layout
 
 block body
   body
-    include in/header
+    include ../in/header
 
     h1 Edit #{group.name}
     form#addPlace(method="POST", action="/groups/update/" + group.key)
@@ -22,4 +22,4 @@ block body
       textarea#inputAbout(name="about", type="text", maxlength="160", placeholder="Describe this group (160 characters max)") #{group.about}
       button(name="submit", type="submit") Update
 
-    include in/footer
+    include ../in/footer

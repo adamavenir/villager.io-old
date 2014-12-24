@@ -22,15 +22,16 @@ exports.list = {
                 var pendingPlaces = _.where(context.places[0], { approved: false });
                 var pendingGroups = _.where(context.groups[0], { approved: false });
                 if(pendingPeople.length + pendingPlaces.length + pendingGroups.length === 0) {
-                    reply.view('noPending', {
+                    reply.view('pending/noPending', {
                         fullName  : session.fullName,
+                        userid    : session.userid,
                         avatar    : session.avatar,
                         moderator : session.moderator,
                         admin     : session.admin
                     });
                 }
                 else {
-                    reply.view('listPending', {
+                    reply.view('pending/listPending', {
                         people    : pendingPeople,
                         places    : pendingPlaces,
                         groups    : pendingGroups,

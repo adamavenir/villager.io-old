@@ -1,8 +1,8 @@
-extends layout
+extends ../layout
 
 block body
   body
-    include in/header
+    include ../in/header
 
     h1 Add someone
     form#addPerson(method="POST", action="/people/add", )
@@ -20,4 +20,4 @@ block body
             | #{interest.name}
       button(name="submit", type="submit") Add yourself
 
-    include in/footer
+    include ../in/footer

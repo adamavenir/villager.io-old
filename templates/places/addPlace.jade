@@ -1,8 +1,8 @@
-extends layout
+extends ../layout
 
 block body
   body
-    include in/header
+    include ../in/header
 
     h1 Add a place
     p (Restaurant, company, coffee shop, venue, park)
@@ -20,4 +20,4 @@ block body
       textarea#inputAbout(name="about", type="text", maxlength="160", placeholder="Describe this place (160 characters max)")
       button(name="submit", type="submit") Add this place
 
-    include in/footer
+    include ../in/footer
