@@ -46,14 +46,18 @@ module.exports = {
                 reply.view('404');
             }
             else {
-                reply.view('person', {
-                    person    : value,
-                    userid    : session.userid,
-                    fullName  : session.fullName,
-                    avatar    : session.avatar,
-                    moderator : session.moderator,
-                    admin     : session.admin
-                });
+                if (session && session.userid) {
+                    reply.view('person', {
+                        person    : value,
+                        userid    : session.userid,
+                        fullName  : session.fullName,
+                        avatar    : session.avatar,
+                        moderator : session.moderator,
+                        admin     : session.admin
+                    });
+                } else {
+                    reply.view('person', { person: value });
+                }
             }
         });
     },
