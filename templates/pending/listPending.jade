@@ -5,12 +5,12 @@ block body
     include ../in/header
 
     h1 Pending
-    ul.pending
+    ul.item-list.list-unstyled
       for person in people
         li(class= person.approved)
           a(href= '/people/' + person.slug)
-            img.grav(src= person.avatar)
-          h3= person.fullName
+            img.avatar.avatar-large.avatar-rounded(src= person.avatar)
+          h5= person.fullName
           p
             if !person.approved
               | Pending
@@ -27,16 +27,16 @@ block body
       for place in places
         li
           a(href= '/places/' + place.slug)
-            img.grav(src= place.image)
-          h3= place.name
+            img.avatar.avatar-large.avatar-rounded(src= place.image)
+          h5= place.name
           p.moderate
             a(href="/places/approve/" + place.key) Approve
             a(href="/places/delete/" + place.key + '/' + place.slug) Delete
       for group in groups
         li
           a(href= '/groups/' + group.slug)
-            img.grav(src= group.image)
-          h3= group.name
+            img.avatar.avatar-large.avatar-rounded(src= group.image)
+          h5= group.name
           p.moderate
             a(href="/groups/approve/" + group.key) Approve
             a(href="/groups/delete/" + group.key + '/' + group.slug) Delete

@@ -4,11 +4,10 @@ block body
   body
     include ../in/header
 
-    h1 No groups found
-
-    if user
-      ul
-        li
-          a.andOne(href="/groups/add") +
+    .title-bar
+      h1 No groups yet
+      .action-menu
+        if moderator
+          a.button.button-primary.add-item(href="/groups/add") Add a group
 
     include ../in/footer

@@ -4,14 +4,21 @@ block body
   body
     include ../in/header
 
-    h1 People
-    ul.people
+    .title-bar
+      h1 People
+      .action-menu
+        if moderator
+          a.button.button-primary.add-item(href="/people/add") Add someone
+        if !userid
+          a.button.button-primary.add-item(href="/auth/twitter") Add me
+
+    ul.item-list.list-unstyled
       if people
         for person in people
           li(class= person.approved)
             a(href= '/people/' + person.slug)
-              img.grav(src= person.avatar)
-              h3= person.fullName
+              img.avatar.avatar-large.avatar-rounded(src= person.avatar)
+              h5= person.fullName
               if moderator
                 p
                   if !person.approved
@@ -25,17 +32,10 @@ block body
         if me
           li(class="pending")
             a(href="/people/" + me.slug)
-              img.grav(src= me.avatar)
-              h3= me.fullName
+              img.avatar.avatar-large.avatar-rounded(src= me.avatar)
+              h5= me.fullName
               p
                 if !me.approved
                   | Pending
-
-        if moderator
-          li
-            a.andOne(href="/people/add") +
-        if !userid
-          li
-            a.andMe(href="/auth/twitter") + me
 
     include ../in/footer

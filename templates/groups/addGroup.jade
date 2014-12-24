@@ -3,16 +3,16 @@ extends ../layout
 block body
   body
     include ../in/header
-    
+
     form(method="POST", action="/groups/add")
       fieldset
         legend Add a group
         .form-element
-            label(for="type") Type of group:
-            select.form-input(name="type")
-              option(value="") -- Select a Category --
-              each cat in groupCategories
-                option(value=cat.key) #{cat.name}
+          label(for="type") Type of group:
+          select.form-input(name="type")
+            option(value="") -- Select a Category --
+            each cat in groupCategories
+              option(value=cat.key) #{cat.name}
         .form-element
           label(for="name") Group name
           input.form-input(name="name", type="text", placeholder="Name of the group")

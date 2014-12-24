@@ -4,19 +4,22 @@ block body
   body
     include ../in/header
 
-    h1 Groups
-    ul.groups
+    .title-bar
+      h1 Groups
+      .action-menu
+        if moderator
+          a.button.button-primary.add-item(href="/groups/add") Add a group
+
+    ul.item-list.list-unstyled
       for group in groups
         li
           a(href= '/groups/' + group.slug)
-            img.grav(src= group.image)
-            h3= group.name
+            img.avatar.avatar-large.avatar-rounded(src= group.image)
+            h5= group.name
       for item in mine
         li
           a(href= '/groups/' + item.slug)
-            img.grav(src= item.image)
-            h3= item.name
-      li
-        a.andOne(href="/groups/add") +
+            img.avatar.avatar-large.avatar-rounded(src= item.image)
+            h5= item.name
 
     include ../in/footer

@@ -17,19 +17,22 @@ block body
             a(href="/lists/edit/" + list.slug) Edit this list
 
     form(method="POST", action="/lists/add")
-      p Add new list
-      label(for="name") Name
-      input(name="name")
-      label(for="description") Description
-      input(name="description")
-      label(for="image") Image (optional)
-      input(name="image")
-      - var sections = ['groups', 'places', 'people']
-      ul.forWhat
-        each section in sections
-          li
-            input(name="what", type="radio", value=section)
-            | #{section}
-      button.small(type="submit") +
+      fieldset
+        legend Add new list
+        .form-element
+          label(for="name") Name
+          input.form-input(name="name")
+        .form-element
+          label(for="description") Description
+          input.form-input(name="description")
+        .form-element
+          label(for="image") Image (optional)
+          input.form-input(name="image")
+        - var sections = ['groups', 'places', 'people']
+          each section in sections
+            label.form-element.input-radio(for="radio") 
+              input(name="what", type="radio", value=section)
+              | #{section}
+        button.button.button-primary(type="submit") Add list
 
     include ../in/footer

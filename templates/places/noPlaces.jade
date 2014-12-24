@@ -4,11 +4,10 @@ block body
   body
     include ../in/header
 
-    h1 No places found
-
-    if user
-      ul
-        li
-          a.andOne(href="/places/add") +
+    .title-bar
+      h1 No places yet
+      .action-menu
+        if moderator
+          a.button.button-primary.add-item(href="/places/add") Add a place
 
     include ../in/footer

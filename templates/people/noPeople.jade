@@ -4,10 +4,12 @@ block body
   body
     include ../in/header
 
-    h1 No people found
-
-    ul
-      li
-        a.andOne(href="/auth/twitter") +
+    .title-bar
+      h1 No people yet
+      .action-menu
+        if moderator
+          a.button.button-primary.add-item(href="/people/add") Add someone
+        if !userid
+          a.button.button-primary.add-item(href="/auth/twitter") Add me
 
     include ../in/footer

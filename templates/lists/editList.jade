@@ -4,19 +4,19 @@ block body
   body
     include ../in/header
 
-    h1 Edit #{list.name}
-    form#addPlace(method="POST", action="/lists/update/" + list.key)
-      ul.pickList
-        each option in listOptions
-          - var inList = (optionsInList.indexOf(option.key) > -1)
-          li
-            if option.name
-              input(name=list.what, type="checkbox", checked=inList, value=option.key)
-              | #{option.name}
-            else if option.fullName
-              input(name=list.what, type="checkbox", checked=inList, value=option.key)
-              | #{option.fullName}
-      input(type="hidden", name="what", value=list.what)
-      button(name="submit", type="submit") Save List
+    form(method="POST", action="/lists/update/" + list.key)
+      fieldset
+        legend Edit #{list.what} list: #{list.name}
+        .form-element
+          label(for="name") Name
+          input.form-input(name="name", value= list.name)
+        .form-element
+          label(for="description") Description
+          input.form-input(name="description", value= list.description)
+        .form-element
+          label(for="image") Image (optional)
+          input.form-input(name="image", value= list.image)
+        input(type="hidden", name="what", value=list.what)
+        button.button.button-primary(type="submit") Update list
 
     include ../in/footer

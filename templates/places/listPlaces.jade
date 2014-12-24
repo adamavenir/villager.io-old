@@ -4,14 +4,17 @@ block body
   body
     include ../in/header
 
-    h1 Places
-    ul.places
+    .title-bar
+      h1 Places
+      .action-menu
+        if moderator
+          a.button.button-primary.add-item(href="/places/add") Add a place
+
+    ul.item-list.list-unstyled
       for place in places
         li
           a(href= '/places/' + place.slug)
-            img.grav(src= place.image)
-            h3= place.name
-      li
-        a.andOne(href="/places/add") +
+            img.avatar.avatar-large.avatar-rounded(src= place.image)
+            h5= place.name
 
     include ../in/footer
