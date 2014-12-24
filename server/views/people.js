@@ -2,9 +2,9 @@ var models = require('../models').models;
 var _ = require('underscore');
 var async = require('async');
 
-module.exports = {
-
-    addPerson: function (request, reply) {
+exports.addPerson = {
+    auth: 'session',
+    handler: function (request, reply) {
         var session = request.auth.credentials;
         models.Interest.all(function (err, interests) {
             reply.view('addPerson', {
@@ -16,9 +16,12 @@ module.exports = {
                 admin     : session.admin
             });
         });
-    },
+    }
+};
 
-    createPerson: function (request, reply) {
+exports.createPerson = {
+    auth: 'session',
+    handler: function (request, reply) {
         var form = request.payload;
         var p = models.User.create({
             fullName  : form.fullName,
@@ -37,9 +40,12 @@ module.exports = {
                 reply().code(201).redirect('/people/' + person.slug);
             });
         });
-    },
+    }
+};
 
-    getPerson: function (request, reply) {
+exports.getPerson = {
+    auth: { strategy: 'session', mode: 'try' }
+    handler: function (request, reply) {
         var session = request.auth.credentials;
         models.User.findByIndex('slug', request.params.person, function(err, value) {
             if (err) {
@@ -60,9 +66,12 @@ module.exports = {
                 }
             }
         });
-    },
+    }
+};
 
-    listPeople: function (request, reply) {
+exports.listPeople = {
+    auth: { strategy: 'session', mode: 'try' }
+    handler: function (request, reply) {
         var session = request.auth.credentials;
         // console.log('\n in listPeople request.auth  is',request.auth);
         if (session && session.userid) {
@@ -110,9 +119,12 @@ module.exports = {
                 }
             });
         }
-    },
+    }
+};
 
-    editPerson: function (request, reply) {
+exports.editPerson = {
+    auth: 'session',
+    handler: function (request, reply) {
         var session = request.auth.credentials;
         models.User.get(request.params.person, function (err, person) {
             models.Interest.all(function (err, interests) {
@@ -128,9 +140,12 @@ module.exports = {
                 });
             });
         });
-    },
+    }
+};
 
-    updatePerson: function (request, reply) {
+exports.updatePerson = {
+    auth: 'session',
+    handler: function (request, reply) {
         var form = request.payload;
         console.log('form is', form);
         models.User.update(request.params.person, {
@@ -147,9 +162,12 @@ module.exports = {
                 reply().code(201).redirect('/people');
             }
         });
-    },
+    }
+};
 
-    deletePerson: function (request, reply) {
+exports.deletePerson = {
+    auth: 'session',
+    handler: function (request, reply) {
         var session = request.auth.credentials;
         async.parallel({
             person: function (done) {

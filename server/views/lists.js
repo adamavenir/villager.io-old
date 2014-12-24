@@ -2,9 +2,9 @@ var models = require('../models').models;
 var async = require('async');
 var _ = require('underscore');
 
-module.exports = {
-    
-    listLists: function (request, reply) {
+exports.listLists = {
+    auth: { strategy: 'session', mode: 'try' }
+    handler: function (request, reply) {
         var session = request.auth.credentials;
         async.parallel({
             places: function (done) {
@@ -32,9 +32,12 @@ module.exports = {
             }
             reply.view('lists', context);
         });
-    },
+    }
+};
 
-    addList: function (request, reply) {
+exports.addList = {
+    auth: 'session',
+    handler: function (request, reply) {
         var form = request.payload;
         console.log('form is', form);
         if (form.name) {
@@ -44,9 +47,12 @@ module.exports = {
                 reply().redirect('/lists/edit/' + list.slug);
             });
         }
-    },
+    }
+};
 
-    editList: function (request, reply) {
+exports.editList = {
+    auth: 'session',
+    handler: function (request, reply) {
         var session = request.auth.credentials;
         async.parallel({
             places: function (done) {
@@ -93,9 +99,12 @@ module.exports = {
             console.log('context%j', context.optionsInList);
             reply.view('editList', context);
         });
-    },
+    }
+};
 
-    updateList: function (request, reply) {
+exports.updateList = {
+    auth: 'session',
+    handler: function (request, reply) {
         var form = request.payload;
         console.log('form is', form);
         var listElements = form[form.what];
@@ -111,9 +120,12 @@ module.exports = {
             console.log('list is%j', list);
             reply().redirect('/lists');
         });
-    },
+    }
+};
 
-    deleteList: function (request, reply) {
+exports.deleteList = {
+    auth: 'session',
+    handler: function (request, reply) {
         models.List.delete(request.params.listKey, function (err) {
             if (err) { throw err; }
             reply.view('deleted').redirect('/lists');

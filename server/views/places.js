@@ -2,9 +2,9 @@ var _ = require('underscore');
 var models = require('../models').models;
 var async = require('async');
 
-module.exports = {
-
-    addPlace: function (request, reply) {
+exports.addPlace = {
+    auth: 'session',
+    handler: function (request, reply) {
         var session = request.auth.credentials;
         models.PlaceCategory.all(function (err, placeCategories) {
             reply.view('addPlace', {
@@ -16,9 +16,12 @@ module.exports = {
                 admin     : session.admin
             });
         });
-    },
+    }
+};
 
-    createPlace: function (request, reply) {
+exports.createPlace = {
+    auth: 'session',
+    handler: function (request, reply) {
         var session = request.auth.credentials;
         var form = request.payload;
         var p = models.Place.create({
@@ -39,9 +42,12 @@ module.exports = {
                 reply().code(201).redirect('/places/' + place.slug);
             });
         });
-    },
+    }
+};
 
-    getPlace: function (request, reply) {
+exports.getPlace = {
+    auth: { strategy: 'session', mode: 'try' }
+    handler: function (request, reply) {
         var session = request.auth.credentials;
         models.Place.findByIndex('slug', request.params.place, function(err, place) {
             var thismod;
@@ -63,9 +69,12 @@ module.exports = {
                 });
             }
         });
-    },
+    }
+};
 
-    listPlaces: function (request, reply) {
+exports.listPlaces = {
+    auth: { strategy: 'session', mode: 'try' }
+    handler: function (request, reply) {
         var session = request.auth.credentials;
         async.parallel({
             places: function (done) {
@@ -105,9 +114,12 @@ module.exports = {
 
             //}
         });
-    },
+    }
+};
 
-    editPlace: function (request, reply) {
+exports.editPlace = {
+    auth: 'session',
+    handler: function (request, reply) {
         var session = request.auth.credentials;
         async.parallel({
             place: function (done) {
@@ -128,9 +140,12 @@ module.exports = {
             });
             reply.view('editPlace', context);
         });
-    },
+    }
+};
 
-    updatePlace: function (request, reply) {
+exports.updatePlace = {
+    auth: 'session',
+    handler: function (request, reply) {
         var session = request.auth.credentials;
         var form = request.payload;
         models.Place.update(request.params.placeKey, {
@@ -147,9 +162,12 @@ module.exports = {
             if (err) { throw err; }
             else { reply().code(201).redirect('/places'); }
         });
-    },
+    }
+};
 
-    starPlace: function (request, reply) {
+exports.starPlace = {
+    auth: 'session',
+    handler: function (request, reply) {
         var session = request.auth.credentials;
         models.Place.get(request.params.placeKey, function (err, place) {
             // get an array of the users which already starred the place
@@ -175,9 +193,12 @@ module.exports = {
                 reply().redirect('/places/' + place.slug);
             });
         });
-    },
+    }
+};
 
-    deletePlace: function (request, reply) {
+exports.deletePlace = {
+    auth: 'session',
+    handler: function (request, reply) {
         var session = request.auth.credentials;
         async.parallel({
             user: function (done) {
@@ -194,5 +215,4 @@ module.exports = {
             });
         });
     }
-
 };

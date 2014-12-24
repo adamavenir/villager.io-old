@@ -2,9 +2,9 @@ var _ = require('underscore');
 var models = require('../models').models;
 var User = models.User;
 
-module.exports = {
-
-    login: function (request, reply) {
+exports.login = {
+    auth: 'twitter',
+    handler: function (request, reply) {
         var access, newSession;
         var t = request.auth.credentials.profile;
         console.log('signed in as', t.username);
@@ -60,14 +60,18 @@ module.exports = {
                 });
             }
         });
-    },
+    }
+};
 
-    logout: function (request, reply) {
+exports.logout = {
+    handler: function (request, reply) {
         request.auth.session.clear();
         reply().redirect('/');
-    },
+    }
+};
 
-    session: function (request, reply) {
+exports.session = {
+    handler: function (request, reply) {
         if (request.auth.isAuthenticated) {
             reply('<h1>Session</h1><pre>' + JSON.stringify(request.auth.credentials, null, 4) + '</pre>');
         }
@@ -76,5 +80,4 @@ module.exports = {
         }
         
     } 
-
 };

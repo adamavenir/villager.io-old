@@ -2,9 +2,9 @@ var models = require('../models').models;
 var _ = require('underscore');
 var async = require('async');
 
-module.exports = {
-
-    listPending: function (request, reply) {
+exports.listPending = {
+    auth: 'session',
+    handler: function (request, reply) {
         var session = request.auth.credentials;
         async.parallel({
             people: function (done) {
@@ -44,9 +44,12 @@ module.exports = {
             }
             else { reply.redirect('/'); }
         });
-    },
+    }
+};
 
-    approvePerson: function (request, reply) {
+exports.approvePerson = {
+    auth: 'session',
+    handler: function (request, reply) {
         var session = request.auth.credentials;
         if (session.moderator) {
             models.User.update(request.params.person, { approved: true }, function (person) {
@@ -55,9 +58,12 @@ module.exports = {
             });
         }
         else { reply.redirect('/'); }
-    },
+    }
+};
 
-    approvePlace: function (request, reply) {
+exports.approvePlace = {
+    auth: 'session',
+    handler: function (request, reply) {
         var session = request.auth.credentials;
         if (session.moderator) {
             models.Place.update(request.params.place, { approved: true }, function () {
@@ -66,9 +72,12 @@ module.exports = {
             });
         }
         else { reply.redirect('/'); }
-    },
+    }
+};
 
-    approveGroup: function (request, reply) {
+exports.approveGroup = {
+    auth: 'session',
+    handler: function (request, reply) {
         var session = request.auth.credentials;
         if (session.moderator) {
             models.Group.update(request.params.group, { approved: true }, function (err, group) {
@@ -77,9 +86,12 @@ module.exports = {
             });
         }
         else { reply.redirect('/'); }
-    },
+    }
+};
 
-    adminPerson: function (request, reply) {
+exports.adminPerson = {
+    auth: 'session',
+    handler: function (request, reply) {
         var session = request.auth.credentials;
         if (session.admin) {
             models.User.update(request.params.person, { admin: true, moderator: true, approved: true }, function (person) {
@@ -88,9 +100,12 @@ module.exports = {
             });
         }
         else { reply().code(401).redirect('/'); }
-    },
+    }
+};
 
-    moderatorPerson: function (request, reply) {
+exports.moderatorPerson = {
+    auth: 'session',
+    handler: function (request, reply) {
         var session = request.auth.credentials;
         if (session.admin) {
             models.User.update(request.params.person, { moderator: true, approved: true }, function (person) {
@@ -99,6 +114,5 @@ module.exports = {
             });
         }
         else { reply().code(401).redirect('/'); }
-    },
-
+    }
 };

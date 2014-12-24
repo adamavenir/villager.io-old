@@ -2,34 +2,37 @@ var models = require('../models').models;
 var async = require('async');
 var _ = require('underscore');
 
-module.exports = {
+exports.addInterest = {
+    auth: 'session',
+    handler: function (request,reply) {
+        var form = request.payload;
+        var newInterest = models.Interest.create(form);
+        newInterest.save(function (err) {
+            if (err) { throw err; }
+            reply().redirect('/tinker');
+        });
+    }
+};
 
-	addInterest: function (request,reply) {
-    	var form = request.payload;
-    	var newInterest = models.Interest.create(form);
-    	newInterest.save(function (err) {
-    		if (err) { throw err; }
-    		reply().redirect('/tinker');
-	    });
-	},
-
-	delete: function (request, reply) {
-		var categoryType = request.params.categoryType;
+exports.delete = {
+    auth: 'session',
+    handler: function (request, reply) {
+        var categoryType = request.params.categoryType;
         async.parallel({
             model: function (done) {
-            	if (categoryType === 'interests') {
-            		console.log('interests');
- 	                models.Interest.findByIndex('slug', request.params.modelSlug, done);
-            	}
-            	else if (categoryType === 'group-category') {
-   	                models.GroupCategory.findByIndex('slug', request.params.modelSlug, done);
-            	}
-            	else if (categoryType === 'place-category') {
-		         	models.PlaceCategory.findByIndex('slug', request.params.modelSlug, done);
-            	}
-            	else {
-            		done('Invalid category type', null);
-            	}
+                if (categoryType === 'interests') {
+                    console.log('interests');
+                    models.Interest.findByIndex('slug', request.params.modelSlug, done);
+                }
+                else if (categoryType === 'group-category') {
+                    models.GroupCategory.findByIndex('slug', request.params.modelSlug, done);
+                }
+                else if (categoryType === 'place-category') {
+                    models.PlaceCategory.findByIndex('slug', request.params.modelSlug, done);
+                }
+                else {
+                    done('Invalid category type', null);
+                }
             }
         }, function (err, context) {
             if (err) { throw err; }
@@ -38,27 +41,31 @@ module.exports = {
                 reply.view('deleted').redirect('/tinker');
             });
         });
-    },
-    edit: function (request, reply) {
-		var categoryType = request.params.categoryType;
+    }
+};
+
+exports.edit = {
+    auth: 'session',
+    handler: function (request, reply) {
+        var categoryType = request.params.categoryType;
         var session = request.auth.credentials;
         async.parallel({
             model: function (done) {
-            	if (categoryType === 'interests') {
-            		console.log('interests');
- 	                models.Interest.findByIndex('slug', request.params.modelSlug, done);
-            	}
-            	else if (categoryType === 'group-category') {
-            		console.log('group-category');
-   	                models.GroupCategory.findByIndex('slug', request.params.modelSlug, done);
-            	}
-            	else if (categoryType === 'place-category') {
-            		console.log('place-category');
-		         	models.PlaceCategory.findByIndex('slug', request.params.modelSlug, done);
-            	}
-            	else {
-            		done('Invalid category type', null);
-            	}
+                if (categoryType === 'interests') {
+                    console.log('interests');
+                    models.Interest.findByIndex('slug', request.params.modelSlug, done);
+                }
+                else if (categoryType === 'group-category') {
+                    console.log('group-category');
+                    models.GroupCategory.findByIndex('slug', request.params.modelSlug, done);
+                }
+                else if (categoryType === 'place-category') {
+                    console.log('place-category');
+                    models.PlaceCategory.findByIndex('slug', request.params.modelSlug, done);
+                }
+                else {
+                    done('Invalid category type', null);
+                }
             }
         }, function (err, context) {
             if (err) { throw err; }
@@ -69,45 +76,57 @@ module.exports = {
             context.categoryType = categoryType;
             reply.view('tinker/editing', context);
         });
-    },
-    update: function (request, reply) {
+    }
+};
+
+exports.update = {
+    auth: 'session',
+    handler: function (request, reply) {
         var categoryType = request.params.categoryType;
         var form = request.payload;
         if (form.name) {
-        	if (categoryType === 'interests') {
-        		models.Interest.update(request.params.modelKey, form, function () {
-        			reply().redirect('/tinker');
-        		});
-			}
-        	else if (categoryType === 'group-category') {
-        		models.GroupCategory.update(request.params.modelKey, form, function () {
-        			reply().redirect('/tinker');
-        		});
-        	}
-        	else if (categoryType === 'place-category') {
-	         	models.PlaceCategory.update(request.params.modelKey, form, function () {
-        			reply().redirect('/tinker');
-        		});
-        	}
+            if (categoryType === 'interests') {
+                models.Interest.update(request.params.modelKey, form, function () {
+                    reply().redirect('/tinker');
+                });
+            }
+            else if (categoryType === 'group-category') {
+                models.GroupCategory.update(request.params.modelKey, form, function () {
+                    reply().redirect('/tinker');
+                });
+            }
+            else if (categoryType === 'place-category') {
+                models.PlaceCategory.update(request.params.modelKey, form, function () {
+                    reply().redirect('/tinker');
+                });
+            }
         }
         else {
-        	console.log('error updating');
+            console.log('error updating');
         }
-    },
-	addGroupCategory: function (request,reply) {
-    	var form = request.payload;
-    	var newCat = models.GroupCategory.create(form);
-    	newCat.save(function (err) {
-    		if (err) { throw err; }
-    		reply().redirect('/tinker');
-	    });
-	},
-	addPlaceCategory: function (request,reply) {
-    	var form = request.payload;
-    	var newCat = models.PlaceCategory.create(form);
-    	newCat.save(function (err) {
-    		if (err) { throw err; }
-    		reply().redirect('/tinker');
-	    });
-	}
+    }
+};
+
+exports.addGroupCategory = {
+    auth: 'session',
+    handler: function (request,reply) {
+        var form = request.payload;
+        var newCat = models.GroupCategory.create(form);
+        newCat.save(function (err) {
+            if (err) { throw err; }
+            reply().redirect('/tinker');
+        });
+    }
+};
+
+exports.addPlaceCategory = {
+    auth: 'session',
+    handler: function (request,reply) {
+        var form = request.payload;
+        var newCat = models.PlaceCategory.create(form);
+        newCat.save(function (err) {
+            if (err) { throw err; }
+            reply().redirect('/tinker');
+        });
+    }
 };

@@ -2,9 +2,9 @@ var models = require('../models').models;
 var _ = require('underscore');
 var async = require('async');
 
-module.exports = {
-
-    addGroup: function (request, reply) {
+exports.addGroup = {
+    auth: 'session',
+    handler: function (request, reply) {
         var session = request.auth.credentials;
         models.GroupCategory.all(function (err, groupCategories) {
             reply.view('addGroup', {
@@ -16,9 +16,12 @@ module.exports = {
                 groupCategories : groupCategories
             });
         });
-    },
+    }
+};
 
-    listGroups: function (request, reply) {
+exports.listGroups = {
+    auth: { strategy: 'session', mode: 'try' }
+    handler: function (request, reply) {
         var session = request.auth.credentials;
         async.parallel({
             groups: function (done) {
@@ -60,9 +63,12 @@ module.exports = {
                 }
             }
         });
-    },
-    
-    getGroup: function (request, reply) {
+    }
+};
+
+exports.getGroup = {
+    auth: { strategy: 'session', mode: 'try' }
+    handler: function (request, reply) {
         var session = request.auth.credentials;
         models.Group.findByIndex('slug', request.params.group, function(err, group) {
             console.log('req', request.params.group);
@@ -83,9 +89,12 @@ module.exports = {
                 });
             }
         });
-    },
+    }
+};
 
-    createGroup: function (request, reply) {
+exports.createGroup = {
+    auth: 'session',
+    handler: function (request, reply) {
         var session = request.auth.credentials;
         var form = request.payload;
         console.log('form is%j', form);
@@ -105,9 +114,12 @@ module.exports = {
                 reply().code(201).redirect('/groups/' + group.slug);
             });
         });
-    },
+    }
+};
 
-    editGroup: function (request, reply) {
+exports.editGroup = {
+    auth: 'session',
+    handler: function (request, reply) {
         var session = request.auth.credentials;
         async.parallel({
             group: function (done) {
@@ -127,9 +139,12 @@ module.exports = {
             });
             reply.view('editGroup', context);
         });
-    },
+    }
+};
 
-    updateGroup: function (request, reply) {
+exports.updateGroup = {
+    auth: 'session',
+    handler: function (request, reply) {
         var session = request.auth.credentials;
         var form = request.payload;
         models.Group.update(request.params.groupKey, {
@@ -144,9 +159,12 @@ module.exports = {
             if (err) { throw err; }
             reply().code(201).redirect('/groups');
         });
-    },
+    }
+};
 
-    starGroup: function (request, reply) {
+exports.starGroup = {
+    auth: 'session',
+    handler: function (request, reply) {
         var session = request.auth.credentials;
         models.Group.get(request.params.groupKey, function (err, group) {
             // get an array of the users which already starred the group
@@ -171,9 +189,12 @@ module.exports = {
                 reply().redirect('/groups/' + group.slug);
             });
         });
-    },
+    }
+};
 
-    deleteGroup: function (request, reply) {
+exports.deleteGroup = {
+    auth: 'session',
+    handler: function (request, reply) {
         var session = request.auth.credentials;
         async.parallel({
             user: function (done) {
@@ -189,6 +210,5 @@ module.exports = {
                 reply.view('deleted').redirect('/groups');
             });
         });
-    },
-
+    }
 };

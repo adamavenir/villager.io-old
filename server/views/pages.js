@@ -2,9 +2,9 @@ var models = require('../models').models;
 var async = require('async');
 var _ = require('underscore');
 
-module.exports = {
-
-    index: function (request, reply) {
+exports.index = {
+    auth: 'session',
+    handler: function (request, reply) {
         if (request.auth.isAuthenticated && request.auth.credentials.userid) {
             var session = request.auth.credentials;
             reply.view('index', {
@@ -16,9 +16,12 @@ module.exports = {
             });
         }
         else { reply.view('index'); }
-    },
+    }
+};
 
-    tinker: function (request, reply) {
+exports.tinker = {
+    auth: 'session',
+    handler: function (request, reply) {
         var session = request.auth.credentials;
         async.parallel({
             interests: function (done) {
@@ -42,9 +45,10 @@ module.exports = {
             reply.view('tinker/tinker', context);
         });
     },
+};
 
-    notFound: function (request, reply) {
+exports.notFound = {
+    handler: function (request, reply) {
         reply('404');
     },
-
-};
+}
