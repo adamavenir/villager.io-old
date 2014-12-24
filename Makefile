@@ -1,3 +1,20 @@
+include node_modules/make-better/core.inc
+include node_modules/make-better/frontend.inc
+
+STYLUS_DIR := ./styl
+
+# General targets
+build: css
+css: public/css/main.css
+
+public/css/main.css: $(STYLUS_FILES)
+	mkdir -p public/css
+	stylus -u yeticss \
+		   -u autoprefixer-stylus \
+		   -c \
+		   -o public/css styl/main.styl
+
+# Tests
 test-cov:
 		@node node_modules/lab/bin/lab -c
 test:
@@ -7,4 +24,4 @@ test-cov-html:
 complexity:
 		@node node_modules/complexity-report/src/index.js -o complexity.md -f markdown lib/
 
-.PHONY: test test-no-cov test-cov-html complexity
+.PHONY: test test-no-cov test-cov-html complexitycss
