@@ -3,6 +3,7 @@ var async = require('async');
 var _ = require('underscore');
 
 module.exports = {
+    
     listLists: function (request, reply) {
         var session = request.auth.credentials;
         async.parallel({
@@ -32,6 +33,7 @@ module.exports = {
             reply.view('lists', context);
         });
     },
+
     addList: function (request, reply) {
         var form = request.payload;
         console.log('form is', form);
@@ -43,6 +45,7 @@ module.exports = {
             });
         }
     },
+
     editList: function (request, reply) {
         var session = request.auth.credentials;
         async.parallel({
@@ -91,6 +94,7 @@ module.exports = {
             reply.view('editList', context);
         });
     },
+
     updateList: function (request, reply) {
         var form = request.payload;
         console.log('form is', form);
@@ -108,23 +112,10 @@ module.exports = {
             reply().redirect('/lists');
         });
     },
+
     deleteList: function (request, reply) {
-        var session = request.auth.credentials;
         models.List.delete(request.params.listKey, function (err) {
             if (err) { throw err; }
-            var l = models.Log.create({ 
-                objType: 'list',
-                editType: 'deleted',
-                editorKey: session.userid,
-                editorName: session.fullName,
-                editorAvatar: session.avatar,
-                editedKey: request.params.personKey,
-                editedName: request.params.personName 
-            });
-            l.save(function(err) {
-                if (err) { throw err; }
-                console.log('logging');
-            });
             reply.view('deleted').redirect('/lists');
         });
     }

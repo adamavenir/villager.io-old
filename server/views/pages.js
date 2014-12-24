@@ -5,19 +5,14 @@ var _ = require('underscore');
 module.exports = {
 
     index: function (request, reply) {
-        //console.log('\n====in pages.js request.auth%j', request.auth);
         if (request.auth.isAuthenticated && request.auth.credentials.userid) {
             var session = request.auth.credentials;
-            models.Log.all(function(err, log) {
-                if (err) { console.log(err); }
-                reply.view('index', {
-                    log       : log,
-                    fullName  : session.fullName,
-                    avatar    : session.avatar,
-                    userid    : session.userid,
-                    moderator : session.moderator,
-                    admin     : session.admin
-                });
+            reply.view('index', {
+                fullName  : session.fullName,
+                avatar    : session.avatar,
+                userid    : session.userid,
+                moderator : session.moderator,
+                admin     : session.admin
             });
         }
         else { reply.view('index'); }

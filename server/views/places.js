@@ -33,8 +33,6 @@ module.exports = {
             creatorKey : session.userid
         });
         p.save(function (err) {
-            // var l = Log.create({ objType: 'place', editType: 'created', editorKey: session.userid, editorName: session.user.displayName, editorAvatar: session.user._json.profile_image_url });
-            // l.save();
             if (err) { throw err; }
             models.Place.load(p.key, function (err, place) {
                 if (err) { throw err; }
@@ -145,21 +143,9 @@ module.exports = {
             website : form.website,
             about   : form.about,
             creatorKey : session.userid
-        }, function (err, place) {
+        }, function (err) {
             if (err) { throw err; }
-            var l = models.Log.create({ objType: 'place',
-                                        editType: 'updated',
-                                        editorKey: session.userid,
-                                        editorName: session.fullName,
-                                        editorAvatar: session.avatar,
-                                        editedKey: place.key,
-                                        editedName: place.name });
-            l.save( function (err) {
-                if (err) { throw err; }
-                else {
-                    reply().code(201).redirect('/places');
-                }
-            });
+            else { reply().code(201).redirect('/places'); }
         });
     },
 
@@ -204,19 +190,6 @@ module.exports = {
             if (err) { throw err; }
             context.place.delete(function (err) {
                 if (err) { throw err; }
-                var l = models.Log.create({ 
-                    objType: 'person',
-                    editType: 'deleted',
-                    editorKey: session.userid,
-                    editorName: context.user.fullName,
-                    editorAvatar: context.user.avatar,
-                    editedKey: request.params.placeKey,
-                    editedName: request.params.placeName 
-                });
-                l.save(function(err) {
-                    if (err) { throw err; }
-                    console.log('logging');
-                });
                 reply.view('deleted').redirect('/places');
             });
         });

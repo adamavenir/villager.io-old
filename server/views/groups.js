@@ -98,21 +98,11 @@ module.exports = {
             about   : form.about,
             creatorKey : session.userid
         });
-        models.User.get(session.userid, function (err, user) {
-            g.save(function (err) {
-                if (err) { throw err; }
-                var l = models.Log.create({ 
-                    objType: 'group',
-                    editType: 'created',
-                    editorKey: session.userid,
-                    editorName: user.fullName,
-                    editorAvatar: user.avatar
-                });
-                l.save( function () { console.log('logging'); });
-                models.Group.load(g.key, function (err, group) {
-                    console.log('saved ' +  group.key);
-                    reply().code(201).redirect('/groups/' + group.slug);
-                });
+        g.save(function (err) {
+            if (err) { throw err; }
+            models.Group.load(g.key, function (err, group) {
+                console.log('saved ' +  group.key);
+                reply().code(201).redirect('/groups/' + group.slug);
             });
         });
     },
@@ -150,23 +140,9 @@ module.exports = {
             website : form.website,
             about   : form.about,
             creatorKey : session.userid
-        }, function (err, group) {
+        }, function (err) {
             if (err) { throw err; }
-            var l = models.Log.create({ 
-                objType: 'group',
-                editType: 'updated',
-                editorKey: session.userid,
-                editorName: session.fullName,
-                editorAvatar: session.avatar,
-                editedKey: group.key,
-                editedName: group.name 
-            });
-            l.save( function (err) {
-                if (err) { throw err; }
-                else {
-                    reply().code(201).redirect('/groups');
-                }
-            });
+            reply().code(201).redirect('/groups');
         });
     },
 
@@ -210,19 +186,6 @@ module.exports = {
             if (err) { throw err; }
             context.group.delete(function (err) {
                 if (err) { throw err; }
-                var l = models.Log.create({ 
-                    objType: 'group',
-                    editType: 'deleted',
-                    editorKey: session.userid,
-                    editorName: context.user.fullName,
-                    editorAvatar: context.user.avatar,
-                    editedKey: request.params.groupKey,
-                    editedName: request.params.groupName 
-                });
-                l.save(function(err) {
-                    if (err) { throw err; }
-                    console.log('logging');
-                });
                 reply.view('deleted').redirect('/groups');
             });
         });

@@ -1,5 +1,5 @@
-var Log   = new require('./Log');
-var User  = new require('./User');
+var LogEvent = new require('./LogEvent');
+var User = new require('./User');
 var Place = new require('./Place');
 var Group = new require('./Group');
 var Interest = new require('./Interest');
@@ -8,19 +8,19 @@ var PlaceCategory = new require('./PlaceCategory');
 var List = new require('./List');
 
 var models = {
-    User:   User,
-    Log:    Log,
-    Place:  Place,
-    Group:  Group,
+    User: User,
+    LogEvent: LogEvent,
+    Place: Place,
+    Group: Group,
     Interest: Interest,
     GroupCategory: GroupCategory,
     PlaceCategory: PlaceCategory,
-    List : List
+    List: List
 };
 
 function attachDB(db) {
     models.User.options.db = db;
-    models.Log.options.db = db;
+    models.LogEvent.options.db = db;
     models.Place.options.db = db;
     models.Group.options.db = db;
     models.GroupCategory.options.db = db;

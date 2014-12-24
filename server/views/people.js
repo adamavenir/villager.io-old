@@ -19,7 +19,6 @@ module.exports = {
     },
 
     createPerson: function (request, reply) {
-        var session = request.auth.credentials;
         var form = request.payload;
         var p = models.User.create({
             fullName  : form.fullName,
@@ -31,23 +30,11 @@ module.exports = {
             interests : form.interests,
             approved  : true
         });
-        models.User.get(session.userid, function (err, user) {
-            p.save(function (err) {
+        p.save(function (err) {
+            if (err) { throw err; }
+            models.User.load(p.key, function (err, person) {
                 if (err) { throw err; }
-                models.User.load(p.key, function (err, person) {
-                    if (err) { throw err; }
-                    reply().code(201).redirect('/people/' + person.slug);
-                    var l = models.Log.create({ 
-                        objType: 'person',
-                        editType: 'created',
-                        editorKey: session.userid,
-                        editorName: user.fullName,
-                        editorAvatar: user.avatar,
-                        editedKey: person.key,
-                        editedName: person.fullName 
-                    });
-                    l.save(function () { console.log('logging'); });
-                });
+                reply().code(201).redirect('/people/' + person.slug);
             });
         });
     },
@@ -140,7 +127,6 @@ module.exports = {
     },
 
     updatePerson: function (request, reply) {
-        var session = request.auth.credentials;
         var form = request.payload;
         console.log('form is', form);
         models.User.update(request.params.person, {
@@ -151,25 +137,10 @@ module.exports = {
             company   : form.company,
             about     : form.about,
             interests : form.interests
-        }, function(err, p) {
+        }, function (err) {
             if (err) { throw err; }
             else {
                 reply().code(201).redirect('/people');
-                models.User.get(session.userid, function (err, sessionUser) {
-                    var l = models.Log.create({ 
-                        objType: 'person',
-                        editType: 'updated',
-                        editorKey: session.userid,
-                        editorName: sessionUser.fullName,
-                        editorAvatar: sessionUser.avatar,
-                        editedKey: p.key,
-                        editedName: p.fullName 
-                    });
-                    l.save(function(err) {
-                        if (err) { throw err; }
-                        console.log('logging');
-                    });
-                });
             }
         });
     },
@@ -189,19 +160,6 @@ module.exports = {
             if (session.moderator && !context.person.admin) {
                 context.person.delete(function (err) {
                     if (err) { throw err; }
-                    var l = models.Log.create({ 
-                        objType: 'person',
-                        editType: 'deleted',
-                        editorKey: session.userid,
-                        editorName: session.fullName,
-                        editorAvatar: session.avatar,
-                        editedKey: request.params.personKey,
-                        editedName: request.params.personName 
-                    });
-                    l.save(function(err) {
-                        if (err) { throw err; }
-                        console.log('logging');
-                    });
                     reply.view('deleted').redirect('/people');
                 });
             }

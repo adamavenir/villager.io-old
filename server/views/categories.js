@@ -15,7 +15,6 @@ module.exports = {
 
 	delete: function (request, reply) {
 		var categoryType = request.params.categoryType;
-        var session = request.auth.credentials;
         async.parallel({
             model: function (done) {
             	if (categoryType === 'interests') {
@@ -36,17 +35,6 @@ module.exports = {
             if (err) { throw err; }
             context.model.delete(function (err) {
                 if (err) { throw err; }
-                var l = models.Log.create({ objType: 'category',
-                                    editType: 'deleted',
-                                    editorKey: session.userid,
-                                    editorName: session.fullName,
-                                    editorAvatar: session.avatar,
-                                    editedKey: request.params.placeKey,
-                                    editedName: request.params.placeName });
-                l.save(function(err) {
-                    if (err) { throw err; }
-                    console.log('logging');
-                });
                 reply.view('deleted').redirect('/tinker');
             });
         });
