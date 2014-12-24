@@ -1,10 +1,6 @@
 {
     "hostname": "localhost",
     "port": 7000,
-    "urls": {
-        "failureRedirect": "/login",
-        "successRedirect": "/"
-    },
     "auth": {
         "urls": {
             "failureRedirect": "/login",

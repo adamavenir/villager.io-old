@@ -1,14 +1,10 @@
 {
     "hostname": "localhost",
     "port": 5000,
-    "urls": {
-        "failureRedirect": "/login",
-        "successRedirect": "/"
-    },
     "auth": {
         "urls": {
-            "failureRedirect": "/login",
-            "successRedirect": "/on-login",
+            "failureRedirect": "/auth/twitter",
+            "successRedirect": "/",
             "failureFlash": true
         },
         "twitter": {
