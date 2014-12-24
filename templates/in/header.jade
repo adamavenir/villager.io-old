@@ -3,22 +3,22 @@ header(class="mod" + moderator)
     input#menu-toggle.menu-toggle(type="checkbox")
     label(for="menu-toggle") Menu
     ul.list-unstyled.list-inline.cf
-      li: a(href="/") home
-      li: a(href="/lists") lists
-      li: a(href="/people") people
-      li: a(href="/places") places
-      li: a(href="/groups") groups
+      li: a(href="/") Home
+      li: a(href="/lists") Lists
+      li: a(href="/people") People
+      li: a(href="/places") Places
+      li: a(href="/groups") Groups
       //- li: a(href="/events") Events
       if moderator
-        li: a(href="/pending") pending
+        li: a(href="/pending") Pending
       if userid
-        li.has-dropdown
+        li.has-dropdown.header-profile
           a(href="/profile/edit/" + userid)= fullName
             img.avatar.avatar-small(src= avatar)
           .icon-arrow-down
           ul.list-unstyled.dropdown.cf
-            li: a(href="/profile/edit/" + userid) edit profile
-            li: a(href="/tinker") tinker
-            li: a(href="/logout") log out
+            li: a(href="/profile/edit/" + userid) Edit profile
+            li: a(href="/tinker") Tinker
+            li: a(href="/logout") Log out
       if !userid
-        a(href="/auth/twitter") log in
+        a(href="/auth/twitter") Log in
