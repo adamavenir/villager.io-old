@@ -1,72 +1,72 @@
 extends ../layout
 
 block body
-  body
-    include ../in/header
+  
+  include ../in/header
 
-    h1 Categories
+  h1 Categories
 
-    h6 Interests
-    each interest in interests[0]
-        div.interest
-          img.grav(src= interest.image)
-          h2= interest.name
-          h3= interest.description
-          a(href="/tinker/delete/interests/" + interest.slug) Delete this interest
-          br
-          a.edit(href="/tinker/edit/interests/" + interest.slug) Edit this inteterest
-
-
-    form(method="POST", action="/tinker/add-interest")
-      p Add new interest
-      label(for="name") Name
-      input(name="name")
-      label(for="description") Description
-      input(name="description")
-      label(for="image") Image (optional)
-      input(name="image")
-      button.small(type="submit") +
-
-    h6 Place Categories
-    each cat in placeCategories[0]
-        div.interest
-          img.grav(src= cat.image)
-          h2= cat.name
-          h3= cat.description
-          a(href="/tinker/delete/place-category/" + cat.slug) Delete this place category
-          br
-          a.edit(href="/tinker/edit/place-category/" + cat.slug) Edit this place category
+  h6 Interests
+  each interest in interests[0]
+      div.interest
+        img.grav(src= interest.image)
+        h2= interest.name
+        h3= interest.description
+        a(href="/tinker/delete/interests/" + interest.slug) Delete this interest
+        br
+        a.edit(href="/tinker/edit/interests/" + interest.slug) Edit this inteterest
 
 
-    form(method="POST", action="/tinker/add-place-category")
-      p Add new place category
-      label(for="name") Name
-      input(name="name")
-      label(for="description") Description
-      input(name="description")
-      label(for="image") Image (optional)
-      input(name="image")
-      button.small(type="submit") +
+  form(method="POST", action="/tinker/add-interest")
+    p Add new interest
+    label(for="name") Name
+    input(name="name")
+    label(for="description") Description
+    input(name="description")
+    label(for="image") Image (optional)
+    input(name="image")
+    button.small(type="submit") +
 
-    h6 Group Categories
-    each cat in groupCategories[0]
-        div.interest
-          img.grav(src= cat.image)
-          h2= cat.name
-          h3= cat.description
-          a(href="/tinker/delete/group-category/" + cat.slug) Delete this group category
-          br
-          a.edit(href="/tinker/edit/group-category/" + cat.slug) Edit this group category
+  h6 Place Categories
+  each cat in placeCategories[0]
+      div.interest
+        img.grav(src= cat.image)
+        h2= cat.name
+        h3= cat.description
+        a(href="/tinker/delete/place-category/" + cat.slug) Delete this place category
+        br
+        a.edit(href="/tinker/edit/place-category/" + cat.slug) Edit this place category
 
 
-    form(method="POST", action="/tinker/add-group-category")
-      p Add new group category
-      label(for="name") Name
-      input(name="name")
-      label(for="description") Description
-      input(name="description")
-      label(for="image") Image (optional)
-      input(name="image")
-      button.small(type="submit") +
+  form(method="POST", action="/tinker/add-place-category")
+    p Add new place category
+    label(for="name") Name
+    input(name="name")
+    label(for="description") Description
+    input(name="description")
+    label(for="image") Image (optional)
+    input(name="image")
+    button.small(type="submit") +
 
-    include ../in/footer
+  h6 Group Categories
+  each cat in groupCategories[0]
+      div.interest
+        img.grav(src= cat.image)
+        h2= cat.name
+        h3= cat.description
+        a(href="/tinker/delete/group-category/" + cat.slug) Delete this group category
+        br
+        a.edit(href="/tinker/edit/group-category/" + cat.slug) Edit this group category
+
+
+  form(method="POST", action="/tinker/add-group-category")
+    p Add new group category
+    label(for="name") Name
+    input(name="name")
+    label(for="description") Description
+    input(name="description")
+    label(for="image") Image (optional)
+    input(name="image")
+    button.small(type="submit") +
+
+  include ../in/footer

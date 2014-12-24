@@ -1,21 +1,24 @@
 header(class="mod" + moderator)
-  span.home
-    a(href="/") triciti.es
-  nav
-    a(href="/lists") Lists
-    a(href="/people") People
-    a(href="/places") Places
-    a(href="/groups") Groups
-    //- a(href="/events") Events
-    //- a(href="/projects") Projects
-    if moderator
-      a(href="/pending") Pending
-    if userid
-      a(href="/profile/edit/" + userid) Edit profile
-      a(href="/tinker") Tinker
-      a(href="/logout") Log out
-    if !userid
-      a(href="/auth/twitter") Log in
-  if fullName && avatar
-    span.user= fullName
-      img(src= avatar)
+  nav.top-nav.top-nav-light.cf
+    input#menu-toggle.menu-toggle(type="checkbox")
+    label(for="menu-toggle") Menu
+    ul.list-unstyled.list-inline.cf
+      li: a(href="/") home
+      li: a(href="/lists") lists
+      li: a(href="/people") people
+      li: a(href="/places") places
+      li: a(href="/groups") groups
+      //- li: a(href="/events") Events
+      if moderator
+        li: a(href="/pending") pending
+      if userid
+        li.has-dropdown
+          a(href="/profile/edit/" + userid)= fullName
+            img.avatar.avatar-small(src= avatar)
+          .icon-arrow-down
+          ul.list-unstyled.dropdown.cf
+            li: a(href="/profile/edit/" + userid) edit profile
+            li: a(href="/tinker") tinker
+            li: a(href="/logout") log out
+      if !userid
+        a(href="/auth/twitter") log in
