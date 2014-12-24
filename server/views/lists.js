@@ -112,18 +112,20 @@ module.exports = {
         var session = request.auth.credentials;
         models.List.delete(request.params.listKey, function (err) {
             if (err) { throw err; }
-            var l = models.Log.create({ objType: 'person',
-                                        editType: 'deleted',
-                                        editorKey: session.userid,
-                                        editorName: session.fullName,
-                                        editorAvatar: session.avatar,
-                                        editedKey: request.params.personKey,
-                                        editedName: request.params.personName });
+            var l = models.Log.create({ 
+                objType: 'list',
+                editType: 'deleted',
+                editorKey: session.userid,
+                editorName: session.fullName,
+                editorAvatar: session.avatar,
+                editedKey: request.params.personKey,
+                editedName: request.params.personName 
+            });
             l.save(function(err) {
                 if (err) { throw err; }
                 console.log('logging');
             });
-            reply.view('deleted').redirect('/people');
+            reply.view('deleted').redirect('/lists');
         });
     }
 };

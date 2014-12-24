@@ -61,6 +61,7 @@ module.exports = {
             }
         });
     },
+    
     getGroup: function (request, reply) {
         var session = request.auth.credentials;
         models.Group.findByIndex('slug', request.params.group, function(err, group) {
@@ -83,6 +84,7 @@ module.exports = {
             }
         });
     },
+
     createGroup: function (request, reply) {
         var session = request.auth.credentials;
         var form = request.payload;
@@ -99,12 +101,13 @@ module.exports = {
         models.User.get(session.userid, function (err, user) {
             g.save(function (err) {
                 if (err) { throw err; }
-                var l = models.Log.create({ objType: 'group',
-                                     editType: 'created',
-                                     editorKey: session.userid,
-                                     editorName: user.fullName,
-                                     editorAvatar: user.avatar
-                                 });
+                var l = models.Log.create({ 
+                    objType: 'group',
+                    editType: 'created',
+                    editorKey: session.userid,
+                    editorName: user.fullName,
+                    editorAvatar: user.avatar
+                });
                 l.save( function () { console.log('logging'); });
                 models.Group.load(g.key, function (err, group) {
                     console.log('saved ' +  group.key);
@@ -149,13 +152,15 @@ module.exports = {
             creatorKey : session.userid
         }, function (err, group) {
             if (err) { throw err; }
-            var l = models.Log.create({ objType: 'group',
-                                        editType: 'updated',
-                                        editorKey: session.userid,
-                                        editorName: session.fullName,
-                                        editorAvatar: session.avatar,
-                                        editedKey: group.key,
-                                        editedName: group.name });
+            var l = models.Log.create({ 
+                objType: 'group',
+                editType: 'updated',
+                editorKey: session.userid,
+                editorName: session.fullName,
+                editorAvatar: session.avatar,
+                editedKey: group.key,
+                editedName: group.name 
+            });
             l.save( function (err) {
                 if (err) { throw err; }
                 else {
@@ -164,6 +169,7 @@ module.exports = {
             });
         });
     },
+
     starGroup: function (request, reply) {
         var session = request.auth.credentials;
         models.Group.get(request.params.groupKey, function (err, group) {
@@ -204,13 +210,15 @@ module.exports = {
             if (err) { throw err; }
             context.group.delete(function (err) {
                 if (err) { throw err; }
-                var l = models.Log.create({ objType: 'group',
-                                    editType: 'deleted',
-                                    editorKey: session.userid,
-                                    editorName: context.user.fullName,
-                                    editorAvatar: context.user.avatar,
-                                    editedKey: request.params.groupKey,
-                                    editedName: request.params.groupName });
+                var l = models.Log.create({ 
+                    objType: 'group',
+                    editType: 'deleted',
+                    editorKey: session.userid,
+                    editorName: context.user.fullName,
+                    editorAvatar: context.user.avatar,
+                    editedKey: request.params.groupKey,
+                    editedName: request.params.groupName 
+                });
                 l.save(function(err) {
                     if (err) { throw err; }
                     console.log('logging');

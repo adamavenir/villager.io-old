@@ -56,7 +56,7 @@ module.exports = {
                     });
                     request.auth.session.clear();
                     request.auth.session.set(newSession);
-                    reply().code(201).redirect('/people');
+                    reply().code(201).redirect('/');
                 });
             }
         });
