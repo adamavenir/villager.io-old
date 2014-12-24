@@ -2,6 +2,7 @@ var Hapi = require('hapi');
 var Bell = require('bell');
 var config = require('getconfig');
 var Cookie = require('hapi-auth-cookie');
+var BSS = require('building-static-server');
 var routes = require('./server/routes');
 var Dulcimer = require('dulcimer');
 Dulcimer.connect({type: 'level', path: './db'});
@@ -19,11 +20,17 @@ server.views({
     path: __dirname + '/templates'
 });
 
-server.register([Bell, Cookie], function (err) {
+var plugins = [];
 
-    if (err) {
-        throw err;
-    }
+plugins.push(Bell, Cookie);
+
+if (config.getconfig.env === 'dev') {
+    var build = BSS;
+} else { var build = null; }
+
+server.register([Bell,Cookie], function (err) {
+
+    if (err) { throw err; }
 
     server.auth.strategy('twitter', 'bell', {
         provider: 'twitter',
@@ -42,6 +49,12 @@ server.register([Bell, Cookie], function (err) {
     });
 
     server.route(routes(server));
+});
+
+// have to register plugins twice to use BSS at the moment
+server.register(build, function (err) {
+
+    if (err) { throw err; }
 
     server.start(function (err) {
         if (err) { console.log('error: ', err); }
