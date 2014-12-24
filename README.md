@@ -11,6 +11,27 @@ First implementation will be [triciti.es](http://triciti.es), successor to [WeCr
 
 The project takes its name from [Jane Jacobs](http://en.wikipedia.org/wiki/Jane_Jacobs) (above) and her work on the [urban village](http://en.wikipedia.org/wiki/Urban_village). The underlying thesis of this project is that our online connectedness can be a tool to help overcome the tragic disconnectedness of suburbia.
 
+## Setup
+
+Want to contribute? Here's what you need to do to run this app locally.
+
+1. Go [configure a Twitter app](https://apps.twitter.com/app/new)
+
+  - Make sure to check *Allow this application to be used to Sign in with Twitter*
+  - It doesn't matter what you put in the callback URL.
+  
+2. Copy ``sample_config.json`` to ``dev_config.json`` and edit accordingly:
+
+  - Grab the *Consumer Key (API Key)* and set it as ``ClientId``
+  - Grab the *Consumer Secret (API Secret)* and set it as ``ClientSecret``
+
+3. ``npm i`` to install dependencies.
+
+4. ``npm start`` to run.
+
+__Important note:__ I just realized this app *temporarily* requires a nlfpm account in order to compile CSS. This app uses [yeti.css](http://yeticss.com) by [Karolina](https://github.com/thefoxis), which is not published publically yet.
+
+
 ## Done:
 
 - Add yourself by logging in with Twitter
@@ -23,22 +44,23 @@ The project takes its name from [Jane Jacobs](http://en.wikipedia.org/wiki/Jane_
 - ★ for favorites
 - Curated lists
 
-
 ## Todos for next release (early January):
 - [x] Update to hapi 8
 - [x] Update to bell
 - [x] Update to dulcimer 2.5
 - [x] Set up test scaffolding
+- [ ] Design cleanup
+- [ ] Add a place/group to a list from its page
+- [ ] Show lists a place/group appears on
 - [ ] Add and list upcoming events
 - [ ] Basic RSVPs for events
-- [ ] Show lists a place/group appears on
 - [ ] Show groups a person is a member of
 - [ ] Show places a person has been
 - [ ] Show events a person has RSVP'd for
 - [ ] Ability to be a member or admin of a group or place
 - [ ] Write more tests
 - [ ] Make some things not suck as much
-- [ ] Design
+- [ ] Design polish
 
 ## Future todos
 - Fallback avatars
