@@ -41,15 +41,15 @@ __Important note:__ I just realized this app *temporarily* requires a nlfpm acco
 - List pending submissions
 - Moderate submitted entries
 - Probably some other stuff
-- ★ for favorites
-- Curated lists
 
 ## Todos for next release (early January):
 - [x] Update to hapi 8
 - [x] Update to bell
 - [x] Update to dulcimer 2.5
 - [x] Set up test scaffolding
-- [ ] Design cleanup
+- [x] Design cleanup
+- [ ] Curated lists of places and groups
+- [ ] ★ places and groups for favorites
 - [ ] Add a place/group to a list from its page
 - [ ] Show lists a place/group appears on
 - [ ] Add and list upcoming events
