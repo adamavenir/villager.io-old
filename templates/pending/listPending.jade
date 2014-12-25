@@ -11,15 +11,15 @@ block body
           a(href= '/people/' + person.slug)
             img.avatar.avatar-large.avatar-rounded(src= person.avatar)
           h5= person.fullName
-          p
-            if !person.approved
-              | Pending
-            if person.approved
-              | √
-            if person.moderator
-              | M
-            if person.admin
-              | A
+          //- p
+          //-   if !person.approved
+          //-     | Pending
+          //-   if person.approved
+          //-     | √
+          //-   if person.moderator
+          //-     | M
+          //-   if person.admin
+          //-     | A
           p.moderate
             a(href="/people/approve/" + person.key) Approve
             a(href="/people/moderator/" + person.key) Moderator

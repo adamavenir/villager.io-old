@@ -4,20 +4,33 @@ block body
   body
     include ../in/header
 
-    h1 Add a place
-    p (Restaurant, company, coffee shop, venue, park)
-    form#addPlace(method="POST", action="/places/add")
-      label(for="type") Type of place:
-      select#inputType(name="type")
-        option(value="") -- Select a Category --
-        each cat in placeCategories
-          option(value=cat.key) #{cat.name}
-      input#inputName(name="name", type="text", placeholder="Name of the place")
-      input#inputAddress(name="address", type="text", placeholder="112 Hundred Acre Wood")
-      input#inputCity(name="city", type="text", placeholder="West Richlascowickton City")
-      input#inputWebsite(name="website", type="text", placeholder="http://placewebsite.com")
-      input#inputImage(name="image", type="text", placeholder="link to an image")
-      textarea#inputAbout(name="about", type="text", maxlength="160", placeholder="Describe this place (160 characters max)")
-      button(name="submit", type="submit") Add this place
+    form(method="POST", action="/places/add")
+      fieldset
+        legend Add a place
+        .form-element
+          label(for="type") Type of place:
+          select.form-input(name="type")
+            option(value="") -- Select a Category --
+            each cat in placeCategories
+              option(value=cat.key) #{cat.name}
+        .form-element
+          label(for="name") Place name
+          input.form-input(name="name", type="text", placeholder="Name of the place")
+        .form-element
+          label(for="address") Address
+          input.form-input(name="address", type="text", placeholder="112 Hundred Acre Wood")            
+        .form-element
+          label(for="city") City
+          input.form-input(name="city", type="text", placeholder="West Richlascowickton City")            
+        .form-element
+          label(for="website") Website
+          input.form-input(name="website", type="text", placeholder="http://placewebsite.com")
+        .form-element
+          label(for="image") Link to image
+          input.form-input(name="image", type="text", placeholder="link to an image")
+        .form-element
+          label(for="about") Description
+          textarea.form-input(name="about", type="text", maxlength="160", placeholder="Describe this place (160 characters max)")
+        button.button.button-primary(name="submit", type="submit") Add this place
 
     include ../in/footer

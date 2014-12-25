@@ -14,7 +14,8 @@ header(class="mod" + moderator)
       if userid
         li.has-dropdown.header-profile
           a(href="/profile/edit/" + userid)= fullName
-            img.avatar.avatar-small(src= avatar)
+            //- TODO: figure out why avatar doesn't work here
+            //- img.avatar.avatar-small(src= avatar)
           .icon-arrow-down
           ul.list-unstyled.dropdown.cf
             li: a(href="/profile/edit/" + userid) Edit profile

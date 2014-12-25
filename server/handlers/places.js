@@ -12,37 +12,40 @@ exports.list = {
             }
         }, function (err, context) {
             if (err) { throw err; }
-            //var approved = _.where(context.places[0], { approved: true });
-            //console.log('approved places', approved);
-            //var mine = _.where(context.places[0], { creatorKey: session.userid, approved: false });
-            // if(mine.length + approved.length === 0) {
-            //     reply.view('noPlaces', {
-            //         userid    : session.userid,
-            //         user      : context.sessionUser[0],
-            //         moderator : session.moderator,
-            //         admin     : session.admin
-            //     });
-            // }
-            //else {
+            var approved = _.where(context.places[0], { approved: true });
             if (session && session.userid) {
-                reply.view('places/listPlaces', {
-                    places    : context.places[0],
-                    //mine      : mine,
-                    userid    : session.userid,
-                    fullName  : session.fullName,
-                    avatar    : session.avatar,
-                    moderator : session.moderator,
-                    admin     : session.admin
-                });
+                var mine = _.where(context.places[0], { creatorKey: session.userid, approved: false });
+                if(mine.length + approved.length === 0) {
+                    reply.view('places/noPlaces', {
+                        fullName  : session.fullName,
+                        avatar    : session.avatar,
+                        userid    : session.userid,
+                        moderator : session.moderator,
+                        admin     : session.admin
+                    });
+                }
+                else {
+                    reply.view('places/listPlaces', {
+                        places    : approved,
+                        mine      : mine,
+                        fullName  : session.fullName,
+                        avatar    : session.avatar,
+                        userid    : session.userid,
+                        moderator : session.moderator,
+                        admin     : session.admin
+                    });
+                }
             }
-
             else {
-                reply.view('places/listPlaces', {
-                    places    : context.places[0],
-                });
+                if (approved.length === 0) {
+                    reply.view('places/noPlaces');
+                }
+                else {
+                    reply.view('places/listPlaces', {
+                        places : approved
+                    });
+                }
             }
-
-            //}
         });
     }
 };

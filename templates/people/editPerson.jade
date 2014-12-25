@@ -7,32 +7,24 @@ block body
     form(method="POST", action="/people/add")
       fieldset
         legend Edit #{person.fullName}
-      .form-element
-        label(for="fullName") Full name
-        input.form-input(name="fullName", type="text", placeholder="Name", value= person.fullName)
-      .form-element
-        label(for="email") Email address
-        input.form-input(name="email", type="text", placeholder="you@reaweso.me", value= person.email)
-      .form-element
-        label(for="twitter") Twitter handle
-        input.form-input(name="twitter", type="text", placeholder="@username", value= person.twitter)
-      .form-element
-        label(for="website") Website
-        input.form-input(name="website", type="text", placeholder="http://website.com", value= person.website)
-      .form-element
-        label(for="company") Company
-        input.form-input(name="company", type="text", placeholder="Company, Inc.", value= person.company)
-      .form-element
-        label(for="about") Short bio
-        textarea.form-input(name="about", type="text", maxlength="160", placeholder="Introduce yourself (160 characters max)")
-      .form-element
-        if interests
-          .form-element
-          label(for="interests") What are you interested in?
-          each interest in interests
-            - var inInterests = (person.interests.indexOf(interest.key) > -1)
-            label(for= interest.name)= interest.name
-            input(name= interest.name, type="checkbox", checked=inInterests , value=interest.key)
-      button.button.button-primary(name="submit", type="submit") Add yourself
+        .form-element
+          label(for="fullName") Full name
+          input.form-input(name="fullName", type="text", placeholder="Name", value= person.fullName)
+        .form-element
+          label(for="email") Email address
+          input.form-input(name="email", type="text", placeholder="you@reaweso.me", value= person.email)
+        .form-element
+          label(for="twitter") Twitter handle
+          input.form-input(name="twitter", type="text", placeholder="@username", value= person.twitter)
+        .form-element
+          label(for="website") Website
+          input.form-input(name="website", type="text", placeholder="http://website.com", value= person.website)
+        .form-element
+          label(for="company") Company
+          input.form-input(name="company", type="text", placeholder="Company, Inc.", value= person.company)
+        .form-element
+          label(for="about") Short bio
+          textarea.form-input(name="about", type="text", maxlength="160", placeholder="Introduce yourself (160 characters max)")
+        button.button.button-primary(name="submit", type="submit") Add yourself
 
     include ../in/footer

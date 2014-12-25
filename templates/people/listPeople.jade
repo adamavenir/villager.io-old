@@ -19,16 +19,16 @@ block body
             a(href= '/people/' + person.slug)
               img.avatar.avatar-large.avatar-rounded(src= person.avatar)
               h5= person.fullName
-              if moderator
-                p
-                  if !person.approved
-                    | Pending
-                  if person.approved
-                    | √
-                  if person.moderator
-                    | M
-                  if person.admin
-                    | A
+              //- if moderator
+              //-   p
+              //-     if !person.approved
+              //-       | Pending
+              //-     if person.approved
+              //-       | √
+              //-     if person.moderator
+              //-       | M
+              //-     if person.admin
+              //-       | A
         if me
           li(class="pending")
             a(href="/people/" + me.slug)

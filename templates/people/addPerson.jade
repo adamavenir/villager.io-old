@@ -25,12 +25,6 @@ block body
       .form-element
         label(for="about") Short bio
         textarea.form-input(name="about", type="text", maxlength="160", placeholder="Introduce yourself (160 characters max)")
-      .form-element
-      label(for="interests") What are you interested in?
-      .form-element
-        each interest in interests
-          label(for= interest.name)= interest.name
-          input(name= interest.name, type="checkbox", value= interest.key)
       button.button.button-primary(name="submit", type="submit") Add yourself
 
     include ../in/footer

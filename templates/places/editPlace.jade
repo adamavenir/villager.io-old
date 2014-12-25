@@ -4,23 +4,37 @@ block body
   body
     include ../in/header
 
-    h1 Edit #{place.name}
-    form#addPlace(method="POST", action="/places/update/" + place.key)
-      label(for="type") Type of place:
-      select#inputType(name="type")
-        if place.type
-          option(value=place.type) #{place.type.name}
-        else
-          option(value="") -- Select a Category --
-        each cat in placeCategories[0]
-          if place.type.key !== cat.key
-            option(value=cat.key) #{cat.name}
-      input#inputName(name="name", type="text", placeholder="Name of the place", value= place.name)
-      input#inputAddress(name="address", type="text", placeholder="112 Hundred Acre Wood", value= place.address)
-      input#inputCity(name="city", type="text", placeholder="West Richlascowickton City", value= place.city)
-      input#inputWebsite(name="website", type="text", placeholder="http://placewebsite.com", value= place.website)
-      input#inputImage(name="image", type="text", placeholder="link to an image", value= place.image)
-      textarea#inputAbout(name="about", type="text", maxlength="160", placeholder="Describe this place (160 characters max)") #{place.about}
-      button(name="submit", type="submit") Update
+    form(method="POST", action="/place/add")
+    fieldset
+      legend Edit #{place.name}
+      .form-element
+        label(for="type") Type of place:
+        select.form-input(name="type")
+          if place.type
+            option(value= place.type) #{place.type.name}
+          else
+            option(value="") -- Select a Category --
+          each cat in placeCategories
+            if place.type.key !=== cat.key
+              option(value=cat.key) #{cat.name}
+      .form-element
+        label(for="name") Place name
+        input.form-input(name="name", type="text", placeholder="Name of the place", value= place.name)
+      .form-element
+        label(for="address") Address
+        input.form-input(name="address", type="text", placeholder="112 Hundred Acre Wood", value= place.address)            
+      .form-element
+        label(for="city") City
+        input.form-input(name="city", type="text", placeholder="West Richlascowickton City", value= place.city)            
+      .form-element
+        label(for="website") Website
+        input.form-input(name="website", type="text", placeholder="http://placewebsite.com", value= place.website)
+      .form-element
+        label(for="image") Link to image
+        input.form-input(name="image", type="text", placeholder="link to an image", value= place.image)
+      .form-element
+        label(for="about") Description
+        textarea.form-input(name="about", type="text", maxlength="160", placeholder="Describe this place (160 characters max)") #{place.about}
+      button.button.button-primary(name="submit", type="submit") Update place
 
     include ../in/footer
