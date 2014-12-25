@@ -55,7 +55,6 @@ __Important note:__ I just realized this app *temporarily* requires a nlfpm acco
 - [ ] Add and list upcoming events
 - [ ] Basic RSVPs for events
 - [ ] Show groups a person is a member of
-- [ ] Show places a person has been
 - [ ] Show events a person has RSVP'd for
 - [ ] Ability to be a member or admin of a group or place
 - [ ] Write more tests
