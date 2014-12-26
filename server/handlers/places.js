@@ -132,7 +132,7 @@ exports.edit = {
                 models.PlaceCategory.all(done);
             }
         }, function (err, context) {
-            console.log('place is%j', context.place);
+            // console.log('place is%j', context.place);
             if (err) { throw err; }
             context = _.extend(context, {
                 userid    : session.userid,
@@ -213,7 +213,7 @@ exports.star = {
                 place.starredBy.push(session.userid);
             }
             place.save(function () {
-                console.log('place is%j', place);
+                // console.log('place is%j', place);
                 reply().redirect('/places/' + place.slug);
             });
         });
