@@ -24,7 +24,7 @@ exports.list = {
 
                 // also show my items that haven't been approved yet
                 var mine = _.where(context.lists[0], { 
-                    creatorKey: session.userid, 
+                    creator: session.userid, 
                     approved: false 
                 });
 
@@ -66,24 +66,28 @@ exports.get = {
             if (err) { reply.view('404'); }
 
             // if we have a session
-            if (session.userid) {
+            else if (session.userid) {
 
-                console.log('list', JSON.stringify(list, null, 2))
+                // get foreignkeys for creator
+                list.getForeign('creator', function (err, creator) {
 
-                // if I created this list, I'm a moderator of it.
-                if (list.creator.key === session.userid) { 
-                    thismod = true;
-                } else { thismod = false; }
+                    if (err) { throw err; }
 
-                // if I starred it
-                if (list.hasKey('starredBy', session.userid)) {
-                    iStarred = true;
-                    reply.view('items/item', itemReply('list', list, session, thismod, iStarred));
-                // if I didn't star it
-                } else { 
-                    iStarred = false; 
-                    reply.view('items/item', itemReply('list', list, session, thismod, iStarred));
-                }
+                    // if I created this list, I'm a moderator of it.
+                    if (creator && creator.key === session.userid) { 
+                        thismod = true;
+                    } else { thismod = false; }
+
+                    // if I starred it
+                    if (list.hasKey('starredBy', session.userid)) {
+                        iStarred = true;
+                        reply.view('items/item', itemReply('list', list, session, thismod, iStarred));
+                    // if I didn't star it
+                    } else { 
+                        iStarred = false; 
+                        reply.view('items/item', itemReply('list', list, session, thismod, iStarred));
+                    }
+                });
 
             // if I don't have a session, give a standard page
             } else {
@@ -113,17 +117,27 @@ exports.create = {
     handler: function (request, reply) {
         var session = request.auth.credentials;
         var form = request.payload;
-        var p = models.List.create({
+        var list = models.List.create({
             type    : form.type,
             name    : form.name,
-            about   : form.about,
-            creator : session.userid,
+            about   : form.about
         });
-        p.save(function (err) {
+        console.log(session.userid);
+        // get my user
+        models.User.get(session.userid, function (err, user) {
             if (err) { throw err; }
-            models.List.load(p.key, function (err, list) {
+            console.log('got user', JSON.stringify(user, null, 2));
+            // save the list
+            list.save(function (err) {
                 if (err) { throw err; }
-                reply().code(201).redirect('/lists/' + list.slug);
+                console.log('saved list', list.name);
+                // add my user as a foreign key
+                list.addForeign('creator', user, function (err) {
+                    console.log('added foreign user', user.name);
+                    if (err) { throw err; }
+                    // return the new list page as confirmation
+                    reply().code(201).redirect('/lists/' + list.slug);
+                });
             });
         });
     }
@@ -146,13 +160,11 @@ exports.edit = {
 exports.update = {
     auth: 'session',
     handler: function (request, reply) {
-        var session = request.auth.credentials;
         var form = request.payload;
         models.List.update(request.params.listKey, {
             type    : form.type,
             name    : form.name,
-            about   : form.about,
-            creator : session.userid,
+            about   : form.about
         }, function (err) {
             if (err) { throw err; }
             else { reply().code(201).redirect('/lists'); }

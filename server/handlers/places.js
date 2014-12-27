@@ -23,7 +23,7 @@ exports.list = {
 
                 // also show my items that haven't been approved yet
                 var mine = _.where(context.places[0], { 
-                    creatorKey: session.userid, 
+                    creator: session.userid, 
                     approved: false 
                 });
 
@@ -64,20 +64,26 @@ exports.get = {
             // if we have a session
             if (session.userid) {
 
-                // if I created this place, I'm a moderator of it.
-                if (place.creator.key === session.userid) { 
-                    thismod = true;
-                } else { thismod = false; }
+                // get foreignkeys for creator
+                place.getForeign('creator', function (err, creator) {
 
-                // if I starred it
-                if (place.hasKey('starredBy', session.userid)) {
-                    iStarred = true;
-                    reply.view('items/item', itemReply('place', place, session, thismod, iStarred));
-                // if I didn't star it
-                } else { 
-                    iStarred = false; 
-                    reply.view('items/item', itemReply('place', place, session, thismod, iStarred));
-                }
+                    if (err) { throw err; }
+
+                    // if I created this place, I'm a moderator of it.
+                    if (creator && creator.key === session.userid) { 
+                        thismod = true;
+                    } else { thismod = false; }
+
+                    // if I starred it
+                    if (place.hasKey('starredBy', session.userid)) {
+                        iStarred = true;
+                        reply.view('items/item', itemReply('place', place, session, thismod, iStarred));
+                    // if I didn't star it
+                    } else { 
+                        iStarred = false; 
+                        reply.view('items/item', itemReply('place', place, session, thismod, iStarred));
+                    }
+                });
 
             // if I don't have a session, give a standard page
             } else {
@@ -110,7 +116,7 @@ exports.create = {
     handler: function (request, reply) {
         var session = request.auth.credentials;
         var form = request.payload;
-        var p = models.Place.create({
+        var place = models.Place.create({
             type    : form.type,
             name    : form.name,
             address : form.address,
@@ -118,14 +124,24 @@ exports.create = {
             image   : form.image,
             twitter : form.twitter,
             website : form.website,
-            about   : form.about,
-            creator : session.userid,
+            about   : form.about
         });
-        p.save(function (err) {
+        console.log(session.userid);
+        // get my user
+        models.User.get(session.userid, function (err, user) {
             if (err) { throw err; }
-            models.Place.load(p.key, function (err, place) {
+            console.log('got user', JSON.stringify(user, null, 2));
+            // save the place
+            place.save(function (err) {
                 if (err) { throw err; }
-                reply().code(201).redirect('/places/' + place.slug);
+                console.log('saved place', place.name);
+                // add my user as a foreign key
+                place.addForeign('creator', user, function (err) {
+                    console.log('added foreign user', user.name);
+                    if (err) { throw err; }
+                    // return the new place page as confirmation
+                    reply().code(201).redirect('/places/' + place.slug);
+                });
             });
         });
     }
@@ -160,7 +176,6 @@ exports.edit = {
 exports.update = {
     auth: 'session',
     handler: function (request, reply) {
-        var session = request.auth.credentials;
         var form = request.payload;
         models.Place.update(request.params.placeKey, {
             type    : form.type,
@@ -170,8 +185,7 @@ exports.update = {
             image   : form.image,
             twitter : form.twitter,
             website : form.website,
-            about   : form.about,
-            creatorKey : session.userid
+            about   : form.about
         }, function (err) {
             if (err) { throw err; }
             else { reply().code(201).redirect('/places'); }

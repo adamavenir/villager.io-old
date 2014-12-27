@@ -61,7 +61,7 @@ var User = new dulcimer.Model(
                 if (this.username) {
                     return this.username;
                 } else {
-                    return this.slugName
+                    return this.slugName;
                 }
             },
             index: true

@@ -23,7 +23,7 @@ exports.list = {
 
                 // also show my items that haven't been approved yet
                 var mine = _.where(context.groups[0], { 
-                    creatorKey: session.userid, 
+                    creator: session.userid, 
                     approved: false 
                 });
 
@@ -64,20 +64,24 @@ exports.get = {
             // if we have a session
             if (session.userid) {
 
-                // if I created this group, I'm a moderator of it.
-                if (group.creatorKey === session.userid) { 
-                    thismod = true;
-                } else { thismod = false; }
+                // get foreignkeys for creator
+                group.getForeign('creator', function (err, creator) {
 
-                // if I starred it
-                if (group.hasKey('starredBy', session.userid)) {
-                    iStarred = true;
-                    reply.view('items/item', itemReply('group', group, session, thismod, iStarred));
-                // if I didn't star it
-                } else { 
-                    iStarred = false; 
-                    reply.view('items/item', itemReply('group', group, session, thismod, iStarred));
-                }
+                    // if I created this group, I'm a moderator of it.
+                    if (creator.key === session.userid) { 
+                        thismod = true;
+                    } else { thismod = false; }
+
+                    // if I starred it
+                    if (group.hasKey('starredBy', session.userid)) {
+                        iStarred = true;
+                        reply.view('items/item', itemReply('group', group, session, thismod, iStarred));
+                    // if I didn't star it
+                    } else { 
+                        iStarred = false; 
+                        reply.view('items/item', itemReply('group', group, session, thismod, iStarred));
+                    }
+                });
 
             // if I don't have a session, give a standard page
             } else {
@@ -111,20 +115,30 @@ exports.create = {
         var session = request.auth.credentials;
         var form = request.payload;
         console.log('form is%j', form);
-        var g = models.Group.create({
+        var group = models.Group.create({
             type    : form.type,
             name    : form.name,
             image   : form.image,
             twitter : form.twitter,
             website : form.website,
-            about   : form.about,
-            creatorKey : session.userid
+            about   : form.about
         });
-        g.save(function (err) {
+        console.log(session.userid);
+        // get my user
+        models.User.get(session.userid, function (err, user) {
             if (err) { throw err; }
-            models.Group.load(g.key, function (err, group) {
-                console.log('saved ' +  group.key);
-                reply().code(201).redirect('/groups/' + group.slug);
+            console.log('got user', JSON.stringify(user, null, 2));
+            // save the group
+            group.save(function (err) {
+                if (err) { throw err; }
+                console.log('saved group', group.name);
+                // add my user as a foreign key
+                group.addForeign('creator', user, function (err) {
+                    console.log('added foreign user', user.name);
+                    if (err) { throw err; }
+                    // return the new group page as confirmation
+                    reply().code(201).redirect('/groups/' + group.slug);
+                });
             });
         });
     }
@@ -158,7 +172,6 @@ exports.edit = {
 exports.update = {
     auth: 'session',
     handler: function (request, reply) {
-        var session = request.auth.credentials;
         var form = request.payload;
         models.Group.update(request.params.groupKey, {
             type    : form.type,
@@ -166,8 +179,7 @@ exports.update = {
             image   : form.image,
             twitter : form.twitter,
             website : form.website,
-            about   : form.about,
-            creatorKey : session.userid
+            about   : form.about
         }, function (err) {
             if (err) { throw err; }
             reply().code(201).redirect('/groups');
