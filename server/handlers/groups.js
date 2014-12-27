@@ -22,7 +22,10 @@ exports.list = {
             if (session && session.userid) {
 
                 // also show my items that haven't been approved yet
-                var mine = _.where(context.groups[0], { creatorKey: session.userid, approved: false });
+                var mine = _.where(context.groups[0], { 
+                    creatorKey: session.userid, 
+                    approved: false 
+                });
 
                 // if there are no approved groups or my unapproved groups
                 if(mine.length + approved.length === 0) {

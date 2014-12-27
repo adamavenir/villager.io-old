@@ -22,7 +22,10 @@ exports.list = {
             if (session && session.userid) {
 
                 // also show my items that haven't been approved yet
-                var mine = _.where(context.places[0], { creatorKey: session.userid, approved: false });
+                var mine = _.where(context.places[0], { 
+                    creatorKey: session.userid, 
+                    approved: false 
+                });
 
                 // if there are no approved places or my unapproved places
                 if(mine.length + approved.length === 0) {
