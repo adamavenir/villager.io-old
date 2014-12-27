@@ -1,7 +1,7 @@
 exports.itemReply = function (itemType, item, session, thismod, iStarred) {
     var replyData;
-    if (thismod === undefined) { thismod = false; }
-    if (iStarred === undefined) { iStarred = false; }
+    thismod = !!thismod;
+    iStarred = !!iStarred;
 
     if (session.userid === undefined) { 
         replyData = {
@@ -25,9 +25,10 @@ exports.itemReply = function (itemType, item, session, thismod, iStarred) {
     return replyData;
 };
 
+
 exports.listReply = function (itemType, items, mine, session) {
     var replyData;
-    if (mine === undefined) { mine = false; }
+    mine = !!mine;
 
     if (session.userid === undefined) { 
         replyData = {

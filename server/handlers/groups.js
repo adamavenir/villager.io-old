@@ -1,5 +1,5 @@
-var models = require('../models').models;
 var _ = require('underscore');
+var models = require('../models').models;
 var async = require('async');
 var itemReply = require('./helpers').itemReply;
 var listReply = require('./helpers').listReply;
