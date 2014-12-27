@@ -121,25 +121,14 @@ exports.create = {
             image   : form.image,
             twitter : form.twitter,
             website : form.website,
-            about   : form.about
+            about   : form.about,
+            creator : session.userid
         });
-        console.log(session.userid);
-        // get my user
-        models.User.get(session.userid, function (err, user) {
+        // save the group
+        group.save(function (err) {
             if (err) { throw err; }
-            console.log('got user', JSON.stringify(user, null, 2));
-            // save the group
-            group.save(function (err) {
-                if (err) { throw err; }
-                console.log('saved group', group.name);
-                // add my user as a foreign key
-                group.addForeign('creator', user, function (err) {
-                    console.log('added foreign user', user.name);
-                    if (err) { throw err; }
-                    // return the new group page as confirmation
-                    reply().code(201).redirect('/groups/' + group.slug);
-                });
-            });
+            // return the new group page as confirmation
+            reply().code(201).redirect('/groups/' + group.slug);
         });
     }
 };

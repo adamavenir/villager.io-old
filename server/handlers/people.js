@@ -86,15 +86,12 @@ exports.add = {
     auth: 'session',
     handler: function (request, reply) {
         var session = request.auth.credentials;
-        models.Interest.all(function (err, interests) {
-            reply.view('people/addPerson', {
-                userid    : session.userid,
-                fullName  : session.fullName,
-                avatar    : session.avatar,
-                interests : interests,
-                moderator : session.moderator,
-                admin     : session.admin
-            });
+        reply.view('people/addPerson', {
+            userid    : session.userid,
+            fullName  : session.fullName,
+            avatar    : session.avatar,
+            moderator : session.moderator,
+            admin     : session.admin
         });
     }
 };
@@ -111,7 +108,6 @@ exports.create = {
             website   : form.website,
             company   : form.company,
             about     : form.about,
-            interests : form.interests,
             creator   : session.userid,
             approved  : true
         });
@@ -130,17 +126,13 @@ exports.edit = {
     handler: function (request, reply) {
         var session = request.auth.credentials;
         models.User.get(request.params.personKey, function (err, person) {
-            models.Interest.all(function (err, interests) {
-                person.interests = _.pluck(person.interests, 'key');
-                reply.view('people/editPerson', {
-                    interests : interests,
-                    person    : person,
-                    userid    : session.userid,
-                    fullName  : session.fullName,
-                    avatar    : session.avatar,
-                    moderator : session.moderator,
-                    admin     : session.admin
-                });
+            reply.view('people/editPerson', {
+                person    : person,
+                userid    : session.userid,
+                fullName  : session.fullName,
+                avatar    : session.avatar,
+                moderator : session.moderator,
+                admin     : session.admin
             });
         });
     }
@@ -157,8 +149,7 @@ exports.update = {
             twitter   : form.twitter,
             website   : form.website,
             company   : form.company,
-            about     : form.about,
-            interests : form.interests
+            about     : form.about
         }, function (err) {
             if (err) { throw err; }
             else {

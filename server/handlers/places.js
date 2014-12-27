@@ -64,26 +64,22 @@ exports.get = {
             // if we have a session
             if (session.userid) {
 
-                // get foreignkeys for creator
-                place.getForeign('creator', function (err, creator) {
+                if (err) { throw err; }
 
-                    if (err) { throw err; }
+                // if I created this place, I'm a moderator of it.
+                if (place.creator.key === session.userid) { 
+                    thismod = true;
+                } else { thismod = false; }
 
-                    // if I created this place, I'm a moderator of it.
-                    if (creator && creator.key === session.userid) { 
-                        thismod = true;
-                    } else { thismod = false; }
-
-                    // if I starred it
-                    if (place.hasKey('starredBy', session.userid)) {
-                        iStarred = true;
-                        reply.view('items/item', itemReply('place', place, session, thismod, iStarred));
-                    // if I didn't star it
-                    } else { 
-                        iStarred = false; 
-                        reply.view('items/item', itemReply('place', place, session, thismod, iStarred));
-                    }
-                });
+                // if I starred it
+                if (place.hasKey('starredBy', session.userid)) {
+                    iStarred = true;
+                    reply.view('items/item', itemReply('place', place, session, thismod, iStarred));
+                // if I didn't star it
+                } else { 
+                    iStarred = false; 
+                    reply.view('items/item', itemReply('place', place, session, thismod, iStarred));
+                }
 
             // if I don't have a session, give a standard page
             } else {
@@ -124,25 +120,14 @@ exports.create = {
             image   : form.image,
             twitter : form.twitter,
             website : form.website,
-            about   : form.about
+            about   : form.about,
+            creator : session.userid
         });
-        console.log(session.userid);
-        // get my user
-        models.User.get(session.userid, function (err, user) {
+        // save the place
+        place.save(function (err) {
             if (err) { throw err; }
-            console.log('got user', JSON.stringify(user, null, 2));
-            // save the place
-            place.save(function (err) {
-                if (err) { throw err; }
-                console.log('saved place', place.name);
-                // add my user as a foreign key
-                place.addForeign('creator', user, function (err) {
-                    console.log('added foreign user', user.name);
-                    if (err) { throw err; }
-                    // return the new place page as confirmation
-                    reply().code(201).redirect('/places/' + place.slug);
-                });
-            });
+            // return the new place page as confirmation
+            reply().code(201).redirect('/places/' + place.slug);
         });
     }
 };
