@@ -68,15 +68,12 @@ exports.get = {
                 if (place.hasKey('starredBy', session.userid)) {
                     iStarred = true;
                     reply.view('items/item', itemReply('place', place, session, thismod, iStarred));
-                    console.log('iStarred true');
                 } else { 
                     iStarred = false; 
-                    console.log('iStarred false');
                     reply.view('items/item', itemReply('place', place, session, thismod, iStarred));
                 }
 
             } else {
-                console.log('no session');
                 reply.view('items/item', itemReply('place', place));
             }
             
