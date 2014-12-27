@@ -48,6 +48,8 @@ __Important note:__ I just realized this app *temporarily* requires a nlfpm acco
 - [x] Update to dulcimer 2.5
 - [x] Set up test scaffolding
 - [x] Design cleanup
+- [ ] Add links
+- [ ] Add posts
 - [ ] Curated lists of places and groups
 - [ ] ★ places and groups for favorites
 - [ ] Add a place/group to a list from its page
