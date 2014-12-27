@@ -3,7 +3,7 @@ exports.itemReply = function (itemType, item, session, thismod, iStarred) {
     thismod = !!thismod;
     iStarred = !!iStarred;
 
-    if (session.userid === undefined) { 
+    if (typeof session === 'undefined') { 
         replyData = {
             item      : item,
             thismod   : thismod,
@@ -28,9 +28,11 @@ exports.itemReply = function (itemType, item, session, thismod, iStarred) {
 
 exports.listReply = function (itemType, items, mine, session) {
     var replyData;
-    mine = !!mine;
+    if (typeof mine === 'undefined') {
+        mine = false
+    }
 
-    if (session.userid === undefined) { 
+    if (typeof session === 'undefined') { 
         replyData = {
             items     : items,
             mine      : mine

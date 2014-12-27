@@ -30,6 +30,7 @@ exports.list = {
                 }
                 // reply with approved and mine
                 else {
+                    console.log('reply with group item', JSON.stringify(mine, null, 2))
                     reply.view('items/listItems', listReply('group', approved, mine, session));
                 }
             }
@@ -60,38 +61,17 @@ exports.get = {
                 } else { thismod = false; }
 
             if (err) { reply.view('404'); }
-            else {
 
-                // if user has a session
-                if (session.userid) {
-                    models.User.get(session.userid, function (err, me) {
-                        if (err) { throw err; }
-
-                        // if at least one person has starred this group
-                        if (group.starredBy.length > 0) {
-
-                            // loop through each group
-                            _.each(group.starredBy, function (person) {
-                                if (err) { throw err; }
-
-                                // if I starred it
-                                if (me.key === person.key) {
-                                    iStarred = true; 
-                                }
-                            });
-                        // or else nobody starred it
-                        } else {
-                            iStarred = false;
-                        }
-                        console.log('replying with', iStarred);
-                        reply.view('items/item', itemReply('group', group, thismod, iStarred, session));
-                        
-                    });
-                } else { 
-                    iStarred = false; 
-                    reply.view('items/item', itemReply('group', group));
-                }
+            // if user has a session and starred it
+            if (session.userid && group.hasInstance('starredBy', session.userid)) {
+                console.log('hi, I starred it');
+                iStarred = true;
+                reply.view('items/item', itemReply('group', group, thismod, iStarred, session));
+            } else { 
+                iStarred = false; 
             }
+
+            reply.view('items/item', itemReply('group', group));
         });
     }
 };
