@@ -14,17 +14,22 @@ block body
       .action-menu
         if moderator
           a.button.add-item(href="/" + itemType + "s/edit" + item.slug) Edit this #{itemType}
-    
+    if itemType = 'place' && item.address && gmapsApi
+      section.map
+        iframe(width="100%", height="200", frameborder="0", style="border:0", src="https://www.google.com/maps/embed/v1/place?q=" + item.address + ' ' + item.city + "&key=" + gmapsApi)
     section.content
-      .item
-        a(href= item.website)
-          img.avatar.avatar-rounded.avatar-large(src= item.image)
+      .item.cf
+        if item.image
+          img.item-image(src= item.image)
+        if item.website
+          p: a(href= "item.website") #{item.website}
+        if item.phone
+          p= item.phone        
+        if item.map
+          p: a(href= item.map)
+              span= item.address + ' ' + item.city          
         if item.about
           p= item.about
-        if item.map
-          p
-            a(href= item.map)
-              span= item.address + ' ' + item.city
 
     section.meta.grid-flex-container
       if item.stars > 0

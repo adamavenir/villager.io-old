@@ -13,6 +13,9 @@
             "callbackURL": "http://localhost:7000/auth/twitter/callback"
         }
     },
+    "api": { 
+        "googleMaps": ""
+    },
     "session": {
         "cookieOptions": {
             "password": "cheshirecarp",

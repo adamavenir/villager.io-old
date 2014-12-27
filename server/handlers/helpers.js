@@ -1,7 +1,13 @@
+var config = require('getconfig');
+
 exports.itemReply = function (itemType, item, session, thismod, iStarred) {
-    var replyData;
+    var replyData, gmapsApi;
     thismod = !!thismod;
     iStarred = !!iStarred;
+
+    if (itemType === 'place') {
+        gmapsApi = config.api.googleMaps;
+    } else { gmapsApi = null; }
 
     if (typeof session === 'undefined') { 
         replyData = {
@@ -19,7 +25,8 @@ exports.itemReply = function (itemType, item, session, thismod, iStarred) {
             avatar    : session.avatar,
             moderator : session.moderator,
             admin     : session.admin,
-            iStarred  : iStarred
+            iStarred  : iStarred,
+            gmapsApi  : gmapsApi
         };
     }
     return replyData;
