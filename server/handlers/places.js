@@ -55,6 +55,10 @@ exports.get = {
         models.Place.findByIndex('slug', request.params.place, function(err, place) {
             var thismod, iStarred;
 
+            // if there's no such item, return a 404
+            if (err) { reply.view('404'); }
+
+            // if we have a session
             if (session.userid) {
 
                 // if I created this place, I'm a moderator of it.
@@ -62,17 +66,17 @@ exports.get = {
                     thismod = true;
                 } else { thismod = false; }
 
-                if (err) { reply.view('404'); }
-
-                // if user starred it
+                // if I starred it
                 if (place.hasKey('starredBy', session.userid)) {
                     iStarred = true;
                     reply.view('items/item', itemReply('place', place, session, thismod, iStarred));
+                // if I didn't star it
                 } else { 
                     iStarred = false; 
                     reply.view('items/item', itemReply('place', place, session, thismod, iStarred));
                 }
 
+            // if I don't have a session, give a standard page
             } else {
                 reply.view('items/item', itemReply('place', place));
             }

@@ -55,6 +55,10 @@ exports.get = {
         models.Group.findByIndex('slug', request.params.group, function(err, group) {
             var thismod, iStarred;
 
+            // if there's no such item, return a 404
+            if (err) { reply.view('404'); }
+
+            // if we have a session
             if (session.userid) {
 
                 // if I created this group, I'm a moderator of it.
@@ -62,17 +66,17 @@ exports.get = {
                     thismod = true;
                 } else { thismod = false; }
 
-                if (err) { reply.view('404'); }
-
-                // if user starred it
+                // if I starred it
                 if (group.hasKey('starredBy', session.userid)) {
                     iStarred = true;
                     reply.view('items/item', itemReply('group', group, session, thismod, iStarred));
+                // if I didn't star it
                 } else { 
                     iStarred = false; 
                     reply.view('items/item', itemReply('group', group, session, thismod, iStarred));
                 }
 
+            // if I don't have a session, give a standard page
             } else {
                 reply.view('items/item', itemReply('group', group));
             }
