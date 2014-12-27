@@ -65,7 +65,7 @@ exports.get = {
                 if (err) { reply.view('404'); }
 
                 // if user has a session and starred it
-                if (group.hasInstance('starredBy', session.userid)) {
+                if (group.hasKey('starredBy', session.userid)) {
                     iStarred = true;
                     reply.view('items/item', itemReply('group', group, session, thismod, iStarred));
                     console.log('iStarred true');
