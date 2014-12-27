@@ -23,7 +23,7 @@ exports.list = {
 
                 // also show my items that haven't been approved yet
                 var mine = _.where(context.places[0], { 
-                    creatorKey: session.userid, 
+                    creator: session.userid, 
                     approved: false 
                 });
 
@@ -65,7 +65,7 @@ exports.get = {
             if (session.userid) {
 
                 // if I created this place, I'm a moderator of it.
-                if (place.creatorKey === session.userid) { 
+                if (place.creator.key === session.userid) { 
                     thismod = true;
                 } else { thismod = false; }
 
@@ -119,7 +119,7 @@ exports.create = {
             twitter : form.twitter,
             website : form.website,
             about   : form.about,
-            creatorKey : session.userid
+            creator : session.userid
         });
         p.save(function (err) {
             if (err) { throw err; }
@@ -171,7 +171,7 @@ exports.update = {
             twitter : form.twitter,
             website : form.website,
             about   : form.about,
-            creatorKey : session.userid
+            creator : session.userid
         }, function (err) {
             if (err) { throw err; }
             else { reply().code(201).redirect('/places'); }
