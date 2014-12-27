@@ -4,8 +4,26 @@
 .add-item
   float: right
   
-.title-bar h1, .action-menu
+.title-bar h1, .stars, .action-menu
   display: inline-block
+
+.title-bar .stars a
+  font-size: 42px
+  margin-right: 10px
+
+.title-bar h1, .stars
+  line-height: 1
+  margin-top: 0
+
+.star-this
+  color: $gray-light
+  &:hover
+    color: $orange-light
+
+.unstar-this
+  color: $orange-light
+  &:hover
+    color: $gray-light
 
 .action-menu
   float: right

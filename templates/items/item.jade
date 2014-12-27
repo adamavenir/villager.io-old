@@ -5,30 +5,44 @@ block body
     include ../in/header
 
     .title-bar
+      .stars
+        if iStarred
+          a.unstar-this(href='star/' + item.key) ★ 
+        if !iStarred
+          a.star-this(href='star/' + item.key) ☆
       h1= item.name
       .action-menu
-        .stars
-        if iStarred
-          a.unStarThis(href='star/' + item.key) ★ #{item.starredBy.length}  
-        if !iStarred
-          a.starThis(href='star/' + item.key) ☆
-        if item.stars > 0
-          ul.starredBy
-              for person in item.starredBy
-                li
-                  img.avatar(src= person.avatar)
-                  h6= person.fullName
         if moderator
-          a.button.add-item(href="/" + itemType + "s/edit" + item.slug) Edit
+          a.button.add-item(href="/" + itemType + "s/edit" + item.slug) Edit this #{itemType}
     
-    div.item
-      a(href= item.website)
-        img.grav(src= item.image)
-      if item.about
-        p= item.about
-      if item.map
-        p
-          a(href= item.map)
-            span= item.address + ' ' + item.city
+    section.content
+      .item
+        a(href= item.website)
+          img.avatar.avatar-rounded.avatar-large(src= item.image)
+        if item.about
+          p= item.about
+        if item.map
+          p
+            a(href= item.map)
+              span= item.address + ' ' + item.city
+
+    section.meta.grid-flex-container
+      if item.stars > 0
+        div.starredBy.grid-flex-cell.grid-flex-cell-1of3
+          if item.starredBy.length = 1
+            h6 ★ Starred by one person
+          else if item.starredBy.length > 1
+            h6 Starred by #{item.starredBy.length} people
+          for person in item.starredBy
+            a(href= '/people/' + person.slug)
+              img.avatar.avatar-rounded.avatar-small(src= person.avatar, title= person.fullName)
+      //- if item.lists > 0
+      //-   div.listedBy.grid-flex-cell
+      //-     if item.listedBy.length = 1
+      //-       h6 One list
+      //-     else if item.listedBy.length > 1
+      //-       h6 #{item.listedBy.length} lists
+      //-     for list in item.listedBy
+      //-       a(href= list.creatorSlug + '/' + list.slug) #{list.name}
 
     include ../in/footer

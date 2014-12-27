@@ -3,8 +3,10 @@ extends ../layout
 block body
   body
     include ../in/header
+    
+    .title-bar
+      h1 Pending
 
-    h1 Pending
     ul.item-list.list-unstyled
       for person in people
         li(class= person.approved)
