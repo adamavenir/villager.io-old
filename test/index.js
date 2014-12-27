@@ -7,7 +7,7 @@ var config = require('../dev_config.json');
 var Cookie = require('hapi-auth-cookie');
 var routes = require('../server/routes');
 var Dulcimer = require('dulcimer');
-Dulcimer.connect({type: 'level', path: './db'});
+Dulcimer.connect({type: 'level', path: './testdb'});
 
 var lab = exports.lab = Lab.script();
 var expect = Code.expect;
@@ -89,14 +89,13 @@ lab.experiment('main tests', function () {
         });
     });
 
-    // TODO: fix error "Cannot read property 'name' of undefined" 
-    // lab.test('load lists list', function (done) {
-    //     var options = { method: 'GET', url: '/lists' };
-    //     server.inject(options, function (response) {
-    //         expect(response.statusCode).to.equal(200);
-    //         done();
-    //     });
-    // });
+    lab.test('load lists list', function (done) {
+        var options = { method: 'GET', url: '/lists' };
+        server.inject(options, function (response) {
+            expect(response.statusCode).to.equal(200);
+            done();
+        });
+    });
 
     lab.test('load groups list', function (done) {
         var options = { method: 'GET', url: '/groups' };
@@ -105,5 +104,29 @@ lab.experiment('main tests', function () {
             done();
         });
     });
+
+    // lab.test('load people add form', function (done) {
+    //     var options = { method: 'GET', url: '/people/add' };
+    //     server.inject(options, function (response) {
+    //         expect(response.statusCode).to.equal(200);
+    //         done();
+    //     });
+    // });
+
+    // lab.test('load places add form', function (done) {
+    //     var options = { method: 'GET', url: '/places/add' };
+    //     server.inject(options, function (response) {
+    //         expect(response.statusCode).to.equal(200);
+    //         done();
+    //     });
+    // });
+
+    // lab.test('load groups add form', function (done) {
+    //     var options = { method: 'GET', url: '/groups/add' };
+    //     server.inject(options, function (response) {
+    //         expect(response.statusCode).to.equal(200);
+    //         done();
+    //     });
+    // });
 
 });    

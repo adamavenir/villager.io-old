@@ -1,6 +1,8 @@
 var models = require('../models').models;
 var _ = require('underscore');
 var async = require('async');
+var itemReply = require('./helpers').itemReply;
+var listReply = require('./helpers').listReply;
 
 exports.list = {
     auth: { strategy: 'session', mode: 'try' },
@@ -11,38 +13,34 @@ exports.list = {
                 models.Group.all(done);
             }
         }, function (err, context) {
+            if (err) { throw err; }
+
+            // show only items that have been approved
             var approved = _.where(context.groups[0], { approved: true });
+
+            // if we have a session
             if (session && session.userid) {
+
+                // also show my items that haven't been approved yet
                 var mine = _.where(context.groups[0], { creatorKey: session.userid, approved: false });
+
+                // if there are no approved groups or my unapproved groups
                 if(mine.length + approved.length === 0) {
-                    reply.view('groups/noGroups', {
-                        fullName  : session.fullName,
-                        avatar    : session.avatar,
-                        userid    : session.userid,
-                        moderator : session.moderator,
-                        admin     : session.admin
-                    });
+                    reply.view('items/noItems', listReply('group', null, null, session));
                 }
+                // reply with approved and mine
                 else {
-                    reply.view('groups/listGroups', {
-                        groups    : approved,
-                        mine      : mine,
-                        fullName  : session.fullName,
-                        avatar    : session.avatar,
-                        userid    : session.userid,
-                        moderator : session.moderator,
-                        admin     : session.admin
-                    });
+                    reply.view('items/listItems', listReply('group', approved, mine, session));
                 }
             }
             else {
+                // if there are no approved items
                 if (approved.length === 0) {
-                    reply.view('groups/noGroups');
+                    reply.view('items/noItems');
                 }
+                // else show the list of approved groups
                 else {
-                    reply.view('groups/listGroups', {
-                        groups : approved
-                    });
+                    reply.view('items/listItems', listReply('group', approved));
                 }
             }
         });
@@ -53,23 +51,46 @@ exports.get = {
     auth: { strategy: 'session', mode: 'try' },
     handler: function (request, reply) {
         var session = request.auth.credentials;
+
         models.Group.findByIndex('slug', request.params.group, function(err, group) {
-            console.log('req', request.params.group);
-            if (err) {
-                console.log('err', err);
-                reply.view('404');
-            }
+            var thismod, iStarred;
+
+            // if I created this group, I'm a moderator of it.
+            if (group.creatorKey === session.userid) { thismod = true; 
+                } else { thismod = false; }
+
+            if (err) { reply.view('404'); }
             else {
-                var thismod;
-                if (group.creatorKey === session.userid) { thismod = true; }
-                else { thismod = false; }
-                reply.view('groups/group', {
-                    group     : group,
-                    thismod   : thismod,
-                    userid    : session.userid,
-                    moderator : session.moderator,
-                    admin     : session.admin
-                });
+
+                // if user has a session
+                if (session.userid) {
+                    models.User.get(session.userid, function (err, me) {
+                        if (err) { throw err; }
+
+                        // if at least one person has starred this group
+                        if (group.starredBy.length > 0) {
+
+                            // loop through each group
+                            _.each(group.starredBy, function (person) {
+                                if (err) { throw err; }
+
+                                // if I starred it
+                                if (me.key === person.key) {
+                                    iStarred = true; 
+                                }
+                            });
+                        // or else nobody starred it
+                        } else {
+                            iStarred = false;
+                        }
+                        console.log('replying with', iStarred);
+                        reply.view('items/item', itemReply('group', group, thismod, iStarred, session));
+                        
+                    });
+                } else { 
+                    iStarred = false; 
+                    reply.view('items/item', itemReply('group', group));
+                }
             }
         });
     }
@@ -80,7 +101,7 @@ exports.add = {
     handler: function (request, reply) {
         var session = request.auth.credentials;
         models.GroupCategory.all(function (err, groupCategories) {
-            reply.view('groups/addGroup', {
+            reply.view('items/addGroup', {
                 userid    : session.userid,
                 fullName  : session.fullName,
                 avatar    : session.avatar,
@@ -137,7 +158,7 @@ exports.edit = {
                 moderator : session.moderator,
                 admin     : session.admin
             });
-            reply.view('groups/editGroup', context);
+            reply.view('items/editGroup', context);
         });
     }
 };

@@ -29,7 +29,7 @@ var Place = new dulcimer.Model (
             type: type().isAlphanumeric()
         },
         map: {
-            processIn: function() {
+            derive: function() {
                 if (this.address.length > 0) {
                     return 'http://maps.google.com/?q=' + this.address + ' ' + this.city;
                 }

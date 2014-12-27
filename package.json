@@ -21,7 +21,8 @@
     "string": "^3.0.0",
     "twitface": "^0.1.1",
     "underscore": "^1.7.0",
-    "verymodel": "^1.10.1"
+    "verymodel": "^1.10.1",
+    "jade": "^1.8.2"
   },
   "devDependencies": {
     "autoprefixer-stylus": "^0.4.0",

@@ -1,0 +1,30 @@
+extends ../layout
+
+block body
+  body
+    include ../in/header
+    
+    .title-bar
+      //- annoyed that I have to do this for now. 
+      //- doing ``- var itemType Upper = itemType.toUpperCase();`` didn't work
+      if (itemType === 'place')
+        h1 Places
+      if (itemType === 'group')
+        h1 Groups
+      .action-menu
+        if moderator
+          a.button.button-primary.add-item(href="/" + itemType + "s/add") Add a #{itemType}
+
+    ul.item-list.list-unstyled
+      for item in items
+        li
+          a(href= '/' + itemType + 's/' + item.slug)
+            img.avatar.avatar-large.avatar-rounded(src= item.image)
+            h5= item.name
+      for item in mine
+        li
+          a(href= '/' + itemType + 's/' + item.slug)
+            img.avatar.avatar-large.avatar-rounded(src= item.image)
+            h5= item.name
+            
+    include ../in/footer

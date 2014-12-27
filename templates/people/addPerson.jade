@@ -7,24 +7,24 @@ block body
     form(method="POST", action="/people/add")
       fieldset
         legend Add someone
-      .form-element
-        label(for="fullName") Full name
-        input.form-input(name="fullName", type="text", placeholder="Name")
-      .form-element
-        label(for="email") Email address
-        input.form-input(name="email", type="text", placeholder="you@reaweso.me")
-      .form-element
-        label(for="twitter") Twitter handle
-        input.form-input(name="twitter", type="text", placeholder="@username")
-      .form-element
-        label(for="website") Website
-        input.form-input(name="website", type="text", placeholder="http://website.com")
-      .form-element
-        label(for="company") Company
-        input.form-input(name="company", type="text", placeholder="Company, Inc.")
-      .form-element
-        label(for="about") Short bio
-        textarea.form-input(name="about", type="text", maxlength="160", placeholder="Introduce yourself (160 characters max)")
-      button.button.button-primary(name="submit", type="submit") Add yourself
+        .form-element
+          label(for="fullName") Full name
+          input.form-input(name="fullName", type="text", placeholder="Name")
+        .form-element
+          label(for="email") Email address
+          input.form-input(name="email", type="text", placeholder="you@reaweso.me")
+        .form-element
+          label(for="twitter") Twitter handle
+          input.form-input(name="twitter", type="text", placeholder="@username")
+        .form-element
+          label(for="website") Website
+          input.form-input(name="website", type="text", placeholder="http://website.com")
+        .form-element
+          label(for="company") Company
+          input.form-input(name="company", type="text", placeholder="Company, Inc.")
+        .form-element
+          label(for="about") Short bio
+          textarea.form-input(name="about", type="text", maxlength="160", placeholder="Introduce yourself (160 characters max)")
+        button.button.button-primary(name="submit", type="submit") Add yourself
 
     include ../in/footer

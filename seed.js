@@ -3,7 +3,7 @@ var slugger = require('slugger');
 var models = require('./server/models');
 var Dulcimer = require('dulcimer');
 
-if (config.getconfig.env !== 'dev') {
+if (config.getconfig.env !== 'dev' && config.getconfig.env !== 'test') {
     console.log('Devs only');
     process.exit(1);
 }
@@ -144,4 +144,4 @@ function seedAll (err) {
     });
 }
 
-seedAll(null);
+module.exports = seedAll();

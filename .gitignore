@@ -16,3 +16,5 @@ npm-debug.log
 node_modules
 db
 dev_config.json
+test_config.json
+testdb

@@ -5,9 +5,9 @@ block body
     include ../in/header
 
     .title-bar
-      h1 No places yet
+      h1 No #{itemType}s yet
       .action-menu
         if moderator
-          a.button.button-primary.add-item(href="/places/add") Add a place
+          a.button.button-primary.add-item(href="/" + itemType + "s/add") Add a #{itemType}
 
     include ../in/footer

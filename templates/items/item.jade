@@ -1,0 +1,34 @@
+extends ../layout
+
+block body
+  body
+    include ../in/header
+
+    .title-bar
+      h1= item.name
+      .action-menu
+        .stars
+        if iStarred
+          a.unStarThis(href='star/' + item.key) ★ #{item.starredBy.length}  
+        if !iStarred
+          a.starThis(href='star/' + item.key) ☆
+        if item.stars > 0
+          ul.starredBy
+              for person in item.starredBy
+                li
+                  img.avatar(src= person.avatar)
+                  h6= person.fullName
+        if moderator
+          a.button.add-item(href="/" + itemType + "s/edit" + item.slug) Edit
+    
+    div.item
+      a(href= item.website)
+        img.grav(src= item.image)
+      if item.about
+        p= item.about
+      if item.map
+        p
+          a(href= item.map)
+            span= item.address + ' ' + item.city
+
+    include ../in/footer

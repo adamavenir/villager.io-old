@@ -1,6 +1,8 @@
 var _ = require('underscore');
 var models = require('../models').models;
 var async = require('async');
+var itemReply = require('./helpers').itemReply;
+var listReply = require('./helpers').listReply;
 
 exports.list = {
     auth: { strategy: 'session', mode: 'try' },
@@ -12,38 +14,33 @@ exports.list = {
             }
         }, function (err, context) {
             if (err) { throw err; }
+
+            // show only items that have been approved
             var approved = _.where(context.places[0], { approved: true });
+
+            // if we have a session
             if (session && session.userid) {
+
+                // also show my items that haven't been approved yet
                 var mine = _.where(context.places[0], { creatorKey: session.userid, approved: false });
+
+                // if there are no approved places or my unapproved places
                 if(mine.length + approved.length === 0) {
-                    reply.view('places/noPlaces', {
-                        fullName  : session.fullName,
-                        avatar    : session.avatar,
-                        userid    : session.userid,
-                        moderator : session.moderator,
-                        admin     : session.admin
-                    });
+                    reply.view('items/noItems', listReply('place', null, null, session));
                 }
+                // reply with approved and mine
                 else {
-                    reply.view('places/listPlaces', {
-                        places    : approved,
-                        mine      : mine,
-                        fullName  : session.fullName,
-                        avatar    : session.avatar,
-                        userid    : session.userid,
-                        moderator : session.moderator,
-                        admin     : session.admin
-                    });
+                    reply.view('items/listItems', listReply('place', approved, mine, session));
                 }
             }
             else {
+                // if there are no approved items
                 if (approved.length === 0) {
-                    reply.view('places/noPlaces');
+                    reply.view('items/noItems');
                 }
+                // else show the list of approved places
                 else {
-                    reply.view('places/listPlaces', {
-                        places : approved
-                    });
+                    reply.view('items/listItems', listReply('place', approved));
                 }
             }
         });
@@ -54,24 +51,46 @@ exports.get = {
     auth: { strategy: 'session', mode: 'try' },
     handler: function (request, reply) {
         var session = request.auth.credentials;
+
         models.Place.findByIndex('slug', request.params.place, function(err, place) {
-            var thismod;
-            //console.log('place is%j', _.pluck(place, 'starredBy'));
-            if (err) {
-                reply.view('404');
-            }
+            var thismod, iStarred;
+
+            // if I created this place, I'm a moderator of it.
+            if (place.creatorKey === session.userid) { thismod = true; 
+                } else { thismod = false; }
+
+            if (err) { reply.view('404'); }
             else {
-                if (place.creatorKey === session.userid) { thismod = true; }
-                else { thismod = false; }
-                reply.view('places/place', {
-                    place     : place,
-                    thismod   : thismod,
-                    fullName  : session.fullName,
-                    avatar    : session.avatar,
-                    userid    : session.userid,
-                    moderator : session.moderator,
-                    admin     : session.admin
-                });
+
+                // if user has a session
+                if (session.userid) {
+                    models.User.get(session.userid, function (err, me) {
+                        if (err) { throw err; }
+
+                        // if at least one person has starred this place
+                        if (place.starredBy.length > 0) {
+
+                            // loop through each place
+                            _.each(place.starredBy, function (person) {
+                                if (err) { throw err; }
+
+                                // if I starred it
+                                if (me.key === person.key) {
+                                    iStarred = true; 
+                                }
+                            });
+                        // or else nobody starred it
+                        } else {
+                            iStarred = false;
+                        }
+                        console.log('replying with', iStarred);
+                        reply.view('items/item', itemReply('place', place, thismod, iStarred, session));
+                        
+                    });
+                } else { 
+                    iStarred = false; 
+                    reply.view('items/item', itemReply('place', place));
+                }
             }
         });
     }
@@ -82,7 +101,7 @@ exports.add = {
     handler: function (request, reply) {
         var session = request.auth.credentials;
         models.PlaceCategory.all(function (err, placeCategories) {
-            reply.view('places/addPlace', {
+            reply.view('items/addPlace', {
                 placeCategories: placeCategories,
                 userid    : session.userid,
                 fullName  : session.fullName,
@@ -141,7 +160,7 @@ exports.edit = {
                 moderator : session.moderator,
                 admin     : session.admin
             });
-            reply.view('places/editPlace', context);
+            reply.view('items/editPlace', context);
         });
     }
 };
