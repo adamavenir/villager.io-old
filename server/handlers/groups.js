@@ -30,7 +30,6 @@ exports.list = {
                 }
                 // reply with approved and mine
                 else {
-                    console.log('reply with group item', JSON.stringify(mine, null, 2))
                     reply.view('items/listItems', listReply('group', approved, mine, session));
                 }
             }
@@ -56,22 +55,31 @@ exports.get = {
         models.Group.findByIndex('slug', request.params.group, function(err, group) {
             var thismod, iStarred;
 
-            // if I created this group, I'm a moderator of it.
-            if (group.creatorKey === session.userid) { thismod = true; 
+            if (session.userid) {
+
+                // if I created this group, I'm a moderator of it.
+                if (group.creatorKey === session.userid) { 
+                    thismod = true;
                 } else { thismod = false; }
 
-            if (err) { reply.view('404'); }
+                if (err) { reply.view('404'); }
 
-            // if user has a session and starred it
-            if (session.userid && group.hasInstance('starredBy', session.userid)) {
-                console.log('hi, I starred it');
-                iStarred = true;
-                reply.view('items/item', itemReply('group', group, thismod, iStarred, session));
-            } else { 
-                iStarred = false; 
+                // if user has a session and starred it
+                if (group.hasInstance('starredBy', session.userid)) {
+                    iStarred = true;
+                    reply.view('items/item', itemReply('group', group, session, thismod, iStarred));
+                    console.log('iStarred true');
+                } else { 
+                    iStarred = false; 
+                    console.log('iStarred false');
+                    reply.view('items/item', itemReply('group', group, session, thismod, iStarred));
+                }
+
+            } else {
+                console.log('no session');
+                reply.view('items/item', itemReply('group', group));
             }
-
-            reply.view('items/item', itemReply('group', group));
+            
         });
     }
 };

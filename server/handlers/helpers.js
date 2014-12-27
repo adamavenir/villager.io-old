@@ -29,7 +29,7 @@ exports.itemReply = function (itemType, item, session, thismod, iStarred) {
 exports.listReply = function (itemType, items, mine, session) {
     var replyData;
     if (typeof mine === 'undefined') {
-        mine = false
+        mine = false;
     }
 
     if (typeof session === 'undefined') { 
