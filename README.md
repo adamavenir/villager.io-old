@@ -48,16 +48,16 @@ __Important note:__ I just realized this app *temporarily* requires a nlfpm acco
 - [x] Update to dulcimer 2.5
 - [x] Set up test scaffolding
 - [x] Design cleanup
-- [ ] Add links
-- [ ] Add posts
+- [x] ★ star places and groups
 - [ ] Curated lists of places and groups
-- [ ] ★ places and groups for favorites
 - [ ] Add a place/group to a list from its page
 - [ ] Show lists a place/group appears on
 - [ ] Add and list upcoming events
 - [ ] Basic RSVPs for events
 - [ ] Show groups a person is a member of
 - [ ] Show events a person has RSVP'd for
+- [ ] Add links
+- [ ] Add posts
 - [ ] Ability to be a member or admin of a group or place
 - [ ] Write more tests
 - [ ] Make some things not suck as much
