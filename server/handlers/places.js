@@ -55,43 +55,31 @@ exports.get = {
         models.Place.findByIndex('slug', request.params.place, function(err, place) {
             var thismod, iStarred;
 
-            // if I created this place, I'm a moderator of it.
-            if (place.creatorKey === session.userid) { thismod = true; 
+            if (session.userid) {
+
+                // if I created this place, I'm a moderator of it.
+                if (place.creatorKey === session.userid) { 
+                    thismod = true;
                 } else { thismod = false; }
 
-            if (err) { reply.view('404'); }
-            else {
+                if (err) { reply.view('404'); }
 
-                // if user has a session
-                if (session.userid) {
-                    models.User.get(session.userid, function (err, me) {
-                        if (err) { throw err; }
-
-                        // if at least one person has starred this place
-                        if (place.starredBy.length > 0) {
-
-                            // loop through each place
-                            _.each(place.starredBy, function (person) {
-                                if (err) { throw err; }
-
-                                // if I starred it
-                                if (me.key === person.key) {
-                                    iStarred = true; 
-                                }
-                            });
-                        // or else nobody starred it
-                        } else {
-                            iStarred = false;
-                        }
-                        console.log('replying with', iStarred);
-                        reply.view('items/item', itemReply('place', place, thismod, iStarred, session));
-                        
-                    });
+                // if user starred it
+                if (place.hasKey('starredBy', session.userid)) {
+                    iStarred = true;
+                    reply.view('items/item', itemReply('place', place, session, thismod, iStarred));
+                    console.log('iStarred true');
                 } else { 
                     iStarred = false; 
-                    reply.view('items/item', itemReply('place', place));
+                    console.log('iStarred false');
+                    reply.view('items/item', itemReply('place', place, session, thismod, iStarred));
                 }
+
+            } else {
+                console.log('no session');
+                reply.view('items/item', itemReply('place', place));
             }
+            
         });
     }
 };
