@@ -102,6 +102,7 @@ exports.add = {
 exports.create = {
     auth: 'session',
     handler: function (request, reply) {
+        var session = request.auth.credentials;
         var form = request.payload;
         var p = models.User.create({
             fullName  : form.fullName,
@@ -111,6 +112,7 @@ exports.create = {
             company   : form.company,
             about     : form.about,
             interests : form.interests,
+            creator   : session.userid,
             approved  : true
         });
         p.save(function (err) {
@@ -127,7 +129,7 @@ exports.edit = {
     auth: 'session',
     handler: function (request, reply) {
         var session = request.auth.credentials;
-        models.User.get(request.params.person, function (err, person) {
+        models.User.get(request.params.personKey, function (err, person) {
             models.Interest.all(function (err, interests) {
                 person.interests = _.pluck(person.interests, 'key');
                 reply.view('people/editPerson', {

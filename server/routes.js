@@ -36,10 +36,16 @@ module.exports = function _routes() {
     ////////////////////////////////// LISTS
 
     { method: 'GET',  path: '/lists', config: lists.list },
-    { method: 'POST', path: '/lists/add', config: lists.add },
-    { method: 'GET',  path: '/lists/edit/{listSlug}', config: lists.edit },
+    { method: 'GET',  path: '/lists/{list}', config: lists.get },
+    { method: 'GET', path: '/lists/add', config: lists.add },
+    { method: 'POST', path: '/lists/add', config: lists.create },
+    { method: 'GET',  path: '/lists/edit/{listKey}', config: lists.edit },
     { method: 'POST', path: '/lists/update/{listKey}', config: lists.update },
     { method: 'GET',  path: '/lists/delete/{listKey}', config: lists.delete },
+    { method: 'GET',  path: '/lists/star/{listKey}', config: lists.star },
+    { method: 'POST', path: '/lists/addplace/{listKey}', config: lists.addplace },
+    { method: 'POST', path: '/lists/addgroup/{listKey}', config: lists.addgroup },
+    { method: 'GET',  path: '/lists/mute/{listKey}', config: lists.mute },
 
     ////////////////////////////////// PEOPLE
 
@@ -47,7 +53,7 @@ module.exports = function _routes() {
     { method: 'GET',  path: '/people/{person}', config: people.get },
     { method: 'GET',  path: '/people/add', config: people.add },
     { method: 'POST', path: '/people/add', config: people.create },
-    { method: 'GET',  path: '/profile/edit/{person}', config: people.edit },
+    { method: 'GET',  path: '/profile/edit/{personKey}', config: people.edit },
     { method: 'POST', path: '/profile/update/{person}', config: people.update },
     { method: 'GET',  path: '/people/delete/{personKey}/{personName}', config: people.delete },
     { method: 'GET',  path: '/people/approve/{person}', config: people.approve },
@@ -60,7 +66,7 @@ module.exports = function _routes() {
     { method: 'GET',  path: '/places/{place}', config: places.get },
     { method: 'GET',  path: '/places/add', config: places.add },
     { method: 'POST', path: '/places/add', config: places.create },
-    { method: 'GET',  path: '/places/edit/{placeSlug}', config: places.edit },
+    { method: 'GET',  path: '/places/edit/{placeKey}', config: places.edit },
     { method: 'POST', path: '/places/update/{placeKey}', config: places.update },
     { method: 'GET',  path: '/places/star/{placeKey}', config: places.star },
     { method: 'GET',  path: '/places/approve/{place}', config: places.approve },
@@ -72,7 +78,7 @@ module.exports = function _routes() {
     { method: 'GET',  path: '/groups/{group}', config: groups.get },
     { method: 'GET',  path: '/groups/add', config: groups.add },
     { method: 'POST', path: '/groups/add', config: groups.create },
-    { method: 'GET',  path: '/groups/edit/{groupSlug}', config: groups.edit },
+    { method: 'GET',  path: '/groups/edit/{groupKey}', config: groups.edit },
     { method: 'POST', path: '/groups/update/{groupKey}', config: groups.update },
     { method: 'GET',  path: '/groups/star/{groupKey}', config: groups.star },
     { method: 'GET',  path: '/groups/approve/{group}', config: groups.approve },

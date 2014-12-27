@@ -4,19 +4,16 @@ block body
   body
     include ../in/header
 
-    form(method="POST", action="/lists/update/" + list.key)
+    form(method="POST", action="/lists/update/" + item.key)
       fieldset
-        legend Edit #{list.what} list: #{list.name}
+        legend Edit #{item.type} item: #{item.type}
         .form-element
           label(for="name") Name
-          input.form-input(name="name", value= list.name)
+          input.form-input(name="name", value= item.name)
         .form-element
           label(for="description") Description
-          input.form-input(name="description", value= list.description)
-        .form-element
-          label(for="image") Image (optional)
-          input.form-input(name="image", value= list.image)
-        input(type="hidden", name="what", value=list.what)
+          input.form-input(name="description", value= item.description)
+        input(type="hidden", name="type", value=item.type)
         button.button.button-primary(type="submit") Update list
 
     include ../in/footer

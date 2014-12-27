@@ -5,11 +5,11 @@ header(class="mod" + moderator)
     ul.list-unstyled.list-inline.cf
       li: a(href="/") Home
       li: a(href="/lists") Lists
-      li: a(href="/people") People
       li: a(href="/places") Places
       li: a(href="/groups") Groups
       //- li: a(href="/events") Events
       if moderator
+        li: a(href="/people") People
         li: a(href="/pending") Pending
       if userid
         li.has-dropdown.header-profile

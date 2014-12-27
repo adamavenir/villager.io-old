@@ -1,36 +1,95 @@
 var models = require('../models').models;
 var async = require('async');
 var _ = require('underscore');
+var itemReply = require('./helpers').itemReply;
+var listReply = require('./helpers').listReply;
+
 
 exports.list = {
     auth: { strategy: 'session', mode: 'try' },
     handler: function (request, reply) {
         var session = request.auth.credentials;
         async.parallel({
-            places: function (done) {
-                models.Place.all(done);
-            },
-            groups: function (done) {
-                models.Group.all(done);
-            },
-            people: function (done) {
-                models.User.all(done);
-            },
             lists: function (done) {
                 models.List.all(done);
             }
         }, function (err, context) {
             if (err) { throw err; }
+
+            // show only items that have been approved
+            var approved = _.where(context.lists[0], { approved: true });
+
+            // if we have a session
             if (session && session.userid) {
-                context = _.extend(context, {
-                    userid    : session.userid,
-                    fullName  : session.fullName,
-                    avatar    : session.avatar,
-                    moderator : session.moderator,
-                    admin     : session.admin
+
+                // also show my items that haven't been approved yet
+                var mine = _.where(context.lists[0], { 
+                    creatorKey: session.userid, 
+                    approved: false 
                 });
+
+                // if there are no approved lists or my unapproved lists
+                if(mine.length + approved.length === 0) {
+                    reply.view('items/noItems', listReply('list', null, null, session));
+                }
+                // reply with approved and mine
+                else {
+                    reply.view('items/listItems', listReply('list', approved, mine, session));
+                }
             }
-            reply.view('lists/lists', context);
+            else {
+                // if there are no approved items
+                if (approved.length === 0) {
+                    reply.view('items/noItems');
+                }
+                // else show the list of approved lists
+                else {
+                    reply.view('items/listItems', listReply('list', approved));
+                }
+            }
+        });
+    }
+};
+
+exports.get = {
+    auth: { strategy: 'session', mode: 'try' },
+    handler: function (request, reply) {
+        var session = request.auth.credentials;
+
+        models.List.findByIndex('slug', request.params.list, function(err, list) {
+
+            console.log(JSON.stringify(list, null, 2));
+
+            var thismod, iStarred;
+
+            // if there's no such item, return a 404
+            if (err) { reply.view('404'); }
+
+            // if we have a session
+            if (session.userid) {
+
+                console.log('list', JSON.stringify(list, null, 2))
+
+                // if I created this list, I'm a moderator of it.
+                if (list.creator.key === session.userid) { 
+                    thismod = true;
+                } else { thismod = false; }
+
+                // if I starred it
+                if (list.hasKey('starredBy', session.userid)) {
+                    iStarred = true;
+                    reply.view('items/item', itemReply('list', list, session, thismod, iStarred));
+                // if I didn't star it
+                } else { 
+                    iStarred = false; 
+                    reply.view('items/item', itemReply('list', list, session, thismod, iStarred));
+                }
+
+            // if I don't have a session, give a standard page
+            } else {
+                reply.view('items/item', itemReply('list', list));
+            }
+            
         });
     }
 };
@@ -38,66 +97,48 @@ exports.list = {
 exports.add = {
     auth: 'session',
     handler: function (request, reply) {
+        var session = request.auth.credentials;
+        reply.view('lists/addlist', {
+            userid    : session.userid,
+            fullName  : session.fullName,
+            avatar    : session.avatar,
+            moderator : session.moderator,
+            admin     : session.admin
+        });
+    }
+};
+
+exports.create = {
+    auth: 'session',
+    handler: function (request, reply) {
+        var session = request.auth.credentials;
         var form = request.payload;
-        console.log('form is', form);
-        if (form.name) {
-            var list = models.List.create(form);
-            list.save(function (err) {
-                if (err) {throw err;}
-                reply().redirect('/lists/edit/' + list.slug);
+        var p = models.List.create({
+            type    : form.type,
+            name    : form.name,
+            about   : form.about,
+            creator : session.userid,
+        });
+        p.save(function (err) {
+            if (err) { throw err; }
+            models.List.load(p.key, function (err, list) {
+                if (err) { throw err; }
+                reply().code(201).redirect('/lists/' + list.slug);
             });
-        }
+        });
     }
 };
 
 exports.edit = {
     auth: 'session',
     handler: function (request, reply) {
+        console.log('hi, edit handler here');
         var session = request.auth.credentials;
-        async.parallel({
-            places: function (done) {
-                models.Place.all(done);
-            },
-            groups: function (done) {
-                models.Group.all(done);
-            },
-            people: function (done) {
-                models.User.all(done);
-            },
-            list: function (done) {
-                models.List.findByIndex('slug', request.params.listSlug, done);
-            }
-        }, function (err, context) {
+        models.List.get(request.params.listKey, function (err, list) {
+            console.log(JSON.stringify(list,null,2));
+            // console.log('list is%j', context.list);
             if (err) { throw err; }
-            if (context.list.what === 'groups') {
-                context = _.omit(context, ['places', 'people']);
-                context.listOptions = context.groups[0];
-                delete context.groups;
-            }
-            else if (context.list.what === 'places') {
-                context = _.omit(context, ['groups', 'people']);
-                context.listOptions = context.places[0];
-                delete context.places;
-            }
-            else if (context.list.what === 'people') {
-                context = _.omit(context, ['places', 'groups']);
-                context.listOptions = context.people[0];
-                delete context.people;
-            }
-            else {
-                console.log('invalid data type for list');
-            }
-            context.optionKeys = _.pluck(context.listOptions, 'key');
-            context.optionsInList = _.pluck(context.list[context.list.what], 'key');
-            context = _.extend(context, {
-                userid    : session.userid,
-                fullName  : session.fullName,
-                avatar    : session.avatar,
-                moderator : session.moderator,
-                admin     : session.admin
-            });
-            console.log('context%j', context.optionsInList);
-            reply.view('lists/editList', context);
+            reply.view('lists/editList', listReply('list', list, session));
         });
     }
 };
@@ -105,20 +146,16 @@ exports.edit = {
 exports.update = {
     auth: 'session',
     handler: function (request, reply) {
+        var session = request.auth.credentials;
         var form = request.payload;
-        console.log('form is', form);
-        var listElements = form[form.what];
-        console.log('listElements', listElements);
-        console.log('isArray?', _.isArray(listElements));
-        if (!(_.isArray(listElements))) {
-            console.log('running');
-            form[form.what] = [listElements];
-        }
-        console.log('form is', form);
-        models.List.update(request.params.listKey, form, function (err, list) {
+        models.List.update(request.params.listKey, {
+            type    : form.type,
+            name    : form.name,
+            about   : form.about,
+            creator : session.userid,
+        }, function (err) {
             if (err) { throw err; }
-            console.log('list is%j', list);
-            reply().redirect('/lists');
+            else { reply().code(201).redirect('/lists'); }
         });
     }
 };
@@ -126,9 +163,127 @@ exports.update = {
 exports.delete = {
     auth: 'session',
     handler: function (request, reply) {
-        models.List.delete(request.params.listKey, function (err) {
+        var session = request.auth.credentials;
+        async.parallel({
+            user: function (done) {
+                models.User.get(session.userid, done);
+            },
+            list: function (done) {
+                models.List.get(request.params.listKey, done);
+            }
+        }, function (err, context) {
             if (err) { throw err; }
-            reply.view('deleted').redirect('/lists');
+            context.list.delete(function (err) {
+                if (err) { throw err; }
+                reply.view('deleted').redirect('/lists');
+            });
+        });
+    }
+};
+
+exports.star = {
+    auth: 'session',
+    handler: function (request, reply) {
+        var session = request.auth.credentials;
+        models.List.get(request.params.listKey, function (err, list) {
+            // get an array of the users which already starred the list
+            var starredIds = list.starredBy.map(function (user) {
+                return user.key;
+            });
+            // if the user already starred it remove it
+            if (_.contains(starredIds, session.userid)) {
+                list.starredBy = _.without(list.starredBy, session.userid);
+                for (var i = 0; i < list.starredBy.length; i++) {
+                    if (list.starredBy[i].key === session.userid) {
+                        list.starredBy.splice(i, 1);
+                        break;
+                    }
+                }
+            }
+            // otherwise we add it
+            else {
+                list.starredBy.push(session.userid);
+            }
+            list.save(function () {
+                // console.log('list is%j', list);
+                reply().redirect('/lists/' + list.slug);
+            });
+        });
+    }
+};
+
+exports.mute = {
+    auth: 'session',
+    handler: function (request, reply) {
+        var session = request.auth.credentials;
+        if (session.moderator) {
+            models.List.update(request.params.list, { approved: true }, function () {
+                //console.log('approved:', list.key);
+                reply.redirect('/lists');
+            });
+        }
+        else { reply.redirect('/'); }
+    }
+};
+
+exports.addplace = {
+    auth: 'session',
+    handler: function (request, reply) {
+        var session = request.auth.credentials;
+        models.List.get(request.params.listKey, function (err, list) {
+            // get an array of the users which already starred the list
+            var starredIds = list.starredBy.map(function (user) {
+                return user.key;
+            });
+            // if the user already starred it remove it
+            if (_.contains(starredIds, session.userid)) {
+                list.starredBy = _.without(list.starredBy, session.userid);
+                for (var i = 0; i < list.starredBy.length; i++) {
+                    if (list.starredBy[i].key === session.userid) {
+                        list.starredBy.splice(i, 1);
+                        break;
+                    }
+                }
+            }
+            // otherwise we add it
+            else {
+                list.starredBy.push(session.userid);
+            }
+            list.save(function () {
+                // console.log('list is%j', list);
+                reply().redirect('/lists/' + list.slug);
+            });
+        });
+    }
+};
+
+exports.addgroup = {
+    auth: 'session',
+    handler: function (request, reply) {
+        var session = request.auth.credentials;
+        models.List.get(request.params.listKey, function (err, list) {
+            // get an array of the users which already starred the list
+            var starredIds = list.starredBy.map(function (user) {
+                return user.key;
+            });
+            // if the user already starred it remove it
+            if (_.contains(starredIds, session.userid)) {
+                list.starredBy = _.without(list.starredBy, session.userid);
+                for (var i = 0; i < list.starredBy.length; i++) {
+                    if (list.starredBy[i].key === session.userid) {
+                        list.starredBy.splice(i, 1);
+                        break;
+                    }
+                }
+            }
+            // otherwise we add it
+            else {
+                list.starredBy.push(session.userid);
+            }
+            list.save(function () {
+                // console.log('list is%j', list);
+                reply().redirect('/lists/' + list.slug);
+            });
         });
     }
 };

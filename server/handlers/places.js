@@ -65,7 +65,7 @@ exports.get = {
             if (session.userid) {
 
                 // if I created this place, I'm a moderator of it.
-                if (place.creatorKey === session.userid) { 
+                if (place.creator.key === session.userid) { 
                     thismod = true;
                 } else { thismod = false; }
 
@@ -119,7 +119,7 @@ exports.create = {
             twitter : form.twitter,
             website : form.website,
             about   : form.about,
-            creatorKey : session.userid
+            creator : session.userid,
         });
         p.save(function (err) {
             if (err) { throw err; }

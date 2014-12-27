@@ -1,15 +1,18 @@
 var dulcimer = require('dulcimer');
+var verymodel = require('verymodel');
 var slugger = require('slugger');
 
+var type = verymodel.VeryType;
+
 var List = new dulcimer.Model({
-	name:{
-		required: true
-	},
-	what: {
-		type: 'enum',
-		values: ['groups', 'people', 'places']
-	},
-	slug: {
+    name:{
+        required: true
+    },
+    type: {
+        type: 'enum',
+        values: ['groups', 'places']
+    },
+    slug: {
         derive: function () {
             return slugger(this.name);
         },
@@ -17,22 +20,43 @@ var List = new dulcimer.Model({
         private: false
     },
     description: {
+        required: false,
+        type: type().isAlphanumeric().len(0,160)
     },
     image: {
+        required: false,
+        type: type().isUrl()
     },
     groups: {
-    	foreignCollection: 'group',
+        foreignCollection: 'group',
         default: []
     },
     places: {
-    	foreignCollection: 'place',
+        foreignCollection: 'place',
         default: []
     },
-    people: {
-    	foreignCollection: 'user',
-        default: []
+    starredBy: {
+        default: [],
+        foreignCollection: 'user',
+        required: true
+    },
+    stars: {
+        required: true,
+        derive: function () {
+            return this.starredBy.length || 0;
+        },
+    },
+    approved: {
+        default: true,
+        type: 'boolean',
+        required: true,
+        index: true
+    },
+    creator: {
+        foreignKey: 'user',
+        index: true,
+        private: false
     }
-
 },
 {name: 'list'});
 

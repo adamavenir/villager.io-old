@@ -20,6 +20,10 @@ var Group = new dulcimer.Model(
             index: true,
             private: false
         },
+        phone: {
+            required: false,
+            type: type().isAlphanumeric()
+        },
         image: {
             required: true,
             type: type().isUrl()
@@ -48,10 +52,8 @@ var Group = new dulcimer.Model(
             required: true,
             index: true
         },
-        creatorKey: {
-            index: true
-        },
-        moderator: {
+        creator: {
+            foreignKey: 'user',
             index: true
         }
     },

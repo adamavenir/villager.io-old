@@ -39,6 +39,11 @@ var User = new dulcimer.Model(
             },
             required: false
         },
+        username: {
+            type: new type().isAlphanumeric().len(1,80),
+            required: false,
+            index: true
+        },
         slug: {
             derive: function () {
                 if (this.fullName) {
@@ -50,6 +55,16 @@ var User = new dulcimer.Model(
             },
             index: true,
             private: false
+        },
+        urlSlug: {
+            derive: function () {
+                if (this.username) {
+                    return this.username;
+                } else {
+                    return this.slugName
+                }
+            },
+            index: true
         },
         twitterId: {
             index: true

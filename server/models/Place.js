@@ -20,6 +20,10 @@ var Place = new dulcimer.Model (
             index: true,
             private: false
         },
+        phone: {
+            required: false,
+            type: type().isAlphanumeric()
+        },
         address: {
             required: false,
             type: type().isAlphanumeric()
@@ -40,12 +44,12 @@ var Place = new dulcimer.Model (
             type: type().isUrl(),
         },
         image: {
-            required: true,
+            required: false,
             type: type().isUrl()
         },
         website: {
-            type: new type().isUrl(),
-            required: true
+            type: type().isUrl(),
+            required: false
         },
         about: {
             required: false,
@@ -68,17 +72,8 @@ var Place = new dulcimer.Model (
             required: true,
             index: true
         },
-        creatorKey: {
-            index: true
-        },
-        // creatorName: {
-        //   derive: function(creatorKey) {
-        //     User.getByIndex(creatorKey, function(err, user) {
-        //       return user.fullName;
-        //     })
-        //   }
-        // },
-        moderator: {
+        creator: {
+            foreignKey: 'user',
             index: true
         }
     },
