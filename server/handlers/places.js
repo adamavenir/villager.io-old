@@ -109,7 +109,6 @@ exports.create = {
         var session = request.auth.credentials;
         var form = request.payload;
         var place = models.Place.create({
-            type    : form.type,
             name    : form.name,
             address : form.address,
             city    : form.city,
@@ -147,7 +146,6 @@ exports.update = {
     handler: function (request, reply) {
         var form = request.payload;
         models.Place.update(request.params.placeKey, {
-            type    : form.type,
             name    : form.name,
             address : form.address,
             city    : form.city,
@@ -155,7 +153,8 @@ exports.update = {
             twitter : form.twitter,
             website : form.website,
             about   : form.about
-        }, function (err) {
+        }, function (err, place) {
+            console.log('place', place.toJSON())
             if (err) { throw err; }
             else { reply().code(201).redirect('/places'); }
         });

@@ -1,0 +1,52 @@
+extends ../layout
+
+block body
+  body
+    include ../in/header
+    .title-bar
+      h1= item.name
+      .action-menu
+        a.button.delete-item(href="/events/delete/" + item.key + 
+            '/' + item.name) Delete
+
+    form(method="POST", action="/events/update" + item.key)
+      fieldset
+        legend Edit #{item.name}
+        .form-element
+          label(for="type") Type of event:
+          select.form-input(name="type")
+            if item.type
+              option(value= item.type) #{item.type.name}
+            else
+              option(value="") -- Select a Category --
+            each cat in categories
+              if item.type.key != cat.key
+                option(value=cat.key) #{cat.name}
+        .form-element
+          label(for="name") Event title
+          input.form-input(name="name", type="text", placeholder="Title of the event", value= item.name)
+        .form-element
+          label(for="about") Description
+          textarea.form-input(name="about", type="text", maxlength="160", placeholder="Describe this event (160 characters max)") #{item.about}
+        .form-element
+          label(for="date") Date (required)
+          input.form-input(name="date", type="text", placeholder='“June 5, 2015” “next thursday” “tomorrow” “april 10”', value= item.humanDate)
+        .form-element
+          label(for="time") Time (optional)
+          input.form-input(name="time", type="text", placeholder="5:20 p.m.", value= item.time)
+        .form-element
+          label(for="phone") Contact phone number
+          input.form-input(name="phone", type="text", placeholder="(509) 555-1212", value= item.phone)
+        .form-element
+          label(for="email") Contact email address
+          input.form-input(name="email", type="text", placeholder="you@reaweso.me", value= item.email)
+        .form-element
+          label(for="website") Website
+          input.form-input(name="website", type="text", placeholder="http://placewebsite.com", value=item.website)
+        .form-element
+          label(for="image") Link to image
+          input.form-input(name="image", type="text", placeholder="link to an image", value= item.image)
+        
+        button.button.button-primary(name="submit", type="submit") Update this event
+
+    include ../in/footer
