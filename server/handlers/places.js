@@ -3,50 +3,57 @@ var models = require('../models').models;
 var async = require('async');
 var itemReply = require('./helpers').itemReply;
 var listReply = require('./helpers').listReply;
+var h = require('./helpers');
 
 exports.list = {
     auth: { strategy: 'session', mode: 'try' },
-    handler: function (request, reply) {
-        var session = request.auth.credentials;
-        models.Place.all(function (err, items) {
-            if (err) { throw err; }
-
-            // show only items that have been approved
-            var approved = _.where(items, { approved: true });
-
-            // if we have a session
-            if (session && session.userid) {
-
-                // also show my items that haven't been approved yet
-                var mine = [];
-                _.each(items, function (thisItem) {
-                    if (thisItem.creator.key === session.userid && thisItem.approved === false) {
-                        mine.push(thisItem);
-                    }
-                });
-
-                // if there are no approved places or my unapproved places
-                if(mine.length + approved.length === 0) {
-                    reply.view('items/noItems', listReply('place', null, null, session));
-                }
-                // reply with approved and mine
-                else {
-                    reply.view('items/listItems', listReply('place', approved, mine, session));
-                }
-            }
-            else {
-                // if there are no approved items
-                if (approved.length === 0) {
-                    reply.view('items/noItems');
-                }
-                // else show the list of approved places
-                else {
-                    reply.view('items/listItems', listReply('place', approved));
-                }
-            }
-        });
-    }
+    handler: h.makeListHandler('Place', 'place', 'places')
 };
+
+
+// exports.list = {
+//     auth: { strategy: 'session', mode: 'try' },
+//     handler: function (request, reply) {
+//         var session = request.auth.credentials;
+//         models.Place.all(function (err, items) {
+//             if (err) { throw err; }
+
+//             // show only items that have been approved
+//             var approved = _.where(items, { approved: true });
+
+//             // if we have a session
+//             if (session && session.userid) {
+
+//                 // also show my items that haven't been approved yet
+//                 var mine = [];
+//                 _.each(items, function (thisItem) {
+//                     if (thisItem.creator.key === session.userid && thisItem.approved === false) {
+//                         mine.push(thisItem);
+//                     }
+//                 });
+
+//                 // if there are no approved places or my unapproved places
+//                 if(mine.length + approved.length === 0) {
+//                     reply.view('items/noItems', listReply('place', null, null, session));
+//                 }
+//                 // reply with approved and mine
+//                 else {
+//                     reply.view('items/listItems', listReply('place', approved, mine, session));
+//                 }
+//             }
+//             else {
+//                 // if there are no approved items
+//                 if (approved.length === 0) {
+//                     reply.view('items/noItems');
+//                 }
+//                 // else show the list of approved places
+//                 else {
+//                     reply.view('items/listItems', listReply('place', approved));
+//                 }
+//             }
+//         });
+//     }
+// };
 
 exports.get = {
     auth: { strategy: 'session', mode: 'try' },
