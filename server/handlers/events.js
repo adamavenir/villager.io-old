@@ -33,7 +33,7 @@ exports.list = {
                 }
                 // reply with approved and mine
                 else {
-                    reply.view('items/listItems', listReply('event', approved, mine, session));
+                    reply.view('events/listEvents', listReply('event', approved, mine, session));
                 }
             }
             else {
@@ -43,7 +43,7 @@ exports.list = {
                 }
                 // else show the list of approved events
                 else {
-                    reply.view('items/listItems', listReply('event', approved));
+                    reply.view('events/listEvents', listReply('event', approved));
                 }
             }
         });
@@ -64,26 +64,22 @@ exports.get = {
             // if we have a session
             if (session.userid) {
 
-                // get foreignkeys for creator
-                event.getForeign('creator', function (err, creator) {
+                if (err) { throw err; }
 
-                    if (err) { throw err; }
+                // if I created this event, I'm a moderator of it.
+                if (event.creator.key === session.userid) { 
+                    thismod = true;
+                } else { thismod = false; }
 
-                    // if I created this event, I'm a moderator of it.
-                    if (creator && creator.key === session.userid) { 
-                        thismod = true;
-                    } else { thismod = false; }
-
-                    // if I starred it
-                    if (event.hasKey('starredBy', session.userid)) {
-                        iStarred = true;
-                        reply.view('items/item', itemReply('event', event, session, thismod, iStarred));
-                    // if I didn't star it
-                    } else { 
-                        iStarred = false; 
-                        reply.view('items/item', itemReply('event', event, session, thismod, iStarred));
-                    }
-                });
+                // if I starred it
+                if (event.hasKey('starredBy', session.userid)) {
+                    iStarred = true;
+                    reply.view('items/item', itemReply('event', event, session, thismod, iStarred));
+                // if I didn't star it
+                } else { 
+                    iStarred = false; 
+                    reply.view('items/item', itemReply('event', event, session, thismod, iStarred));
+                }
 
             // if I don't have a session, give a standard page
             } else {
@@ -99,7 +95,9 @@ exports.add = {
     handler: function (request, reply) {
         var session = request.auth.credentials;
         models.EventCategory.all(function (err, eventCategories) {
+            if (err) { throw err; }
             reply.view('items/addEvent', {
+                // TODO: add place, group, and organizer selection
                 eventCategories: eventCategories,
                 userid    : session.userid,
                 fullName  : session.fullName,
@@ -116,25 +114,25 @@ exports.create = {
     handler: function (request, reply) {
         var session = request.auth.credentials;
         var form = request.payload;
-        // TODO: explicitly map form to model
-        var event = models.Event.create(form);
-        console.log(session.userid);
-        // get my user
-        models.User.get(session.userid, function (err, user) {
+
+        // TODO: explicitly map form to model, add session
+        var event = models.Event.create({
+            type    : form.type,
+            name    : form.name,
+            email   : form.email,
+            phone   : form.phone,
+            date    : form.date,
+            time    : form.time,
+            image   : form.image,
+            website : form.website,
+            about   : form.about,
+            creator : session.userid
+        });
+        // save the event
+        event.save(function (err) {
             if (err) { throw err; }
-            console.log('got user', JSON.stringify(user, null, 2));
-            // save the event
-            event.save(function (err) {
-                if (err) { throw err; }
-                console.log('saved event', event.name);
-                // add my user as a foreign key
-                event.addForeign('creator', user, function (err) {
-                    console.log('added foreign user', user.name);
-                    if (err) { throw err; }
-                    // return the new event page as confirmation
-                    reply().code(201).redirect('/events/' + event.slug);
-                });
-            });
+            // return the new event page as confirmation
+            reply().code(201).redirect('/events/' + event.slug);
         });
     }
 };
@@ -143,24 +141,12 @@ exports.edit = {
     auth: 'session',
     handler: function (request, reply) {
         var session = request.auth.credentials;
-        async.parallel({
-            event: function (done) {
-                models.Event.findByIndex('slug', request.params.eventSlug, done);
-            },
-            eventCategories: function (done) {
-                models.EventCategory.all(done);
-            }
-        }, function (err, context) {
-            // console.log('event is%j', context.event);
+        models.Event.get(request.params.eventKey, function (err, event) {
             if (err) { throw err; }
-            context = _.extend(context, {
-                userid    : session.userid,
-                fullName  : session.fullName,
-                avatar    : session.avatar,
-                moderator : session.moderator,
-                admin     : session.admin
-            });
-            reply.view('items/editEvent', context);
+            models.EventCategory.all( function (err, categories) {
+                if (err) { throw err; }
+                reply.view('items/editEvent', itemReply('event', event, session, null, null, categories));
+            }); 
         });
     }
 };
@@ -230,7 +216,6 @@ exports.star = {
                 event.starredBy.push(session.userid);
             }
             event.save(function () {
-                // console.log('event is%j', event);
                 reply().redirect('/events/' + event.slug);
             });
         });
@@ -243,7 +228,6 @@ exports.approve = {
         var session = request.auth.credentials;
         if (session.moderator) {
             models.Event.update(request.params.event, { approved: true }, function () {
-                //console.log('approved:', event.key);
                 reply.redirect('/events');
             });
         }

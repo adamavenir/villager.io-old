@@ -8,21 +8,17 @@ exports.list = {
     auth: { strategy: 'session', mode: 'try' },
     handler: function (request, reply) {
         var session = request.auth.credentials;
-        async.parallel({
-            places: function (done) {
-                models.Place.all(done);
-            }
-        }, function (err, context) {
+        models.Place.all(function (err, items) {
             if (err) { throw err; }
 
             // show only items that have been approved
-            var approved = _.where(context.places[0], { approved: true });
+            var approved = _.where(items[0], { approved: true });
 
             // if we have a session
             if (session && session.userid) {
 
                 // also show my items that haven't been approved yet
-                var mine = _.where(context.places[0], { 
+                var mine = _.where(items[0], { 
                     creator: session.userid, 
                     approved: false 
                 });
@@ -136,24 +132,12 @@ exports.edit = {
     auth: 'session',
     handler: function (request, reply) {
         var session = request.auth.credentials;
-        async.parallel({
-            place: function (done) {
-                models.Place.findByIndex('slug', request.params.placeSlug, done);
-            },
-            placeCategories: function (done) {
-                models.PlaceCategory.all(done);
-            }
-        }, function (err, context) {
-            // console.log('place is%j', context.place);
+        models.Place.get(request.params.placeKey, function (err, place) {
             if (err) { throw err; }
-            context = _.extend(context, {
-                userid    : session.userid,
-                fullName  : session.fullName,
-                avatar    : session.avatar,
-                moderator : session.moderator,
-                admin     : session.admin
-            });
-            reply.view('items/editPlace', context);
+            models.PlaceCategory.all( function (err, categories) {
+                if (err) { throw err; }
+                reply.view('items/editPlace', itemReply('place', place, session, null, null, categories));
+            }); 
         });
     }
 };

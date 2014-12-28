@@ -1,3 +1,4 @@
+var sugar = require('sugar');
 var slugger = require('slugger');
 var dulcimer = require('dulcimer');
 var verymodel = require('verymodel');
@@ -28,10 +29,18 @@ var Event = new dulcimer.Model(
             type: new type().isAlphanumeric(),
             required: false
         },
-        eventDate: {
-            processIn: function(eventDate) {
-                return Date.create(eventDate);
+        date: {
+            processIn: function(date) {
+                return Date.future(date);
             }
+        },
+        humanDate: {
+            derive: function() {
+                return this.date.format('{Month} {d}, {yyyy}');
+            }
+        },
+        time: {
+            type: new type().isAlphanumeric(),
         },
         image: {
             required: true,
@@ -72,7 +81,7 @@ var Event = new dulcimer.Model(
             },
         },
         approved: {
-            default: false,
+            default: true,
             type: 'boolean',
             required: true,
             index: true
@@ -83,7 +92,8 @@ var Event = new dulcimer.Model(
             required: true
         },
         creator: {
-            foreignKey: 'user'
+            foreignKey: 'user',
+            private: false
         }
     },
     {

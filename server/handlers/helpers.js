@@ -1,6 +1,6 @@
 var config = require('getconfig');
 
-exports.itemReply = function (itemType, item, session, thismod, iStarred) {
+exports.itemReply = function (itemType, item, session, thismod, iStarred, categories) {
     var replyData, gmapsApi;
     thismod = !!thismod;
     iStarred = !!iStarred;
@@ -26,6 +26,7 @@ exports.itemReply = function (itemType, item, session, thismod, iStarred) {
             moderator : session.moderator,
             admin     : session.admin,
             iStarred  : iStarred,
+            categories: categories,
             gmapsApi  : gmapsApi
         };
     }

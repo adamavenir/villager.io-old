@@ -6,6 +6,7 @@ var pages = require('./handlers/pages');
 var pending = require('./handlers/pending');
 var people = require('./handlers/people');
 var places = require('./handlers/places');
+var events = require('./handlers/events');
 
 module.exports = function _routes() {
 
@@ -37,7 +38,7 @@ module.exports = function _routes() {
 
     { method: 'GET',  path: '/lists', config: lists.list },
     { method: 'GET',  path: '/lists/{list}', config: lists.get },
-    { method: 'GET', path: '/lists/add', config: lists.add },
+    { method: 'GET',  path: '/lists/add', config: lists.add },
     { method: 'POST', path: '/lists/add', config: lists.create },
     { method: 'GET',  path: '/lists/edit/{listKey}', config: lists.edit },
     { method: 'POST', path: '/lists/update/{listKey}', config: lists.update },
@@ -54,7 +55,7 @@ module.exports = function _routes() {
     { method: 'GET',  path: '/people/add', config: people.add },
     { method: 'POST', path: '/people/add', config: people.create },
     { method: 'GET',  path: '/profile/edit/{personKey}', config: people.edit },
-    { method: 'POST', path: '/profile/update/{person}', config: people.update },
+    { method: 'POST', path: '/people/update/{personKey}', config: people.update },
     { method: 'GET',  path: '/people/delete/{personKey}/{personName}', config: people.delete },
     { method: 'GET',  path: '/people/approve/{person}', config: people.approve },
     { method: 'GET',  path: '/people/moderator/{person}', config: people.moderator },
@@ -83,6 +84,18 @@ module.exports = function _routes() {
     { method: 'GET',  path: '/groups/star/{groupKey}', config: groups.star },
     { method: 'GET',  path: '/groups/approve/{group}', config: groups.approve },
     { method: 'GET',  path: '/groups/delete/{groupKey}/{groupName}', config: groups.delete },
+
+    ////////////////////////////////// EVENTS
+
+    { method: 'GET',  path: '/events', config: events.list },
+    { method: 'GET',  path: '/events/{event}', config: events.get },
+    { method: 'GET',  path: '/events/add', config: events.add },
+    { method: 'POST', path: '/events/add', config: events.create },
+    { method: 'GET',  path: '/events/edit/{eventKey}', config: events.edit },
+    { method: 'POST', path: '/events/update/{eventKey}', config: events.update },
+    { method: 'GET',  path: '/events/star/{eventKey}', config: events.star },
+    { method: 'GET',  path: '/events/approve/{event}', config: events.approve },
+    { method: 'GET',  path: '/events/delete/{eventKey}/{eventName}', config: events.delete },
 
     ////////////////////////////////// PENDING
 

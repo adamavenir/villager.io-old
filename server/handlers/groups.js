@@ -8,21 +8,17 @@ exports.list = {
     auth: { strategy: 'session', mode: 'try' },
     handler: function (request, reply) {
         var session = request.auth.credentials;
-        async.parallel({
-            groups: function (done) {
-                models.Group.all(done);
-            }
-        }, function (err, context) {
+        models.Group.all(function (err, groups) {
             if (err) { throw err; }
 
             // show only items that have been approved
-            var approved = _.where(context.groups[0], { approved: true });
+            var approved = _.where(groups, { approved: true });
 
             // if we have a session
             if (session && session.userid) {
 
                 // also show my items that haven't been approved yet
-                var mine = _.where(context.groups[0], { 
+                var mine = _.where(groups, { 
                     creator: session.userid, 
                     approved: false 
                 });
@@ -64,24 +60,20 @@ exports.get = {
             // if we have a session
             if (session.userid) {
 
-                // get foreignkeys for creator
-                group.getForeign('creator', function (err, creator) {
+                // if I created this group, I'm a moderator of it.
+                if (group.creator.key === session.userid) { 
+                    thismod = true;
+                } else { thismod = false; }
 
-                    // if I created this group, I'm a moderator of it.
-                    if (creator.key === session.userid) { 
-                        thismod = true;
-                    } else { thismod = false; }
-
-                    // if I starred it
-                    if (group.hasKey('starredBy', session.userid)) {
-                        iStarred = true;
-                        reply.view('items/item', itemReply('group', group, session, thismod, iStarred));
-                    // if I didn't star it
-                    } else { 
-                        iStarred = false; 
-                        reply.view('items/item', itemReply('group', group, session, thismod, iStarred));
-                    }
-                });
+                // if I starred it
+                if (group.hasKey('starredBy', session.userid)) {
+                    iStarred = true;
+                    reply.view('items/item', itemReply('group', group, session, thismod, iStarred));
+                // if I didn't star it
+                } else { 
+                    iStarred = false; 
+                    reply.view('items/item', itemReply('group', group, session, thismod, iStarred));
+                }
 
             // if I don't have a session, give a standard page
             } else {
@@ -137,23 +129,12 @@ exports.edit = {
     auth: 'session',
     handler: function (request, reply) {
         var session = request.auth.credentials;
-        async.parallel({
-            group: function (done) {
-                models.Group.findByIndex('slug', request.params.groupSlug, done);
-            },
-            groupCategories: function (done) {
-                models.GroupCategory.all(done);
-            }
-        }, function (err, context) {
+        models.Group.get(request.params.groupKey, function (err, group) {
             if (err) { throw err; }
-            context = _.extend(context, {
-                fullName  : session.fullName,
-                avatar    : session.avatar,
-                userid    : session.userid,
-                moderator : session.moderator,
-                admin     : session.admin
-            });
-            reply.view('items/editGroup', context);
+            models.GroupCategory.all( function (err, categories) {
+                if (err) { throw err; }
+                reply.view('items/editGroup', itemReply('group', group, session, null, null, categories));
+            }); 
         });
     }
 };

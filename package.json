@@ -14,15 +14,16 @@
     "gravatar": "^1.1.0",
     "hapi": "^8.0.0",
     "hapi-auth-cookie": "^2.0.0",
+    "jade": "^1.8.2",
     "lab": "^5.1.1",
     "level": "^0.18.0",
     "precommit-hook": "^1.0.7",
     "slugger": "^1.0.0",
     "string": "^3.0.0",
+    "sugar": "^1.4.1",
     "twitface": "^0.1.1",
     "underscore": "^1.7.0",
-    "verymodel": "^1.10.1",
-    "jade": "^1.8.2"
+    "verymodel": "^1.10.1"
   },
   "devDependencies": {
     "autoprefixer-stylus": "^0.4.0",

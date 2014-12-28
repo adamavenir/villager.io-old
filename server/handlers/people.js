@@ -142,15 +142,7 @@ exports.update = {
     auth: 'session',
     handler: function (request, reply) {
         var form = request.payload;
-        console.log('form is', form);
-        models.User.update(request.params.person, {
-            fullName  : form.fullName,
-            email     : form.email,
-            twitter   : form.twitter,
-            website   : form.website,
-            company   : form.company,
-            about     : form.about
-        }, function (err) {
+        models.User.update(request.params.personKey, form, function (err) {
             if (err) { throw err; }
             else {
                 reply().code(201).redirect('/people');
@@ -189,8 +181,8 @@ exports.approve = {
     handler: function (request, reply) {
         var session = request.auth.credentials;
         if (session.moderator) {
-            models.User.update(request.params.person, { approved: true }, function (person) {
-                console.log('approved:', person.key);
+            models.User.update(request.params.person, { approved: true }, function () {
+                // console.log('approved:', person.key);
                 reply.redirect('/people');
             });
         }
@@ -203,8 +195,8 @@ exports.admin = {
     handler: function (request, reply) {
         var session = request.auth.credentials;
         if (session.admin) {
-            models.User.update(request.params.person, { admin: true, moderator: true, approved: true }, function (person) {
-                console.log('made admin:', person.key);
+            models.User.update(request.params.person, { admin: true, moderator: true, approved: true }, function () {
+                // console.log('made admin:', person.key);
                 reply().code(200).redirect('/people');
             });
         }
@@ -217,8 +209,8 @@ exports.moderator = {
     handler: function (request, reply) {
         var session = request.auth.credentials;
         if (session.admin) {
-            models.User.update(request.params.person, { moderator: true, approved: true }, function (person) {
-                console.log('made moderator:', person.key);
+            models.User.update(request.params.person, { moderator: true, approved: true }, function () {
+                // console.log('made moderator:', person.key);
                 reply().code(200).redirect('/people');
             });
         }

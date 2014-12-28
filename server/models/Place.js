@@ -74,7 +74,7 @@ var Place = new dulcimer.Model (
         },
         creator: {
             foreignKey: 'user',
-            index: true
+            private: false
         }
     },
     {

@@ -58,8 +58,6 @@ exports.get = {
 
         models.List.findByIndex('slug', request.params.list, function(err, list) {
 
-            console.log(JSON.stringify(list, null, 2));
-
             var thismod, iStarred;
 
             // if there's no such item, return a 404
@@ -68,26 +66,22 @@ exports.get = {
             // if we have a session
             else if (session.userid) {
 
-                // get foreignkeys for creator
-                list.getForeign('creator', function (err, creator) {
+                if (err) { throw err; }
 
-                    if (err) { throw err; }
+                // if I created this list, I'm a moderator of it.
+                if (list.creator.key === session.userid) { 
+                    thismod = true;
+                } else { thismod = false; }
 
-                    // if I created this list, I'm a moderator of it.
-                    if (creator && creator.key === session.userid) { 
-                        thismod = true;
-                    } else { thismod = false; }
-
-                    // if I starred it
-                    if (list.hasKey('starredBy', session.userid)) {
-                        iStarred = true;
-                        reply.view('items/item', itemReply('list', list, session, thismod, iStarred));
-                    // if I didn't star it
-                    } else { 
-                        iStarred = false; 
-                        reply.view('items/item', itemReply('list', list, session, thismod, iStarred));
-                    }
-                });
+                // if I starred it
+                if (list.hasKey('starredBy', session.userid)) {
+                    iStarred = true;
+                    reply.view('items/item', itemReply('list', list, session, thismod, iStarred));
+                // if I didn't star it
+                } else { 
+                    iStarred = false; 
+                    reply.view('items/item', itemReply('list', list, session, thismod, iStarred));
+                }
 
             // if I don't have a session, give a standard page
             } else {
@@ -120,25 +114,14 @@ exports.create = {
         var list = models.List.create({
             type    : form.type,
             name    : form.name,
-            about   : form.about
+            about   : form.about,
+            creator : session.userid
         });
-        console.log(session.userid);
-        // get my user
-        models.User.get(session.userid, function (err, user) {
+        // save the list
+        list.save(function (err) {
             if (err) { throw err; }
-            console.log('got user', JSON.stringify(user, null, 2));
-            // save the list
-            list.save(function (err) {
-                if (err) { throw err; }
-                console.log('saved list', list.name);
-                // add my user as a foreign key
-                list.addForeign('creator', user, function (err) {
-                    console.log('added foreign user', user.name);
-                    if (err) { throw err; }
-                    // return the new list page as confirmation
-                    reply().code(201).redirect('/lists/' + list.slug);
-                });
-            });
+            // return the new list page as confirmation
+            reply().code(201).redirect('/lists/' + list.slug);
         });
     }
 };
@@ -146,11 +129,8 @@ exports.create = {
 exports.edit = {
     auth: 'session',
     handler: function (request, reply) {
-        console.log('hi, edit handler here');
         var session = request.auth.credentials;
         models.List.get(request.params.listKey, function (err, list) {
-            console.log(JSON.stringify(list,null,2));
-            // console.log('list is%j', context.list);
             if (err) { throw err; }
             reply.view('lists/editList', listReply('list', list, session));
         });
@@ -217,7 +197,6 @@ exports.star = {
                 list.starredBy.push(session.userid);
             }
             list.save(function () {
-                // console.log('list is%j', list);
                 reply().redirect('/lists/' + list.slug);
             });
         });
@@ -230,7 +209,6 @@ exports.mute = {
         var session = request.auth.credentials;
         if (session.moderator) {
             models.List.update(request.params.list, { approved: true }, function () {
-                //console.log('approved:', list.key);
                 reply.redirect('/lists');
             });
         }
@@ -262,7 +240,6 @@ exports.addplace = {
                 list.starredBy.push(session.userid);
             }
             list.save(function () {
-                // console.log('list is%j', list);
                 reply().redirect('/lists/' + list.slug);
             });
         });
@@ -293,7 +270,6 @@ exports.addgroup = {
                 list.starredBy.push(session.userid);
             }
             list.save(function () {
-                // console.log('list is%j', list);
                 reply().redirect('/lists/' + list.slug);
             });
         });

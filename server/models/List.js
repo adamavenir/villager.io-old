@@ -54,7 +54,6 @@ var List = new dulcimer.Model({
     },
     creator: {
         foreignKey: 'user',
-        index: true,
         private: false
     }
 },
