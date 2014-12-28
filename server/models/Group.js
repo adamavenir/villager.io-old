@@ -7,7 +7,8 @@ var type = verymodel.VeryType;
 var Group = new dulcimer.Model(
     {
         type: {
-            foreignKey: 'group-category'
+            foreignKey: 'group-category',
+            private: false
         },
         name: {
             type: new type().isAlphanumeric().len(1,80),
@@ -58,7 +59,8 @@ var Group = new dulcimer.Model(
         }
     },
     {
-        name: 'group'
+        name: 'group',
+        saveKey: 'true'
     }
 );
 

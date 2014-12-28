@@ -7,7 +7,8 @@ var type = verymodel.VeryType;
 var Place = new dulcimer.Model (
     {
         type: {
-            foreignKey: 'place-category'
+            foreignKey: 'place-category',
+            private: false
         },
         name: {
             required: true,
@@ -78,7 +79,8 @@ var Place = new dulcimer.Model (
         }
     },
     {
-        name: 'place'
+        name: 'place',
+        saveKey: 'true'
     }
 );
 

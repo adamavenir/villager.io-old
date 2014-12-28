@@ -23,7 +23,8 @@ var GroupCategory = new dulcimer.Model(
         }
     },
     {
-        name: 'group-category'
+        name: 'group-category',
+        saveKey: 'true'
     }
 );
 

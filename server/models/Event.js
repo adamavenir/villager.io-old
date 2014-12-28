@@ -8,7 +8,8 @@ var type = verymodel.VeryType;
 var Event = new dulcimer.Model(
     {
         type: {
-            foreignKey: 'event-category'
+            foreignKey: 'event-category',
+            private: false
         },
         name: {
             type: new type().isAlphanumeric().len(1,80),
@@ -97,7 +98,8 @@ var Event = new dulcimer.Model(
         }
     },
     {
-        name: 'event'
+        name: 'event',
+        saveKey: 'true'
     }
 );
 

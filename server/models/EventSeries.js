@@ -69,7 +69,8 @@ var EventSeries = new dulcimer.Model(
         }
     },
     {
-        name: 'series'
+        name: 'series',
+        saveKey: 'true'
     }
 );
 

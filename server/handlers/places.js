@@ -12,15 +12,17 @@ exports.list = {
             if (err) { throw err; }
 
             // show only items that have been approved
-            var approved = _.where(items[0], { approved: true });
+            var approved = _.where(items, { approved: true });
 
             // if we have a session
             if (session && session.userid) {
 
                 // also show my items that haven't been approved yet
-                var mine = _.where(items[0], { 
-                    creator: session.userid, 
-                    approved: false 
+                var mine = [];
+                _.each(items, function (thisItem) {
+                    if (thisItem.creator.key === session.userid && thisItem.approved === false) {
+                        mine.push(thisItem);
+                    }
                 });
 
                 // if there are no approved places or my unapproved places
@@ -108,7 +110,9 @@ exports.create = {
     handler: function (request, reply) {
         var session = request.auth.credentials;
         var form = request.payload;
+        console.log('form.type.key', form.type.key);
         var place = models.Place.create({
+            type    : form.type,
             name    : form.name,
             address : form.address,
             city    : form.city,
@@ -146,6 +150,7 @@ exports.update = {
     handler: function (request, reply) {
         var form = request.payload;
         models.Place.update(request.params.placeKey, {
+            type    : form.type,
             name    : form.name,
             address : form.address,
             city    : form.city,
@@ -153,8 +158,7 @@ exports.update = {
             twitter : form.twitter,
             website : form.website,
             about   : form.about
-        }, function (err, place) {
-            console.log('place', place.toJSON())
+        }, function (err) {
             if (err) { throw err; }
             else { reply().code(201).redirect('/places'); }
         });

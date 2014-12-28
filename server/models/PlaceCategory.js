@@ -23,7 +23,8 @@ var PlaceCategory = new dulcimer.Model(
         }
     },
     {
-        name: 'place-category'
+        name: 'place-category',
+        saveKey: 'true'
     }
 );
 

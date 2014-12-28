@@ -117,7 +117,8 @@ var User = new dulcimer.Model(
         }
     },
     {
-        name: 'user'
+        name: 'user',
+        saveKey: 'true'
     }
 );
 

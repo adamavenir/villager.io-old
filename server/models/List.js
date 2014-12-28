@@ -4,59 +4,64 @@ var slugger = require('slugger');
 
 var type = verymodel.VeryType;
 
-var List = new dulcimer.Model({
-    name:{
-        required: true
-    },
-    type: {
-        type: 'enum',
-        values: ['groups', 'places']
-    },
-    slug: {
-        derive: function () {
-            return slugger(this.name);
+var List = new dulcimer.Model(
+    {
+        name: {
+            required: true
         },
-        index: true,
-        private: false
-    },
-    description: {
-        required: false,
-        type: type().isAlphanumeric().len(0,160)
-    },
-    image: {
-        required: false,
-        type: type().isUrl()
-    },
-    groups: {
-        foreignCollection: 'group',
-        default: []
-    },
-    places: {
-        foreignCollection: 'place',
-        default: []
-    },
-    starredBy: {
-        default: [],
-        foreignCollection: 'user',
-        required: true
-    },
-    stars: {
-        required: true,
-        derive: function () {
-            return this.starredBy.length || 0;
+        type: {
+            type: 'enum',
+            values: ['groups', 'places']
         },
+        slug: {
+            derive: function () {
+                return slugger(this.name);
+            },
+            index: true,
+            private: false
+        },
+        description: {
+            required: false,
+            type: type().isAlphanumeric().len(0,160)
+        },
+        image: {
+            required: false,
+            type: type().isUrl()
+        },
+        groups: {
+            foreignCollection: 'group',
+            default: []
+        },
+        places: {
+            foreignCollection: 'place',
+            default: []
+        },
+        starredBy: {
+            default: [],
+            foreignCollection: 'user',
+            required: true
+        },
+        stars: {
+            required: true,
+            derive: function () {
+                return this.starredBy.length || 0;
+            },
+        },
+        approved: {
+            default: true,
+            type: 'boolean',
+            required: true,
+            index: true
+        },
+        creator: {
+            foreignKey: 'user',
+            private: false
+        }
     },
-    approved: {
-        default: true,
-        type: 'boolean',
-        required: true,
-        index: true
-    },
-    creator: {
-        foreignKey: 'user',
-        private: false
+    {
+        name: 'list',
+        saveKey: 'true'
     }
-},
-{name: 'list'});
+);
 
 module.exports = List;
