@@ -391,37 +391,53 @@ exports.makeListSelectHandler = function () {
 // TODO: this is erroneously assuming a user only lists something once
 exports.makeAddToListHandler = function () {
     var handler = function (request, reply) {
-        var session = request.auth.credentials;
-        var type = request.params.itemType;
+        var itemKey = request.params.itemKey;
+        var listKey = request.params.listKey;
+        var userKey = request.auth.credentials.userid;
+        var itemType = request.params.itemType;
+        var modelNameTitle;
 
         // generate modelNameTitle by capitalizing itemType param
-        var modelNameTitle = capitalize(type);
+        if (request.params.listType === 'places') {
+            modelNameTitle = 'Place';
+        } else if (request.params.listType === 'groups') {
+            modelNameTitle = 'Group';
+        }
+
+        console.log(itemType);
 
         // get this instance of list, item, and user
         async.parallel({
             list: function (done) {
-                models.List.get(request.params.listKey, done);
+                models.List.get(listKey, done);
             },
             item: function (done) {
-                models[modelNameTitle].get(request.params.itemKey, done);
+                models[modelNameTitle].get(itemKey, done);
             },
             user: function (done) {
-                models.User.get(session.userid, done);
+                models.User.get(userKey, done);
             }
         }, function (err, context) {
             if (err) { throw err; }
 
-            async.parallel([
+            // console.log('context.list', JSON.stringify(context.list, null, 2));
+
+            async.parallel({
                 // add the item as a member of the list
-                list.addForeign(type, context.item, done),
-
-                // add the list to the item
-                item.addForeign('onLists', context.list, done),
-
+                addType: function (done) {
+                    models.List.update(listKey, { itemType: itemKey }, done);
+                },
+                // add the list to the item                
+                onLists: function (done) {
+                    models[modelNameTitle].update(itemKey, { onLists: listKey }, done);
+                },
                 // add the user as a lister of the item
-                item.addForeign('listedBy', context.user, done)
-            ], function (list, item) {
-                reply.code(200).redirect('/lists/' + context.user.slug + '/' + context.list.slug);
+                listedBy: function (done) {
+                    models[modelNameTitle].update(itemKey, { listedBy: userKey }, done);
+                }
+
+            }, function (err, result) {
+                reply().code(200).redirect('/lists/' + context.user.slug + '/' + context.list.slug);
             });
         });
     }
@@ -434,9 +450,9 @@ exports.makeRemoveFromListHandler = function () {
         var session = request.auth.credentials;
         var modelNameTitle;
 
-        if (request.params.itemType === 'places') {
+        if (request.params.listType === 'places') {
             modelNameTitle = 'Place';
-        } else if (request.params.itemType === 'groups') {
+        } else if (request.params.listType === 'groups') {
             modelNameTitle = 'Group';
         }
 
