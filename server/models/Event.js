@@ -94,7 +94,8 @@ var Event = new dulcimer.Model(
         },
         creator: {
             foreignKey: 'user',
-            private: false
+            private: false,
+            index: true
         }
     },
     {

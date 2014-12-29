@@ -16,7 +16,7 @@ block body
         - var sections = ['groups', 'places']
           each section in sections
             label.form-element.input-radio(for="radio") 
-              input(name="what", type="radio", value=section)
+              input(name="type", type="radio", value=section)
               | #{section}
         button.button.button-primary(type="submit") Add list
 

@@ -205,64 +205,19 @@ exports.lists = {
         handler: h.makeApproveHandler('List', 'list', 'lists')
     },
 
-    addplace : {
+    select: {
         auth: 'session',
-        handler: function (request, reply) {
-            var session = request.auth.credentials;
-            models.List.get(request.params.listKey, function (err, list) {
-                // get an array of the users which already starred the list
-                var starredIds = list.starredBy.map(function (user) {
-                    return user.key;
-                });
-                // if the user already starred it remove it
-                if (_.contains(starredIds, session.userid)) {
-                    list.starredBy = _.without(list.starredBy, session.userid);
-                    for (var i = 0; i < list.starredBy.length; i++) {
-                        if (list.starredBy[i].key === session.userid) {
-                            list.starredBy.splice(i, 1);
-                            break;
-                        }
-                    }
-                }
-                // otherwise we add it
-                else {
-                    list.starredBy.push(session.userid);
-                }
-                list.save(function () {
-                    reply().redirect('/lists/' + list.slug);
-                });
-            });
-        }
+        handler: h.makeListSelectHandler()
     },
 
-    addgroup: {
+    addToList: {
         auth: 'session',
-        handler: function (request, reply) {
-            var session = request.auth.credentials;
-            models.List.get(request.params.listKey, function (err, list) {
-                // get an array of the users which already starred the list
-                var starredIds = list.starredBy.map(function (user) {
-                    return user.key;
-                });
-                // if the user already starred it remove it
-                if (_.contains(starredIds, session.userid)) {
-                    list.starredBy = _.without(list.starredBy, session.userid);
-                    for (var i = 0; i < list.starredBy.length; i++) {
-                        if (list.starredBy[i].key === session.userid) {
-                            list.starredBy.splice(i, 1);
-                            break;
-                        }
-                    }
-                }
-                // otherwise we add it
-                else {
-                    list.starredBy.push(session.userid);
-                }
-                list.save(function () {
-                    reply().redirect('/lists/' + list.slug);
-                });
-            });
-        }
-    }
+        handler: h.makeAddToListHandler()
+    },
+
+    removeFromList: {
+        auth: 'session',
+        handler: h.makeRemoveFromListHandler()
+    },
 
 };

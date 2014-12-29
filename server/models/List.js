@@ -11,7 +11,8 @@ var List = new dulcimer.Model(
         },
         type: {
             type: 'enum',
-            values: ['groups', 'places']
+            values: ['groups', 'places'],
+            index: true
         },
         slug: {
             derive: function () {
@@ -55,7 +56,8 @@ var List = new dulcimer.Model(
         },
         creator: {
             foreignKey: 'user',
-            private: false
+            private: false,
+            index: true
         }
     },
     {

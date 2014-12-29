@@ -47,6 +47,16 @@ var Group = new dulcimer.Model(
                 return this.starredBy.length || 0;
             },
         },
+        onLists: {
+            default: [],
+            foreignCollection: 'list',
+            required: false
+        },
+        listedBy: {
+            default: [],
+            foreignCollection: 'user',
+            required: true
+        },
         approved: {
             default: false,
             type: 'boolean',
@@ -55,7 +65,8 @@ var Group = new dulcimer.Model(
         },
         creator: {
             foreignKey: 'user',
-            private: false
+            private: false,
+            index: true
         }
     },
     {

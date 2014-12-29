@@ -8,6 +8,7 @@ var itemReply, listReply;
 var getForm = function (request, modelName, create, next) {
     var formMap, form;
     var form = request.payload;
+
     if (modelName === 'place') {
         formMap = {
             type    : form.type,
@@ -78,6 +79,7 @@ exports.itemReply = itemReply = function (itemType, item, session, thismod, iSta
             thismod   : thismod,
             userid    : session.userid,
             fullName  : session.fullName,
+            slug      : session.slug,
             avatar    : session.avatar,
             moderator : session.moderator,
             admin     : session.admin,
@@ -107,6 +109,7 @@ exports.listReply = listReply = function (itemType, items, session, mine) {
             items     : items,
             mine      : mine,
             fullName  : session.fullName,
+            slug      : session.slug,
             avatar    : session.avatar,
             userid    : session.userid,
             moderator : session.moderator,
@@ -218,14 +221,20 @@ exports.makeAddHandler = function (modelNameTitle, modelName, modelNamePlural) {
 
 exports.makeCreateHandler = function (modelNameTitle, modelName, modelNamePlural) {
     var handler = function (request, reply) {
+        var session = request.auth.credentials;
         // set up form
         getForm(request, modelName, true, function (form) {
             var item = models[modelNameTitle].create(form);
             // save the item
             item.save(function (err) {
                 if (err) { throw err; }
+
                 // return the new item page as confirmation
-                reply().code(201).redirect('/' + modelNamePlural + '/' + item.slug);
+                if (modelName === 'list') {
+                    reply().code(201).redirect('/' + modelNamePlural + '/' + session.slug + '/' + item.slug);
+                } else {
+                    reply().code(201).redirect('/' + modelNamePlural + '/' + item.slug);
+                }
             });
         });
     };
@@ -303,8 +312,14 @@ exports.makeStarHandler = function (modelNameTitle, modelName, modelNamePlural) 
                 item.starredBy.push(session.userid);
             }
             item.save(function () {
+
                 // redirect to starred item's page
-                reply().redirect('/' + modelNamePlural + '/' + item.slug);
+                if (modelName === 'list') {
+                    reply().code(201).redirect('/' + modelNamePlural + '/' + session.slug + '/' + item.slug);
+                } else {
+                    reply().code(200).redirect('/' + modelNamePlural + '/' + item.slug);
+                }
+                
             });
         });
     };
@@ -324,3 +339,135 @@ exports.makeApproveHandler = function (modelNameTitle, modelName, modelNamePlura
     };
     return handler;
 };
+
+// returns a form that shows the item in question and
+// allows a user to select from their lists to add it to one
+// TODO: or create a new list to add it to?
+
+exports.makeListSelectHandler = function () {
+    var handler = function (request, reply) {
+        var session = request.auth.credentials;
+        var modelTypeTitle, modelName;
+
+        // generate modelNameTitle
+        if (request.params.listType === 'groups') {
+            modelTypeTitle = 'Group';
+        } else if (request.params.listType === 'places') {
+            modelTypeTitle = 'Place';
+        // if listType isn't 'groups' or 'places', this is a bad url
+        } else { reply.view('404'); }
+
+        async.parallel({
+            item: function (done) {
+                models[modelTypeTitle].get(request.params.itemKey, done);
+            },
+            myLists: function (done) {
+                models.List.getByIndex('creator', session.userid, done);
+            },
+        }, function (err, context) {
+
+            // console.log('myLists', JSON.stringify(context.myLists, null, 2))
+
+            // TODO: figure out why this _.where doesn't work
+            var lists = _.where(context.myLists, { type: request.params.itemType });
+            // console.log('lists', JSON.stringify(lists, null, 2))
+
+            reply.view('list/selectList', {
+                itemType  : request.params.itemType,
+                item      : context.item,
+                myLists   : context.myLists,
+                userid    : session.userid,
+                slug      : session.slug,
+                fullName  : session.fullName,
+                avatar    : session.avatar,
+                moderator : session.moderator,
+                admin     : session.admin
+            });
+        });
+    };
+    return handler;
+};
+
+// TODO: this is erroneously assuming a user only lists something once
+exports.makeAddToListHandler = function () {
+    var handler = function (request, reply) {
+        var session = request.auth.credentials;
+        var type = request.params.itemType;
+
+        // generate modelNameTitle by capitalizing itemType param
+        var modelNameTitle = capitalize(type);
+
+        // get this instance of list, item, and user
+        async.parallel({
+            list: function (done) {
+                models.List.get(request.params.listKey, done);
+            },
+            item: function (done) {
+                models[modelNameTitle].get(request.params.itemKey, done);
+            },
+            user: function (done) {
+                models.User.get(session.userid, done);
+            }
+        }, function (err, context) {
+            if (err) { throw err; }
+
+            async.parallel([
+                // add the item as a member of the list
+                list.addForeign(type, context.item, done),
+
+                // add the list to the item
+                item.addForeign('onLists', context.list, done),
+
+                // add the user as a lister of the item
+                item.addForeign('listedBy', context.user, done)
+            ], function (list, item) {
+                reply.code(200).redirect('/lists/' + context.user.slug + '/' + context.list.slug);
+            });
+        });
+    }
+    return handler;
+};
+
+// TODO: this is erroneously assuming a user only lists something once
+exports.makeRemoveFromListHandler = function () {
+    var handler = function (request, reply) {
+        var session = request.auth.credentials;
+        var modelNameTitle;
+
+        if (request.params.itemType === 'places') {
+            modelNameTitle = 'Place';
+        } else if (request.params.itemType === 'groups') {
+            modelNameTitle = 'Group';
+        }
+
+        // get this instance of list, item, and user
+        async.parallel({
+            list: function (done) {
+                models.List.get(request.params.listKey, done);
+            },
+            item: function (done) {
+                models[modelNameTitle].get(request.params.itemKey, done);
+            },
+            user: function (done) {
+                models.User.get(session.userid, done);
+            }
+        }, function (err, context) {
+            if (err) { throw err; }
+
+            async.parallel([
+                // remove the item as a member of the list
+                list.removeForeign(type, context.item, done),
+
+                // remove the list to the item
+                item.removeForeign('onLists', context.list, done),
+
+                // remove the user as a lister of the item
+                item.removeForeign('listedBy', context.user, done)
+            ], function (list, item) {
+                reply.code(200).redirect('/lists/' + context.user.slug + '/' + context.list.slug);
+            });
+        });
+    }
+    return handler;
+};
+

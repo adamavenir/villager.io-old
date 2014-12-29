@@ -92,15 +92,16 @@ module.exports = function _routes() {
     ////////////////////////////////// LISTS
 
     { method: 'GET',  path: '/lists', config: lists.list },
-    { method: 'GET',  path: '/lists/{slug}', config: lists.get },
+    { method: 'GET',  path: '/lists/{userSlug}/{slug}', config: lists.get },
     { method: 'GET',  path: '/lists/add', config: lists.add },
     { method: 'POST', path: '/lists/add', config: lists.create },
     { method: 'GET',  path: '/lists/edit/{key}', config: lists.edit },
     { method: 'POST', path: '/lists/update/{key}', config: lists.update },
     { method: 'GET',  path: '/lists/delete/{key}', config: lists.delete },
     { method: 'GET',  path: '/lists/star/{key}', config: lists.star },
-    { method: 'POST', path: '/lists/addplace/{key}', config: lists.addplace },
-    { method: 'POST', path: '/lists/addgroup/{key}', config: lists.addgroup }
+    { method: 'GET',  path: '/lists/{user}/{listType}/add/{itemKey}', config: lists.select },
+    { method: 'POST', path: '/lists/{user}/{listType}/add/{listKey}/{itemKey}', config: lists.addToList },
+    { method: 'POST', path: '/lists/{user}/{listType}/remove/{listKey}/{itemKey}', config: lists.removeFromList }
 
   ];
 

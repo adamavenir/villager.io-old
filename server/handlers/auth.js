@@ -2,6 +2,7 @@ var _ = require('underscore');
 var models = require('../models').models;
 var User = models.User;
 var config = require('getconfig');
+var slugger = require('slugger');
 
 exports.login = {
     auth: 'twitter',
@@ -38,7 +39,8 @@ exports.login = {
                     if (err) { throw err; }
                     console.log('Twitter user ' + t.displayName + ' created with key ' + user.key);
                     newSession = _.extend(profile, {
-                        userid: user.key
+                        userid: user.key,
+                        slug: user.slug
                     });
                     request.auth.session.clear();
                     request.auth.session.set(newSession);
@@ -52,6 +54,7 @@ exports.login = {
                     console.log('Twitter user ' + t.displayName + ' updated with key ' + exists.key);
                     newSession = _.extend(profile, {
                         userid: exists.key,
+                        slug: user.slug,
                         admin: exists.admin,
                         moderator: exists.moderator
                     });
