@@ -375,7 +375,7 @@ exports.makeListSelectHandler = function () {
             reply.view('list/selectList', {
                 itemType  : request.params.itemType,
                 item      : context.item,
-                myLists   : context.myLists,
+                myLists   : context.myLists[0],
                 userid    : session.userid,
                 slug      : session.slug,
                 fullName  : session.fullName,

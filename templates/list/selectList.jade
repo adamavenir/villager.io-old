@@ -10,16 +10,8 @@ block body
         fieldset
           legend Add #{item.name} item to a list
           .form-element
-            label(for="list") Select list to add this item to
-            p= myLists
-            p= myLists.key
-            p= myLists.count
-            p= myLists[1]
-            p= myLists[0]
-            p= item
             select.form-input(name="list")
               option(value="") -- Select a list --
-              option(value= myLists) #{myLists[0].name}
                 for list in myLists
                   option(value=list.key) #{list.name}
           button.button.button-primary(type="submit") Add to list
