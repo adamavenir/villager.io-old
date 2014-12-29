@@ -1,0 +1,60 @@
+extends ../layout
+
+block body
+  
+  include ../in/header
+
+  h1 Categories
+
+  form(method="POST", action="/tinker/add-interest")
+    p Add new interest
+    label(for="name") Name
+    input(name="name")
+    label(for="description") Description
+    input(name="description")
+    label(for="image") Image (optional)
+    input(name="image")
+    button.small(type="submit") +
+
+  h6 Place Categories
+  each cat in placeCategories[0]
+      div.interest
+        img.grav(src= cat.image)
+        h2= cat.name
+        h3= cat.description
+        a(href="/tinker/delete/place-category/" + cat.key) Delete this place category
+        br
+        a.edit(href="/tinker/edit/place-category/" + cat.key) Edit this place category
+
+  form(method="POST", action="/tinker/add-place-category")
+    p Add new place category
+    label(for="name") Name
+    input(name="name")
+    label(for="description") Description
+    input(name="description")
+    label(for="image") Image (optional)
+    input(name="image")
+    button.small(type="submit") +
+
+  h6 Group Categories
+  each cat in groupCategories[0]
+      div.interest
+        img.grav(src= cat.image)
+        h2= cat.name
+        h3= cat.description
+        a(href="/tinker/delete/group-category/" + cat.key) Delete this group category
+        br
+        a.edit(href="/tinker/edit/group-category/" + cat.key) Edit this group category
+
+
+  form(method="POST", action="/tinker/add-group-category")
+    p Add new group category
+    label(for="name") Name
+    input(name="name")
+    label(for="description") Description
+    input(name="description")
+    label(for="image") Image (optional)
+    input(name="image")
+    button.small(type="submit") +
+
+  include ../in/footer

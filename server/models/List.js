@@ -20,7 +20,7 @@ var List = new dulcimer.Model(
             index: true,
             private: false
         },
-        description: {
+        about: {
             required: false,
             type: type().isAlphanumeric().len(0,160)
         },

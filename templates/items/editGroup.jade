@@ -6,8 +6,7 @@ block body
     .title-bar
       h1= item.name
       .action-menu
-        a.button.delete-item(href="/groups/delete/" + item.key + 
-            '/' + item.name) Delete
+        a.button.delete-item(href="/groups/delete/" + item.key) Delete
 
     form(method="POST", action="/groups/update/" + item.key)
       fieldset

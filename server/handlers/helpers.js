@@ -7,28 +7,45 @@ var itemReply, listReply;
 
 var getForm = function (request, modelName, create, next) {
     var formMap, form;
+    var form = request.payload;
     if (modelName === 'place') {
         formMap = {
-            type    : request.payload.type,
-            name    : request.payload.name,
-            address : request.payload.address,
-            city    : request.payload.city,
-            image   : request.payload.image,
-            twitter : request.payload.twitter,
-            website : request.payload.website,
-            about   : request.payload.about
+            type    : form.type,
+            name    : form.name,
+            address : form.address,
+            city    : form.city,
+            image   : form.image,
+            twitter : form.twitter,
+            website : form.website,
+            about   : form.about
         };
     } else if (modelName === 'list') {
         formMap = {
-            
+            type    : form.type,
+            name    : form.name,
+            about   : form.about,
+            image   : form.image
         };
     } else if (modelName === 'event') {
         formMap = {
-            
+            type    : form.type,
+            name    : form.name,
+            email   : form.email,
+            phone   : form.phone,
+            date    : form.date,
+            time    : form.time,
+            image   : form.image,
+            website : form.website,
+            about   : form.about
         };
     } else if (modelName === 'group') {
         formMap = {
-            
+            type    : form.type,
+            name    : form.name,
+            image   : form.image,
+            twitter : form.twitter,
+            website : form.website,
+            about   : form.about
         };
     }
 
@@ -72,7 +89,7 @@ exports.itemReply = itemReply = function (itemType, item, session, thismod, iSta
     return replyData;
 };
 
-exports.listReply = listReply = function (itemType, items, mine, session) {
+exports.listReply = listReply = function (itemType, items, session, mine) {
     var replyData;
     if (typeof mine === 'undefined') {
         mine = false;
@@ -121,17 +138,17 @@ exports.makeListHandler = function (modelNameTitle, modelName, modelNamePlural) 
 
                 // if there are no approved item or my unapproved items
                 if(mine.length + approved.length === 0) {
-                    reply.view('items/noItems', listReply(modelName, null, null, session));
+                    reply.view('items/noItems', listReply(modelName, null, session));
                 }
                 // reply with approved and mine
                 else {
-                    reply.view('items/listItems', listReply(modelName, approved, mine, session));
+                    reply.view('items/listItems', listReply(modelName, approved, session, mine));
                 }
             }
             else {
                 // if there are no approved items
                 if (approved.length === 0) {
-                    reply.view('items/noItems');
+                    reply.view('items/noItems', listReply(modelName, null));
                 }
                 // else show the list of approved items
                 else {

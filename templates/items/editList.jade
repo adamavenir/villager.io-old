@@ -3,6 +3,10 @@ extends ../layout
 block body
   body
     include ../in/header
+    .title-bar
+      h1= item.name
+      .action-menu
+        a.button.delete-item(href="/groups/delete/" + item.key) Delete
 
     form(method="POST", action="/lists/update/" + item.key)
       fieldset

@@ -31,10 +31,10 @@ module.exports = function _routes() {
     ////////////////////////////////// ADMIN
 
     { method: 'GET',  path: '/pending', config: admin.pendingList },
-    { method: 'GET',  path: '/settings', config: admin.settings },
-    { method: 'GET',  path: '/settings/delete/{categoryType}/{modelSlug}', config: categories.delete },
-    { method: 'GET',  path: '/settings/edit/{categoryType}/{modelSlug}', config: categories.edit },
-    { method: 'POST', path: '/settings/update/{categoryType}/{modelKey}', config: categories.update },
+    { method: 'GET',  path: '/admin', config: admin.settings },
+    { method: 'GET',  path: '/admin/{categoryType}/delete/{key}', config: categories.delete },
+    { method: 'GET',  path: '/admin/{categoryType}/edit/{key}', config: categories.edit },
+    { method: 'POST', path: '/admin/{categoryType}/update/{key}', config: categories.update },
 
     // move these  
     { method: 'POST', path: '/settings/add-group-category', config: categories.addGroupCategory },
@@ -46,12 +46,12 @@ module.exports = function _routes() {
     { method: 'GET',  path: '/people/{person}', config: people.get },
     { method: 'GET',  path: '/people/add', config: people.add },
     { method: 'POST', path: '/people/add', config: people.create },
-    { method: 'GET',  path: '/profile/edit/{personKey}', config: people.edit },
-    { method: 'POST', path: '/people/update/{personKey}', config: people.update },
-    { method: 'GET',  path: '/people/delete/{personKey}/{personName}', config: people.delete },
-    { method: 'GET',  path: '/people/approve/{person}', config: people.approve },
-    { method: 'GET',  path: '/people/moderator/{person}', config: people.moderator },
-    { method: 'GET',  path: '/people/admin/{person}', config: people.admin },
+    { method: 'GET',  path: '/profile/edit/{key}', config: people.edit },
+    { method: 'POST', path: '/people/update/{key}', config: people.update },
+    { method: 'GET',  path: '/people/delete/{key}', config: people.delete },
+    { method: 'GET',  path: '/people/approve/{key}', config: people.approve },
+    { method: 'GET',  path: '/people/moderator/{key}', config: people.moderator },
+    { method: 'GET',  path: '/people/admin/{key}', config: people.admin },
 
     ////////////////////////////////// PLACES
 
@@ -75,7 +75,7 @@ module.exports = function _routes() {
     { method: 'POST', path: '/groups/update/{key}', config: groups.update },
     { method: 'GET',  path: '/groups/star/{key}', config: groups.star },
     { method: 'GET',  path: '/groups/approve/{key}', config: groups.approve },
-    { method: 'GET',  path: '/groups/delete/{key}/{slug}', config: groups.delete },
+    { method: 'GET',  path: '/groups/delete/{key}', config: groups.delete },
 
     ////////////////////////////////// EVENTS
 
@@ -87,7 +87,7 @@ module.exports = function _routes() {
     { method: 'POST', path: '/events/update/{key}', config: events.update },
     { method: 'GET',  path: '/events/star/{key}', config: events.star },
     { method: 'GET',  path: '/events/approve/{key}', config: events.approve },
-    { method: 'GET',  path: '/events/delete/{key}/{slug}', config: events.delete },
+    { method: 'GET',  path: '/events/delete/{key}', config: events.delete },
 
     ////////////////////////////////// LISTS
 

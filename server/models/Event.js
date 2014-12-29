@@ -37,7 +37,7 @@ var Event = new dulcimer.Model(
         },
         humanDate: {
             derive: function() {
-                return this.date.format('{Month} {d}, {yyyy}');
+                return Date.create(this.date).format('{Month} {d}, {yyyy}');
             }
         },
         time: {
