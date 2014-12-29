@@ -35,7 +35,7 @@ var Place = new dulcimer.Model (
         },
         map: {
             derive: function() {
-                if (this.address.length > 0) {
+                if (this.address && this.address.length > 0) {
                     return 'http://maps.google.com/?q=' + this.address + ' ' + this.city;
                 }
                 else {

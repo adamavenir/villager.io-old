@@ -11,7 +11,7 @@ block body
           label(for="type") Type of place:
           select.form-input(name="type")
             option(value="") -- Select a Category --
-            each cat in placeCategories
+            each cat in categories
               option(value=cat.key) #{cat.name}
         .form-element
           label(for="name") Place name

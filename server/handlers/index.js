@@ -1,11 +1,11 @@
 module.exports = {
-    auth:       require('./auth'),
-    pending:    require('./pending'),
     pages:      require('./pages'),
     people:     require('./people'),
-    places:     require('./places'),
-    groups:     require('./groups'),
-    events:     require('./events'),
+    auth:       require('./auth'),
+    pending:    require('./pending'),
     categories: require('./categories'),
-    lists: 		require('./lists')
-};
+    places:     require('./items').places,
+    groups:     require('./items').groups,
+    events:     require('./items').events,
+    lists:      require('./items').lists
+}
