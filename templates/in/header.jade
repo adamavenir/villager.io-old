@@ -5,11 +5,11 @@ header(class="mod" + moderator)
     ul.list-unstyled.list-inline.cf
       li: a(href="/") Home
       li: a(href="/lists") Lists
-      li: a(href="/people") People
       li: a(href="/places") Places
       li: a(href="/groups") Groups
-      //- li: a(href="/events") Events
+      li: a(href="/events") Events
       if moderator
+        li: a(href="/people") People
         li: a(href="/pending") Pending
       if userid
         li.has-dropdown.header-profile
@@ -19,7 +19,7 @@ header(class="mod" + moderator)
           .icon-arrow-down
           ul.list-unstyled.dropdown.cf
             li: a(href="/profile/edit/" + userid) Edit profile
-            li: a(href="/tinker") Tinker
+            li: a(href="/admin") Admin
             li: a(href="/logout") Log out
       if !userid
         li.header-login: a(href="/auth/twitter") Log in

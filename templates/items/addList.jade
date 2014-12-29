@@ -4,18 +4,6 @@ block body
   body
     include ../in/header
 
-    h1 Lists
-    ul.lists
-      if lists[0]
-        for list in lists[0]
-          li
-            //- a(href= '/groups/' + group.slug)
-            img.grav(src= list.image)
-            h3= list.name
-            a(href="/lists/delete/" + list.key) Delete this list
-            br
-            a(href="/lists/edit/" + list.slug) Edit this list
-
     form(method="POST", action="/lists/add")
       fieldset
         legend Add new list
@@ -25,10 +13,7 @@ block body
         .form-element
           label(for="description") Description
           input.form-input(name="description")
-        .form-element
-          label(for="image") Image (optional)
-          input.form-input(name="image")
-        - var sections = ['groups', 'places', 'people']
+        - var sections = ['groups', 'places']
           each section in sections
             label.form-element.input-radio(for="radio") 
               input(name="what", type="radio", value=section)

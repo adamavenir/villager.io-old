@@ -1,0 +1,25 @@
+extends ../layout
+
+block body
+  body
+    include ../in/header
+    
+    .title-bar
+      h1 Events
+      .action-menu
+        if moderator
+          a.button.button-primary.add-item(href="/events/add") Add an event
+
+    ul.item-list.list-unstyled
+      for item in items
+        li
+          a(href= '/events/' + item.slug)
+            img.avatar.avatar-large.avatar-rounded(src= item.image)
+            h5= item.name
+      for item in mine
+        li
+          a(href= '/events/' + item.slug)
+            img.avatar.avatar-large.avatar-rounded(src= item.image)
+            h5= item.name
+            
+    include ../in/footer

@@ -1,39 +1,67 @@
 var dulcimer = require('dulcimer');
+var verymodel = require('verymodel');
 var slugger = require('slugger');
 
-var List = new dulcimer.Model({
-	name:{
-		required: true
-	},
-	what: {
-		type: 'enum',
-		values: ['groups', 'people', 'places']
-	},
-	slug: {
-        derive: function () {
-            return slugger(this.name);
-        },
-        index: true,
-        private: false
-    },
-    description: {
-    },
-    image: {
-    },
-    groups: {
-    	foreignCollection: 'group',
-        default: []
-    },
-    places: {
-    	foreignCollection: 'place',
-        default: []
-    },
-    people: {
-    	foreignCollection: 'user',
-        default: []
-    }
+var type = verymodel.VeryType;
 
-},
-{name: 'list'});
+var List = new dulcimer.Model(
+    {
+        name: {
+            required: true
+        },
+        type: {
+            type: 'enum',
+            values: ['groups', 'places']
+        },
+        slug: {
+            derive: function () {
+                return slugger(this.name);
+            },
+            index: true,
+            private: false
+        },
+        about: {
+            required: false,
+            type: type().isAlphanumeric().len(0,160)
+        },
+        image: {
+            required: false,
+            type: type().isUrl()
+        },
+        groups: {
+            foreignCollection: 'group',
+            default: []
+        },
+        places: {
+            foreignCollection: 'place',
+            default: []
+        },
+        starredBy: {
+            default: [],
+            foreignCollection: 'user',
+            required: true
+        },
+        stars: {
+            required: true,
+            derive: function () {
+                return this.starredBy.length || 0;
+            },
+        },
+        approved: {
+            default: true,
+            type: 'boolean',
+            required: true,
+            index: true
+        },
+        creator: {
+            foreignKey: 'user',
+            private: false
+        }
+    },
+    {
+        name: 'list',
+        saveKey: 'true'
+    }
+);
 
 module.exports = List;

@@ -11,17 +11,20 @@ block body
           label(for="type") Type of place:
           select.form-input(name="type")
             option(value="") -- Select a Category --
-            each cat in placeCategories
+            each cat in categories
               option(value=cat.key) #{cat.name}
         .form-element
           label(for="name") Place name
           input.form-input(name="name", type="text", placeholder="Name of the place")
         .form-element
           label(for="address") Address
-          input.form-input(name="address", type="text", placeholder="112 Hundred Acre Wood")            
+          input.form-input(name="address", type="text", placeholder="112 Hundred Acre Wood")
         .form-element
           label(for="city") City
-          input.form-input(name="city", type="text", placeholder="West Richlascowickton City")            
+          input.form-input(name="city", type="text", placeholder="West Richlascowickton City")
+        .form-element
+          label(for="phone") Phone number
+          input.form-input(name="phone", type="text", placeholder="(509) 555-1212")
         .form-element
           label(for="website") Website
           input.form-input(name="website", type="text", placeholder="http://placewebsite.com")

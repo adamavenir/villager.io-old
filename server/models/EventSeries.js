@@ -1,29 +1,24 @@
+var slugger = require('slugger');
 var dulcimer = require('dulcimer');
 var verymodel = require('verymodel');
-var slugger = require('slugger');
 
 var type = verymodel.VeryType;
 
-var Group = new dulcimer.Model(
+var EventSeries = new dulcimer.Model(
     {
         type: {
-            foreignKey: 'group-category',
-            private: false
+            foreignKey: 'event-category'
         },
         name: {
             type: new type().isAlphanumeric().len(1,80),
             required: true
         },
-        slug: {
+        slug: { 
             derive: function () {
                 return slugger(this.name);
-            },
+            }, 
             index: true,
-            private: false
-        },
-        phone: {
-            required: false,
-            type: type().isAlphanumeric()
+            private: false 
         },
         image: {
             required: true,
@@ -35,6 +30,17 @@ var Group = new dulcimer.Model(
         },
         about: {
             type: new type().isAlphanumeric().len(0,160),
+        },
+        events: {
+            default: [],
+            foreignCollection: 'event',
+            required: true
+        },
+        group: {
+            foreignKey: 'group'
+        },
+        place: {
+            foreignKey: 'place'
         },
         starredBy: {
             default: [],
@@ -53,15 +59,19 @@ var Group = new dulcimer.Model(
             required: true,
             index: true
         },
+        moderators: {
+            default: [],
+            foreignCollection: 'user',
+            required: true
+        },
         creator: {
-            foreignKey: 'user',
-            private: false
+            foreignKey: 'user'
         }
     },
     {
-        name: 'group',
+        name: 'series',
         saveKey: 'true'
     }
 );
 
-module.exports = Group;
+module.exports = EventSeries;

@@ -39,6 +39,11 @@ var User = new dulcimer.Model(
             },
             required: false
         },
+        username: {
+            type: new type().isAlphanumeric().len(1,80),
+            required: false,
+            index: true
+        },
         slug: {
             derive: function () {
                 if (this.fullName) {
@@ -50,6 +55,16 @@ var User = new dulcimer.Model(
             },
             index: true,
             private: false
+        },
+        urlSlug: {
+            derive: function () {
+                if (this.username) {
+                    return this.username;
+                } else {
+                    return this.slugName;
+                }
+            },
+            index: true
         },
         twitterId: {
             index: true
@@ -75,11 +90,6 @@ var User = new dulcimer.Model(
         },
         about: {
             type: new type().isAlphanumeric().len(0,160),
-        },
-        interests: {
-            foreignCollection: 'interest',
-            default: [],
-            required: true
         },
         approved: {
             default: false,
@@ -107,7 +117,8 @@ var User = new dulcimer.Model(
         }
     },
     {
-        name: 'user'
+        name: 'user',
+        saveKey: 'true'
     }
 );
 

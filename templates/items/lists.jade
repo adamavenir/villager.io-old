@@ -1,0 +1,17 @@
+extends ../layout
+
+block body
+  body
+    include ../in/header
+
+    h1 Lists
+    ul.lists
+      if lists[0]
+        for list in lists[0]
+          li
+            h3= list.name
+            a(href="/lists/delete/" + list.key) Delete this list
+            br
+            a(href="/lists/edit/" + list.slug) Edit this list
+
+    include ../in/footer

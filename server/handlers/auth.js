@@ -1,6 +1,7 @@
 var _ = require('underscore');
 var models = require('../models').models;
 var User = models.User;
+var config = require('getconfig');
 
 exports.login = {
     auth: 'twitter',
@@ -8,7 +9,7 @@ exports.login = {
         var access, newSession;
         var t = request.auth.credentials.profile;
         console.log('signed in as', t.username);
-        if (t.id === '1568') {
+        if (t.id === config.auth.superadmin) {
             console.log('Greetings, superadmin!');
             access = true;
         } else { access = false; }

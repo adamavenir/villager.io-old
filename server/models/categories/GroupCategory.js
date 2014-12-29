@@ -20,13 +20,11 @@ var GroupCategory = new dulcimer.Model(
         image: {
             required: true,
             type: type().isUrl()
-        },
-        description: {
-            type: new type().isAlphanumeric(),
         }
     },
     {
-        name: 'group-category'
+        name: 'group-category',
+        saveKey: 'true'
     }
 );
 

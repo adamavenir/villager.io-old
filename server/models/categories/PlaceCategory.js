@@ -4,7 +4,7 @@ var slugger = require('slugger');
 
 var type = verymodel.VeryType;
 
-var Interest = new dulcimer.Model(
+var PlaceCategory = new dulcimer.Model(
     {
         name: {
             type: new type().isAlphanumeric().len(1,80),
@@ -19,16 +19,13 @@ var Interest = new dulcimer.Model(
         },
         image: {
             required: true,
-            default: '',
             type: type().isUrl()
-        },
-        description: {
-            type: new type().isAlphanumeric(),
         }
     },
     {
-        name: 'interest'
+        name: 'place-category',
+        saveKey: 'true'
     }
 );
 
-module.exports = Interest;
+module.exports = PlaceCategory;

@@ -6,17 +6,6 @@ block body
 
   h1 Categories
 
-  h6 Interests
-  each interest in interests[0]
-      div.interest
-        img.grav(src= interest.image)
-        h2= interest.name
-        h3= interest.description
-        a(href="/tinker/delete/interests/" + interest.slug) Delete this interest
-        br
-        a.edit(href="/tinker/edit/interests/" + interest.slug) Edit this inteterest
-
-
   form(method="POST", action="/tinker/add-interest")
     p Add new interest
     label(for="name") Name
@@ -33,10 +22,9 @@ block body
         img.grav(src= cat.image)
         h2= cat.name
         h3= cat.description
-        a(href="/tinker/delete/place-category/" + cat.slug) Delete this place category
+        a(href="/tinker/delete/place-category/" + cat.key) Delete this place category
         br
-        a.edit(href="/tinker/edit/place-category/" + cat.slug) Edit this place category
-
+        a.edit(href="/tinker/edit/place-category/" + cat.key) Edit this place category
 
   form(method="POST", action="/tinker/add-place-category")
     p Add new place category
@@ -54,9 +42,9 @@ block body
         img.grav(src= cat.image)
         h2= cat.name
         h3= cat.description
-        a(href="/tinker/delete/group-category/" + cat.slug) Delete this group category
+        a(href="/tinker/delete/group-category/" + cat.key) Delete this group category
         br
-        a.edit(href="/tinker/edit/group-category/" + cat.slug) Edit this group category
+        a.edit(href="/tinker/edit/group-category/" + cat.key) Edit this group category
 
 
   form(method="POST", action="/tinker/add-group-category")

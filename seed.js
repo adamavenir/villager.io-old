@@ -39,44 +39,17 @@ function seedUsers (done) {
 	}, done);
 }
 
-function seedInterests (done) {
-	var interests = [
-		{name: 'fishing', description: 'Just sitting there all day long...'},
-		{name: 'pizza', description: 'Nothing better than cheese and carbs'},
-		{name: 'hopscotch', description: 'ta da ta da'},
-		{name: 'dancing', description: 'With the STARS!'},
-		{name: 'prancing', description: 'along with the reindeer'}
-	];
-	async.each(interests, function seedInterest(interest, next) {
-		models.Interest.findByIndex('slug', slugger(interest.name), function (err, existingInterest) {
-			var newInterest = models.Interest.create(interest);
-			if (err || !existingInterest) {
-				newInterest.save( function (err) {
-					console.log('Interest created', interest.name);
-					next(err);
-				});
-			} else {
-				existingInterest.loadData(newInterest.toJSON());
-				existingInterest.save(function (err) {
-					console.log('Interest updated', interest.name);
-					next(err);
-				});
-			}
-		});
-	}, done);
-}
-
 function seedPlaceCategories (done) {
 	var placeCategories = [
-		{name: 'Restaurant', description: 'eateries & more'},
-		{name: 'Coffee Shop', description: 'caffeine for you every day'},
-		{name: 'Bar', description: 'for after work'},
-		{name: 'Winery', description: 'for during work'},
-		{name: 'Store', description: 'places to buy stuff'},
-		{name: 'Company', description: 'in good company'},
-		{name: 'Nonprofit', description: 'because we don\'t want to make a profit'},
-		{name: 'Venue', description: 'have your events here!'},
-		{name: 'Public', description: 'for everyone'},
+		{name: 'Restaurant'},
+		{name: 'Coffee Shop'},
+		{name: 'Bar'},
+		{name: 'Winery'},
+		{name: 'Store'},
+		{name: 'Company'},
+		{name: 'Nonprofit'},
+		{name: 'Venue'},
+		{name: 'Public'},
 	];
 	async.each(placeCategories, function seedPlaceCategory(cat, next) {
 		models.PlaceCategory.findByIndex('slug', slugger(cat.name), function (err, existingCat) {
@@ -99,14 +72,14 @@ function seedPlaceCategories (done) {
 
 function seedGroupCategories (done) {
 	var groupCategories = [
-		{name: 'Music', description: 'for the ears'},
-		{name: 'Art', description: 'for the eyes'},
-		{name: 'Theater', description: 'for the soul'},
-		{name: 'Coworking', description: 'for during work'},
-		{name: 'Educational', description: 'for the mind'},
-		{name: 'Social', description: 'for the heart'},
-		{name: 'Nonprofit', description: 'because we don\'t want to make a profit'},
-		{name: 'Support', description: 'I\'m here for you'},
+		{name: 'Music'},
+		{name: 'Art'},
+		{name: 'Theatre'},
+		{name: 'Coworking'},
+		{name: 'Educational'},
+		{name: 'Social'},
+		{name: 'Nonprofit'},
+		{name: 'Support'},
 	];
 	async.each(groupCategories, function seedGroupCategory(cat, next) {
 		models.GroupCategory.findByIndex('slug', slugger(cat.name), function (err, existingCat) {
@@ -127,11 +100,43 @@ function seedGroupCategories (done) {
 	}, done);
 }
 
+function seedEventCategories (done) {
+	var eventCategories = [
+		{name: 'Music'},
+		{name: 'Theatre'},
+		{name: 'Education'},
+		{name: 'Forum'},
+		{name: 'Presentation'},
+		{name: 'Pro Sports'},
+		{name: 'High School Sports'},
+		{name: 'Meetup'},
+		{name: 'Meeting'},
+		{name: 'Fundraiser'}
+	];
+	async.each(eventCategories, function seedEventCategory(cat, next) {
+		models.EventCategory.findByIndex('slug', slugger(cat.name), function (err, existingCat) {
+			var newCat = models.EventCategory.create(cat);
+			if (err || !existingCat) {
+				newCat.save( function (err) {
+					console.log('Event Category created', cat.name);
+					next(err);
+				});
+			} else {
+				existingCat.loadData(newCat.toJSON());
+				existingCat.save(function (err) {
+					console.log('Event Category updated', cat.name);
+					next(err);
+				});
+			}
+		});
+	}, done);
+}
+
 function seedAll (err) {
 	if (err) { throw err; }
     async.series([
         function (done) {
-            seedInterests(done);
+            seedEventCategories(done);
         }, function (done) {
             seedUsers(done);
         }, function (done) {
