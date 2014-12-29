@@ -35,7 +35,7 @@ __Important note:__ I just realized this app *temporarily* requires a nlfpm acco
 ## Done:
 
 - Twitter authentication
-- Create, Get, List, Edit, Update, Approve, Star:
+- Create, Get, List, Update, Approve, Star:
   - People
   - Places
   - Groups
