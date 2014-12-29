@@ -5,10 +5,10 @@ var Place = new require('./Place');
 var Group = new require('./Group');
 var Event = new require('./Event');
 var EventSeries = new require('./EventSeries');
-var ListCategory = new require('./ListCategory');
-var PlaceCategory = new require('./PlaceCategory');
-var GroupCategory = new require('./GroupCategory');
-var EventCategory = new require('./EventCategory');
+var ListCategory = new require('./categories/ListCategory');
+var PlaceCategory = new require('./categories/PlaceCategory');
+var GroupCategory = new require('./categories/GroupCategory');
+var EventCategory = new require('./categories/EventCategory');
 var LogEvent = new require('./LogEvent');
 
 var models = {

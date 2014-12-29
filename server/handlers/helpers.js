@@ -17,19 +17,19 @@ var getForm = function (request, modelName, create, next) {
             twitter : request.payload.twitter,
             website : request.payload.website,
             about   : request.payload.about
-        }
+        };
     } else if (modelName === 'list') {
         formMap = {
             
-        }
+        };
     } else if (modelName === 'event') {
         formMap = {
             
-        }
+        };
     } else if (modelName === 'group') {
         formMap = {
             
-        }
+        };
     }
 
     if (create) {
@@ -37,7 +37,7 @@ var getForm = function (request, modelName, create, next) {
     } else { form = formMap; }
 
     next(form);
-}
+};
 
 exports.itemReply = itemReply = function (itemType, item, session, thismod, iStarred, categories) {
     var replyData, gmapsApi;
@@ -50,9 +50,9 @@ exports.itemReply = itemReply = function (itemType, item, session, thismod, iSta
 
     if (typeof session === 'undefined') { 
         replyData = {
+            itemType  : itemType,
             item      : item,
-            thismod   : thismod,
-            iStarred  : iStarred
+            gmapsApi  : gmapsApi
         };
     } else {
         replyData = {
@@ -80,6 +80,7 @@ exports.listReply = listReply = function (itemType, items, mine, session) {
 
     if (typeof session === 'undefined') { 
         replyData = {
+            itemType  : itemType,
             items     : items,
             mine      : mine
         };
@@ -200,7 +201,6 @@ exports.makeAddHandler = function (modelNameTitle, modelName, modelNamePlural) {
 
 exports.makeCreateHandler = function (modelNameTitle, modelName, modelNamePlural) {
     var handler = function (request, reply) {
-        var session = request.auth.credentials;
         // set up form
         getForm(request, modelName, true, function (form) {
             var item = models[modelNameTitle].create(form);
@@ -230,9 +230,8 @@ exports.makeEditHandler = function (modelNameTitle, modelName, modelNamePlural) 
     return handler;
 };
 
-exports.makeUpdateHandler = function (modelNameTitle, modelName, modelNamePlural, formMap) {
+exports.makeUpdateHandler = function (modelNameTitle, modelName, modelNamePlural) {
     var handler = function (request, reply) {
-        var form = request.payload;
         getForm(request, modelName, false, function (form) {
             models[modelNameTitle].update(request.params.key, form, function (err) {
                 if (err) { throw err; }
@@ -299,7 +298,7 @@ exports.makeApproveHandler = function (modelNameTitle, modelName, modelNamePlura
     var handler = function (request, reply) {
         var session = request.auth.credentials;
         if (session.moderator) {
-            models[modelTitleName].update(request.params.key, { approved: true }, function () {
+            models[modelNameTitle].update(request.params.key, { approved: true }, function () {
                 // redirect to list of pending items
                 reply.redirect('/pending');
             });

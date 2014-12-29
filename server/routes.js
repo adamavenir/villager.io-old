@@ -3,7 +3,7 @@ var categories = require('./handlers').categories;
 var groups = require('./handlers').groups;
 var lists = require('./handlers').lists;
 var pages = require('./handlers').pages;
-var pending = require('./handlers').pending;
+var admin = require('./handlers').admin;
 var people = require('./handlers').people;
 var places = require('./handlers').places;
 var events = require('./handlers').events;
@@ -18,20 +18,27 @@ module.exports = function _routes() {
       handler: { directory: { path: './public', listing: false, index: true } } 
     },
 
-    ////////////////////////////////// HOME 
+    ////////////////////////////////// PAGES
 
     { method: 'GET',  path: '/', config: pages.index, },
 
-    ////////////////////////////////// TINKER
+    ////////////////////////////////// AUTH
 
-    { method: 'GET',  path: '/tinker', config: pages.tinker },
-    { method: 'GET',  path: '/tinker/delete/{categoryType}/{modelSlug}', config: categories.delete },
-    { method: 'GET',  path: '/tinker/edit/{categoryType}/{modelSlug}', config: categories.edit },
-    { method: 'POST', path: '/tinker/update/{categoryType}/{modelKey}', config: categories.update },
+    { method: ['GET', 'POST'], path: '/auth/twitter', config: auth.login },
+    { method: 'GET', path: '/session', config: auth.session },
+    { method: 'GET', path: '/logout', config: auth.logout },
+
+    ////////////////////////////////// ADMIN
+
+    { method: 'GET',  path: '/pending', config: admin.pendingList },
+    { method: 'GET',  path: '/settings', config: admin.settings },
+    { method: 'GET',  path: '/settings/delete/{categoryType}/{modelSlug}', config: categories.delete },
+    { method: 'GET',  path: '/settings/edit/{categoryType}/{modelSlug}', config: categories.edit },
+    { method: 'POST', path: '/settings/update/{categoryType}/{modelKey}', config: categories.update },
 
     // move these  
-    { method: 'POST', path: '/tinker/add-group-category', config: categories.addGroupCategory },
-    { method: 'POST', path: '/tinker/add-place-category', config: categories.addPlaceCategory },
+    { method: 'POST', path: '/settings/add-group-category', config: categories.addGroupCategory },
+    { method: 'POST', path: '/settings/add-place-category', config: categories.addPlaceCategory },
 
     ////////////////////////////////// PEOPLE
 
@@ -92,19 +99,8 @@ module.exports = function _routes() {
     { method: 'POST', path: '/lists/update/{key}', config: lists.update },
     { method: 'GET',  path: '/lists/delete/{key}', config: lists.delete },
     { method: 'GET',  path: '/lists/star/{key}', config: lists.star },
-    // { method: 'POST', path: '/lists/addplace/{key}', config: lists.addplace },
-    // { method: 'POST', path: '/lists/addgroup/{key}', config: lists.addgroup },
-    // { method: 'GET',  path: '/lists/mute/{key}', config: lists.mute },
-
-    ////////////////////////////////// PENDING
-
-    { method: 'GET',  path: '/pending', config: pending.list },
-
-    ////////////////////////////////// AUTH
-
-    { method: ['GET', 'POST'], path: '/auth/twitter', config: auth.login },
-    { method: 'GET', path: '/session', config: auth.session },
-    { method: 'GET', path: '/logout', config: auth.logout }
+    { method: 'POST', path: '/lists/addplace/{key}', config: lists.addplace },
+    { method: 'POST', path: '/lists/addgroup/{key}', config: lists.addgroup }
 
   ];
 

@@ -1,7 +1,3 @@
-var models = require('../models').models;
-var async = require('async');
-var _ = require('underscore');
-
 exports.index = {
     auth: { strategy: 'session', mode: 'try' },
     handler: function (request, reply) {
@@ -17,34 +13,6 @@ exports.index = {
         }
         else { reply.view('index'); }
     }
-};
-
-exports.tinker = {
-    auth: 'session',
-    handler: function (request, reply) {
-        var session = request.auth.credentials;
-        async.parallel({
-            interests: function (done) {
-                models.Interest.all(done);
-            },
-            groupCategories: function (done) {
-                models.GroupCategory.all(done);
-            },
-            placeCategories: function (done) {
-                models.PlaceCategory.all(done);
-            }
-        }, function (err, context) {
-            if (err) { throw err; }
-            context = _.extend(context, {
-                fullName  : session.fullName,
-                avatar    : session.avatar,
-                userid    : session.userid,
-                moderator : session.moderator,
-                admin     : session.admin
-            });
-            reply.view('tinker/tinker', context);
-        });
-    },
 };
 
 exports.notFound = {

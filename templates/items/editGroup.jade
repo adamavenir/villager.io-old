@@ -14,7 +14,7 @@ block body
         legend Edit #{item.name}
         .form-element
           label(for="type") Type of group:
-          select(name="type")
+          select.form-input(name="type")
             if item.type
               option(value=item.type) #{item.type.name}
             else
