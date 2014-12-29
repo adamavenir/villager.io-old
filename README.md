@@ -34,36 +34,36 @@ __Important note:__ I just realized this app *temporarily* requires a nlfpm acco
 
 ## Done:
 
-- Add yourself by logging in with Twitter
-- List people, places, groups
-- Add and pre-approve users by Twitter handle
-- Add moderators
-- List pending submissions
-- Moderate submitted entries
-- Probably some other stuff
+- Twitter authentication
+- Create, Get, List, Edit, Update, Approve, Star:
+  - People
+  - Places
+  - Groups
+  - Events
+- Pending submissions, approve/delete submitted entries
 
-## Todos for next release (early January):
-- [x] Update to hapi 8
-- [x] Update to bell
-- [x] Update to dulcimer 2.5
-- [x] Set up test scaffolding
-- [x] Design cleanup
-- [x] ★ star places and groups
+## Todos for 1.0 release (early January):
 - [ ] Curated lists of places and groups
 - [ ] Add a place/group to a list from its page
 - [ ] Show lists a place/group appears on
 - [ ] Add and list upcoming events
-- [ ] Basic RSVPs for events
-- [ ] Show groups a person is a member of
-- [ ] Show events a person has RSVP'd for
-- [ ] Add links
-- [ ] Add posts
-- [ ] Ability to be a member or admin of a group or place
-- [ ] Write more tests
-- [ ] Make some things not suck as much
-- [ ] Design polish
+- [ ] Ability to be an admin of a group or place
+- [ ] Check whether you're an admin to edit it
+- [ ] Interface to add/remove admins to a group or place
+- [ ] Pagination for all the things
+- [ ] Log all the things
+- [ ] Welcome page
+- [ ] Tests for all routes
+- [ ] Flesh out seed data
+- [ ] Log in with SMS or Twitter
+- [ ] Add Twitter or SMS to your account
 
 ## Future todos
+- Basic RSVPs for events
+- Request to join a group as a member, have requests be moderated
+- Show people who are members of groups
+- Links 
+- Posts
 - Fallback avatars
 - Custom avatars, upload images
 - CSRF
