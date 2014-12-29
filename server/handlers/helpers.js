@@ -368,16 +368,12 @@ exports.makeListSelectHandler = function () {
             },
         }, function (err, context) {
 
-            // console.log('myLists', JSON.stringify(context.myLists, null, 2))
-
-            // TODO: figure out why this _.where doesn't work
-            var lists = _.where(context.myLists, { type: request.params.itemType });
-            // console.log('lists', JSON.stringify(lists, null, 2))
+            var lists = _.where(context.myLists[0], { type: request.params.listType });
 
             reply.view('list/selectList', {
                 itemType  : request.params.itemType,
                 item      : context.item,
-                myLists   : context.myLists[0],
+                myLists   : lists,
                 userid    : session.userid,
                 slug      : session.slug,
                 fullName  : session.fullName,
