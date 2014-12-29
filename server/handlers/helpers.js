@@ -178,6 +178,8 @@ exports.makeGetHandler = function (modelNameTitle, modelName, modelNamePlural) {
 
                 if (err) { throw err; }
 
+                console.log(JSON.stringify(item, null, 2));
+
                 // if I created this item, I'm a moderator of it.
                 if (item.creator.key === session.userid) { 
                     thismod = true;
@@ -422,18 +424,22 @@ exports.makeAddToListHandler = function () {
 
             // console.log('context.list', JSON.stringify(context.list, null, 2));
 
+            // TODO figure out how to not overwrite the existing lists
+
             async.parallel({
                 // add the item as a member of the list
                 addType: function (done) {
-                    models.List.update(listKey, { itemType: itemKey }, done);
+
+                    // TODO: need to figure out how to use itemType here instead of explicitly setting
+                    models.List.update(listKey, { 'places': [itemKey] }, done);
                 },
                 // add the list to the item                
                 onLists: function (done) {
-                    models[modelNameTitle].update(itemKey, { onLists: listKey }, done);
+                    models[modelNameTitle].update(itemKey, { onLists: [listKey] }, done);
                 },
                 // add the user as a lister of the item
                 listedBy: function (done) {
-                    models[modelNameTitle].update(itemKey, { listedBy: userKey }, done);
+                    models[modelNameTitle].update(itemKey, { listedBy: [userKey] }, done);
                 }
 
             }, function (err, result) {
