@@ -8,16 +8,19 @@ block body
       fieldset
         legend Add new list
         .form-element
+          label What's going on this list?
+          label.input-radio(for="radio-groups") 
+            input#radio-groups(name="list-type", type="radio", checked="checked", value='places')
+            |  Places
+          label.input-radio(for="radio-places") 
+            input#radio-places(name="list-type", type="radio", value='places')    
+            |  Groups
+        .form-element
           label(for="name") Name
           input.form-input(name="name")
         .form-element
           label(for="description") Description
           input.form-input(name="description")
-        - var sections = ['groups', 'places']
-          each section in sections
-            label.form-element.input-radio(for="radio") 
-              input(name="type", type="radio", value=section)
-              | #{section}
         button.button.button-primary(type="submit") Add list
 
     include ../in/footer
