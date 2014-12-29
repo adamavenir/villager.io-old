@@ -371,7 +371,7 @@ exports.makeListSelectHandler = function () {
             var lists = _.where(context.myLists[0], { type: request.params.listType });
 
             reply.view('list/selectList', {
-                itemType  : request.params.itemType,
+                itemType  : request.params.listType,
                 item      : context.item,
                 myLists   : lists,
                 userid    : session.userid,
