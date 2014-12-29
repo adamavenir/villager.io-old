@@ -178,7 +178,7 @@ exports.makeGetHandler = function (modelNameTitle, modelName, modelNamePlural) {
 
                 if (err) { throw err; }
 
-                console.log(JSON.stringify(item, null, 2));
+                // console.log(JSON.stringify(item, null, 2));
 
                 // if I created this item, I'm a moderator of it.
                 if (item.creator.key === session.userid) { 
@@ -349,19 +349,19 @@ exports.makeApproveHandler = function (modelNameTitle, modelName, modelNamePlura
 exports.makeListSelectHandler = function () {
     var handler = function (request, reply) {
         var session = request.auth.credentials;
-        var modelTypeTitle, modelName;
+        var listType;
 
         // generate modelNameTitle
         if (request.params.listType === 'groups') {
-            modelTypeTitle = 'Group';
+            listType = 'Group';
         } else if (request.params.listType === 'places') {
-            modelTypeTitle = 'Place';
+            listType = 'Place';
         // if listType isn't 'groups' or 'places', this is a bad url
         } else { reply.view('404'); }
 
         async.parallel({
             item: function (done) {
-                models[modelTypeTitle].get(request.params.itemKey, done);
+                models[listType].get(request.params.itemKey, done);
             },
             myLists: function (done) {
                 models.List.getByIndex('creator', session.userid, done);
@@ -406,7 +406,7 @@ exports.makeAddToListHandler = function () {
             modelNameTitle = 'Group';
         }
 
-        console.log(itemType);
+        // console.log(itemType);
 
         // get this instance of list, item, and user
         async.parallel({

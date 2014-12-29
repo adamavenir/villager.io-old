@@ -12,7 +12,7 @@ block body
           a.star-this(href= '/' + itemType + 's/star/' + item.key) ☆
       h1= item.name
       .action-menu
-        if slug && itemType != 'list'
+        if slug && itemType !== 'list' && itemType !== 'event'
           a.button.add-to-list(href="/lists/" + slug + "/" + itemType + "s/add/" + item.key) Add to list
         if moderator
           a.button.add-item(href="/" + itemType + "s/edit/" + item.key) Edit this #{itemType}
