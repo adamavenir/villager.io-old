@@ -4,7 +4,7 @@ block body
   body
     include ../in/header
 
-    form(method="POST", action="/people/add")
+    form(method="POST", action="/people/update/" + person.key)
       fieldset
         legend Edit #{person.fullName}
         .form-element
@@ -25,6 +25,6 @@ block body
         .form-element
           label(for="about") Short bio
           textarea.form-input(name="about", type="text", maxlength="160", placeholder="Introduce yourself (160 characters max)")
-        button.button.button-primary(name="submit", type="submit") Add yourself
+        button.button.button-primary(name="submit", type="submit") Update your profile
 
     include ../in/footer

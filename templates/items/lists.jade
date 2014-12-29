@@ -4,11 +4,7 @@ block body
   body
     include ../in/header
 
-    .title-bar
-      h1 Lists
-      .action-menu
-        if moderator
-          a.button.button-primary.add-item(href="/lists/add") Add a list
+    h1 Lists
     ul.lists
       if lists[0]
         for list in lists[0]

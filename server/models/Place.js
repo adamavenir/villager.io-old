@@ -7,7 +7,8 @@ var type = verymodel.VeryType;
 var Place = new dulcimer.Model (
     {
         type: {
-            foreignKey: 'place-category'
+            foreignKey: 'place-category',
+            private: false
         },
         name: {
             required: true,
@@ -20,6 +21,10 @@ var Place = new dulcimer.Model (
             index: true,
             private: false
         },
+        phone: {
+            required: false,
+            type: type().isAlphanumeric()
+        },
         address: {
             required: false,
             type: type().isAlphanumeric()
@@ -30,7 +35,7 @@ var Place = new dulcimer.Model (
         },
         map: {
             derive: function() {
-                if (this.address.length > 0) {
+                if (this.address && this.address.length > 0) {
                     return 'http://maps.google.com/?q=' + this.address + ' ' + this.city;
                 }
                 else {
@@ -40,12 +45,12 @@ var Place = new dulcimer.Model (
             type: type().isUrl(),
         },
         image: {
-            required: true,
+            required: false,
             type: type().isUrl()
         },
         website: {
-            type: new type().isUrl(),
-            required: true
+            type: type().isUrl(),
+            required: false
         },
         about: {
             required: false,
@@ -68,22 +73,14 @@ var Place = new dulcimer.Model (
             required: true,
             index: true
         },
-        creatorKey: {
-            index: true
-        },
-        // creatorName: {
-        //   derive: function(creatorKey) {
-        //     User.getByIndex(creatorKey, function(err, user) {
-        //       return user.fullName;
-        //     })
-        //   }
-        // },
-        moderator: {
-            index: true
+        creator: {
+            foreignKey: 'user',
+            private: false
         }
     },
     {
-        name: 'place'
+        name: 'place',
+        saveKey: 'true'
     }
 );
 

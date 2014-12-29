@@ -2,7 +2,7 @@ var models = require('../models').models;
 var _ = require('underscore');
 var async = require('async');
 
-exports.list = {
+exports.pendingList = {
     auth: 'session',
     handler: function (request, reply) {
         var session = request.auth.credentials;
@@ -22,7 +22,7 @@ exports.list = {
                 var pendingPlaces = _.where(context.places[0], { approved: false });
                 var pendingGroups = _.where(context.groups[0], { approved: false });
                 if(pendingPeople.length + pendingPlaces.length + pendingGroups.length === 0) {
-                    reply.view('pending/noPending', {
+                    reply.view('admin/noPending', {
                         fullName  : session.fullName,
                         userid    : session.userid,
                         avatar    : session.avatar,
@@ -31,7 +31,7 @@ exports.list = {
                     });
                 }
                 else {
-                    reply.view('pending/listPending', {
+                    reply.view('admin/listPending', {
                         people    : pendingPeople,
                         places    : pendingPlaces,
                         groups    : pendingGroups,
@@ -46,4 +46,29 @@ exports.list = {
             else { reply.redirect('/'); }
         });
     }
+};
+
+exports.settings = {
+    auth: 'session',
+    handler: function (request, reply) {
+        var session = request.auth.credentials;
+        async.parallel({
+            groupCategories: function (done) {
+                models.GroupCategory.all(done);
+            },
+            placeCategories: function (done) {
+                models.PlaceCategory.all(done);
+            }
+        }, function (err, context) {
+            if (err) { throw err; }
+            context = _.extend(context, {
+                fullName  : session.fullName,
+                avatar    : session.avatar,
+                userid    : session.userid,
+                moderator : session.moderator,
+                admin     : session.admin
+            });
+            reply.view('admin/settings', context);
+        });
+    },
 };
