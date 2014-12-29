@@ -10,7 +10,7 @@ exports.login = {
         var access, newSession;
         var t = request.auth.credentials.profile;
         console.log('signed in as', t.username);
-        if (t.id === config.auth.superadmin) {
+        if (t.id === config.auth.twitter.superadmin) {
             console.log('Greetings, superadmin!');
             access = true;
         } else { access = false; }
