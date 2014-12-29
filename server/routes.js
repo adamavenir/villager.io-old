@@ -24,8 +24,7 @@ module.exports = function _routes() {
 
     ////////////////////////////////// AUTH
 
-    { method: ['GET', 'POST'], path: '/auth/twitter', config: auth.login },
-    { method: 'GET', path: '/session', config: auth.session },
+    { method: ['GET', 'POST'], path: '/auth/twitter', config: authTwitter.login },
     { method: 'GET', path: '/logout', config: auth.logout },
 
     ////////////////////////////////// ADMIN
