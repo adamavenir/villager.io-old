@@ -122,7 +122,7 @@ exports.listReply = listReply = function (itemType, items, session, mine) {
 exports.makeListHandler = function (modelNameTitle, modelName, modelNamePlural) {
     var handler = function (request, reply) {
         var session = request.auth.credentials;
-        models[modelNameTitle].all(function (err, items) {
+        models[modelNameTitle].all(function (err, items, page) {
             if (err) { throw err; }
 
             // show only items that have been approved
@@ -188,15 +188,9 @@ exports.makeGetHandler = function (modelNameTitle, modelName, modelNamePlural) {
                 } else { thismod = false; }
 
                 // if I starred it
-                if (item.hasKey('starredBy', session.userid)) {
-                    iStarred = true;
-                    reply.view('items/item', itemReply(modelName, item, session, thismod, iStarred));
-
-                // if I didn't star it
-                } else { 
-                    iStarred = false; 
-                    reply.view('items/item', itemReply(modelName, item, session, thismod, iStarred));
-                }
+                item.hasForeign('starredBy', session.userid, function (err, isStarred) {
+                    reply.view('items/item', itemReply(modelName, item, session, thismod, isStarred));
+                });
 
             // if I don't have a session, give a standard page
             } else {

@@ -61,19 +61,13 @@ var Event = new dulcimer.Model(
             foreignKey: 'place'
         },
         organizers: {
-            default: [],
-            foreignCollection: 'user',
-            required: true
+            foreignKeys: 'user',
         },
         rsvps: {
-            default: [],
-            foreignCollection: 'user',
-            required: true
+            foreignKeys: 'user',
         },
         starredBy: {
-            default: [],
-            foreignCollection: 'user',
-            required: true
+            foreignKeys: 'user',
         },
         stars: {
             required: true,

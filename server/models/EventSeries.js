@@ -32,9 +32,7 @@ var EventSeries = new dulcimer.Model(
             type: new type().isAlphanumeric().len(0,160),
         },
         events: {
-            default: [],
-            foreignCollection: 'event',
-            required: true
+            foreignKeys: 'event',
         },
         group: {
             foreignKey: 'group'
@@ -43,9 +41,7 @@ var EventSeries = new dulcimer.Model(
             foreignKey: 'place'
         },
         starredBy: {
-            default: [],
-            foreignCollection: 'user',
-            required: true
+            foreignKeys: 'user',
         },
         stars: {
             required: true,
@@ -60,9 +56,7 @@ var EventSeries = new dulcimer.Model(
             index: true
         },
         moderators: {
-            default: [],
-            foreignCollection: 'user',
-            required: true
+            foreignKeys: 'user',
         },
         creator: {
             foreignKey: 'user'

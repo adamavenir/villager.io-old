@@ -17,9 +17,8 @@ exports.list = {
                 } else { 
                     me = false; 
                 }
-                models.User.all(function(err, data) {
-                    var approved = _.where(data, { approved: true });
-                    if(me === false && approved.length === 0) {
+                models.User.getByIndex('approved', true, function(err, approved, page) {
+                    if(me === false && page.count === 0) {
                         reply.view('people/noPeople', {
                             userid    : session.userid,
                             fullName  : session.fullName,
@@ -42,9 +41,8 @@ exports.list = {
                 });
             });            
         } else {
-            models.User.all(function(err, data) {
-                var approved = _.where(data, { approved: true });
-                if (approved.length === 0) {
+            models.User.getByIndex('approved', true, function(err, approved, page) {
+                if (page.count === 0) {
                     reply.view('people/noPeople');  
                 } else {
                     reply.view('people/listPeople', {

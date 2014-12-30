@@ -57,25 +57,13 @@ var Place = new dulcimer.Model (
             type: type().isAlphanumeric().len(0,160)
         },
         starredBy: {
-            default: [],
-            foreignCollection: 'user',
-            required: true
+            foreignKeys: 'user',
         },
         stars: {
             required: true,
             derive: function () {
                 return this.starredBy.length || 0;
             },
-        },
-        onLists: {
-            default: [],
-            foreignCollection: 'list',
-            required: false
-        },
-        listedBy: {
-            default: [],
-            foreignCollection: 'user',
-            required: true
         },
         approved: {
             default: false,

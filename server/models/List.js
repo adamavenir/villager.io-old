@@ -33,17 +33,13 @@ var List = new dulcimer.Model(
             type: type().isUrl()
         },
         groups: {
-            foreignCollection: 'group',
-            default: []
+            foreignKeys: 'group',
         },
         places: {
-            foreignCollection: 'place',
-            default: []
+            foreignKeys: 'place',
         },
         starredBy: {
-            default: [],
-            foreignCollection: 'user',
-            required: true
+            foreignKeys: 'user',
         },
         stars: {
             required: true,
