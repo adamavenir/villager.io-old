@@ -368,7 +368,11 @@ exports.makeListSelectHandler = function () {
             },
         }, function (err, context) {
 
+            // console.log('myLists', JSON.stringify(context.myLists[0], null, 2));
+
             var lists = _.where(context.myLists[0], { type: request.params.listType });
+
+            // console.log('lists', JSON.stringify(lists, null, 2));
 
             reply.view('list/selectList', {
                 itemType  : request.params.listType,
@@ -392,13 +396,13 @@ exports.makeAddToListHandler = function () {
         var itemKey = request.params.itemKey;
         var listKey = request.params.listKey;
         var userKey = request.auth.credentials.userid;
-        var itemType = request.params.itemType;
+        var listType = request.params.listType;
         var modelNameTitle;
 
         // generate modelNameTitle by capitalizing itemType param
-        if (request.params.listType === 'places') {
+        if (listType === 'places') {
             modelNameTitle = 'Place';
-        } else if (request.params.listType === 'groups') {
+        } else if (listType === 'groups') {
             modelNameTitle = 'Group';
         }
 
@@ -419,23 +423,33 @@ exports.makeAddToListHandler = function () {
             if (err) { throw err; }
 
             // console.log('context.list', JSON.stringify(context.list, null, 2));
+            console.log('itemType', listType)
+            console.log('context.list[itemType]', context.list[listType])
 
-            // TODO figure out how to not overwrite the existing lists
+            // item.get √, item.fkfield.push(newthing), item.save
+
+            // update item: add list to the item
+            context.item.onLists.push(context.list);
+
+            // update item: add the user as a lister of the item
+            context.item.listedBy.push(context.user);
+
+            // update list: add the item as a member of the list
+            context.list[listType].push(context.item);
+
+            console.log('updated context.list', JSON.stringify(context.list, null, 2));
+            console.log('updated context.item', JSON.stringify(context.item, null, 2));
 
             async.parallel({
-                // add the item as a member of the list
-                addType: function (done) {
-
-                    // TODO: need to figure out how to use itemType here instead of explicitly setting
-                    models.List.update(listKey, { 'places': [itemKey] }, done);
+                // save the item
+                saveItem: function (done) {
+                    console.log('saving item', JSON.stringify(context.item, null, 2));
+                    context.item.save(done);
                 },
-                // add the list to the item                
-                onLists: function (done) {
-                    models[modelNameTitle].update(itemKey, { onLists: [listKey] }, done);
-                },
-                // add the user as a lister of the item
-                listedBy: function (done) {
-                    models[modelNameTitle].update(itemKey, { listedBy: [userKey] }, done);
+                // save the list
+                saveList: function (done) {
+                    console.log('saving list', JSON.stringify(context.list, null, 2));
+                    context.list.save(done);
                 }
 
             }, function (err, result) {

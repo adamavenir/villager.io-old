@@ -10,10 +10,13 @@ exports.login = {
         var access, newSession;
         var t = request.auth.credentials.profile;
         console.log('signed in as', t.username);
-        if (t.id === config.auth.twitter.superadmin) {
+        if (t.id === config.auth.superadmin.twitter[0]) {
             console.log('Greetings, superadmin!');
             access = true;
-        } else { access = false; }
+        } else { 
+            console.log('superadmin is ', config.auth.superadmin.twitter[0]);
+            access = false; 
+        }
 
         var profile = {
             fullName    : t.displayName,

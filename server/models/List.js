@@ -12,7 +12,10 @@ var List = new dulcimer.Model(
         type: {
             type: 'enum',
             values: ['groups', 'places'],
-            index: true
+            default: 'places',
+            private: false,
+            index: true,
+            required: true
         },
         slug: {
             derive: function () {

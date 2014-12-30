@@ -7,7 +7,7 @@ block body
     .title-bar
       h1 No #{itemType}s yet
       .action-menu
-        if moderator
+        if slug
           a.button.button-primary.add-item(href="/" + itemType + "s/add") Add #{itemType}
 
     include ../in/footer
