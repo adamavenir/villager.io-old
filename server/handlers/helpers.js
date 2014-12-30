@@ -423,8 +423,6 @@ exports.makeAddToListHandler = function () {
             if (err) { throw err; }
 
             // console.log('context.list', JSON.stringify(context.list, null, 2));
-            console.log('itemType', listType)
-            console.log('context.list[itemType]', context.list[listType])
 
             // item.get √, item.fkfield.push(newthing), item.save
 
