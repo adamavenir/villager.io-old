@@ -1,0 +1,19 @@
+section.meta.grid-flex-container
+  if item.stars > 0
+    div.starredBy.grid-flex-cell.grid-flex-cell-1of3
+      if item.stars = 1
+        h6 ★ Starred by one person
+      else if item.stars > 1
+        h6 Starred by #{item.starredBy.length} people
+      for person in item.starredBy
+        a(href= '/people/' + person.slug)
+          img.avatar.avatar-rounded.avatar-small(src= person.avatar, title= person.fullName)
+  
+  //- if item.lists > 0
+  //-   div.listedBy.grid-flex-cell
+  //-     if item.listedBy.length = 1
+  //-       h6 One list
+  //-     else if item.listedBy.length > 1
+  //-       h6 #{item.listedBy.length} lists
+  //-     for list in item.listedBy
+  //-       a(href= list.creatorSlug + '/' + list.slug) #{list.name}

@@ -1,0 +1,17 @@
+extends ../layout
+
+block body
+  body
+    include ../in/header
+    include headerGetItem
+    //- TODO: add who the creator of the list is
+
+    section.content
+      ul.item-list.list-unstyled
+        for listedItem in item[item.type]
+          li: a(href= listedItem.url)
+            img.avatar.avatar-large.avatar-rounded(src= listedItem.image)
+            h5= listedItem.name
+
+    include showMeta
+    include ../in/footer

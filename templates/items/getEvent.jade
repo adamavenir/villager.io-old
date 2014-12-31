@@ -1,0 +1,23 @@
+extends ../layout
+
+block body
+  body
+    include ../in/header
+    include headerGetItem
+
+    section.content
+      .item.cf
+        if item.image
+          img.item-image(src= item.image)
+        if item.website
+          p: a(href= "item.website") #{item.website}
+        if item.phone
+          p= item.phone        
+        if item.map
+          p: a(href= item.map)
+              span= item.address + ' ' + item.city          
+        if item.about
+          p= item.about
+
+    include showMeta
+    include ../in/footer

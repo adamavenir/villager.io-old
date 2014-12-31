@@ -1,0 +1,30 @@
+extends ../layout
+
+block body
+  body
+    include ../in/header
+
+    if myLists.length > 0
+      form(method="POST", action='')
+        fieldset
+          legend Add #{item.name} item to a list
+          .form-element
+            select.form-input(name="list")
+              option(value="") -- Select a list --
+                for list in myLists
+                  option(value=list.key) #{list.name}
+          button.button.button-primary(type="submit") Add to list
+    else 
+      h1 No lists yet
+      a.button.button-primary(href="/lists/add") Add a list
+
+    include ../in/footer
+    script(src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js")
+    script(type="text/javascript").
+        $('select').on('change', function () {
+            var list = this.value;
+            var slug = window.location.pathname.split('/')[2];
+            var type = window.location.pathname.split('/')[3];
+            var item = window.location.pathname.split('/')[5];
+            $('form').attr('action', '/lists/' + slug + '/' + type + '/add/' + list + '/' + item)
+        })
