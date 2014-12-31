@@ -57,10 +57,10 @@ var getForm = function (request, modelName, create, next) {
     next(form);
 };
 
-exports.itemReply = itemReply = function (itemType, item, session, thismod, iStarred, categories) {
+exports.itemReply = itemReply = function (itemType, item, session, thismod, starredByMe, categories) {
     var replyData, gmapsApi;
     thismod = !!thismod;
-    iStarred = !!iStarred;
+    starredByMe = !!starredByMe;
 
     if (itemType === 'place') {
         gmapsApi = config.api.googleMaps;
@@ -83,7 +83,7 @@ exports.itemReply = itemReply = function (itemType, item, session, thismod, iSta
             avatar    : session.avatar,
             moderator : session.moderator,
             admin     : session.admin,
-            iStarred  : iStarred,
+            starredByMe  : starredByMe,
             categories: categories,
             gmapsApi  : gmapsApi
         };
@@ -168,7 +168,7 @@ exports.makeGetHandler = function (modelNameTitle, modelName, modelNamePlural) {
         var session = request.auth.credentials;
 
         models[modelNameTitle].findByIndex('slug', request.params.slug, function(err, item) {
-            var thismod, iStarred;
+            var thismod, starredByMe;
 
             // if there's no such item, return a 404
             if (err) { reply.view('404'); }
@@ -188,8 +188,8 @@ exports.makeGetHandler = function (modelNameTitle, modelName, modelNamePlural) {
                 } else { thismod = false; }
 
                 // if I starred it
-                item.hasForeign('starredBy', session.userid, function (err, isStarred) {
-                    reply.view('items/item', itemReply(modelName, item, session, thismod, isStarred));
+                item.hasForeign('starredBy', session.userid, function (err, starredByMe) {
+                    reply.view('items/item', itemReply(modelName, item, session, thismod, starredByMe));
                 });
 
             // if I don't have a session, give a standard page
@@ -288,12 +288,15 @@ exports.makeDeleteHandler = function (modelNameTitle, modelName, modelNamePlural
 exports.makeStarHandler = function (modelNameTitle, modelName, modelNamePlural) {
     var handler = function (request, reply) {
         var session = request.auth.credentials;
+        console.log('starHandler');
         models[modelNameTitle].get(request.params.key, function (err, item) {
+            console.log(item.name + ' starredBy: ' + JSON.stringify(item.starredBy, null, 2));
             // get an array of the users which already starred the item
-            item.hasForeign('starredBy', session.userid, function (err, isStarred) {
-                if (isStarred) {
+            item.hasForeign('starredBy', session.userid, function (err, starredByMe) {
+                console.log('starredByMe', starredByMe);
+                if (starredByMe) {
                     item.removeForeign('starredBy', session.userid, function (err) {
-                        reply.view('items/item', itemReply(modelName, item, session, thismod, isStarred));
+                        reply.view('items/item', itemReply(modelName, item, session, thismod, starredByMe));
                     });
                 } else {
                     item.addForeign('starredBy', session.userid, function (err) {

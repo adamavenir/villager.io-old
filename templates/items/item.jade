@@ -6,9 +6,9 @@ block body
 
     .title-bar
       .stars
-        if iStarred
+        if starredByMe
           a.unstar-this(href= '/' + itemType + 's/star/' + item.key) ★ 
-        if !iStarred
+        if !starredByMe
           a.star-this(href= '/' + itemType + 's/star/' + item.key) ☆
       h1= item.name
       .action-menu
