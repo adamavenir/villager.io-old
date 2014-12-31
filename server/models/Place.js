@@ -62,7 +62,9 @@ var Place = new dulcimer.Model (
         stars: {
             required: true,
             derive: function () {
-                return this.starredBy.length || 0;
+                if (this.starredBy) {
+                    return this.starredBy.length || 0;
+                }
             },
         },
         approved: {

@@ -34,7 +34,8 @@ block body
           p= item.about
 
     section.meta.grid-flex-container
-      if item.stars > 0
+      p= item
+      if item.starredBy > 0
         div.starredBy.grid-flex-cell.grid-flex-cell-1of3
           if item.starredBy.length = 1
             h6 ★ Starred by one person
