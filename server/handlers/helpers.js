@@ -293,10 +293,13 @@ exports.makeStarHandler = function (modelNameTitle, modelName, modelNamePlural) 
             console.log(item.name + ' starredBy: ' + JSON.stringify(item.starredBy, null, 2));
             // get an array of the users which already starred the item
             item.hasForeign('starredBy', session.userid, function (err, starredByMe) {
-                console.log('starredByMe', starredByMe);
+                console.log('starredByMe', starredByMe, session.userid, item.key);
                 if (starredByMe) {
                     item.removeForeign('starredBy', session.userid, function (err) {
-                        reply.view('items/item', itemReply(modelName, item, session, thismod, starredByMe));
+                        console.log("removed star------");
+                        reply().code(200).redirect('/' + modelNamePlural + '/' + item.slug);
+                        //var thismod = session.userid == item.creator.key;
+                        //reply.view('items/item', itemReply(modelName, item, session, thismod, starredByMe));
                     });
                 } else {
                     item.addForeign('starredBy', session.userid, function (err) {
@@ -407,7 +410,6 @@ exports.makeAddToListHandler = function () {
         }, function (err, context) {
             if (err) { throw err; }
 
-            // console.log('context.list', JSON.stringify(context.list, null, 2));
 
             // item.get √, item.fkfield.push(newthing), item.save
 

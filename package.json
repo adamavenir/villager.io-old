@@ -9,7 +9,7 @@
   "dependencies": {
     "async": "^0.9.0",
     "bell": "^2.0.0",
-    "dulcimer": "^2.8.0",
+    "dulcimer": "^2.8.1",
     "getconfig": "^1.0.0",
     "gravatar": "^1.1.0",
     "hapi": "^8.0.0",
