@@ -34,16 +34,16 @@ block body
           p= item.about
 
     section.meta.grid-flex-container
-      p= item
-      if item.starredBy > 0
+      if item.stars > 0
         div.starredBy.grid-flex-cell.grid-flex-cell-1of3
-          if item.starredBy.length = 1
+          if item.stars = 1
             h6 ★ Starred by one person
-          else if item.starredBy.length > 1
+          else if item.stars > 1
             h6 Starred by #{item.starredBy.length} people
           for person in item.starredBy
             a(href= '/people/' + person.slug)
               img.avatar.avatar-rounded.avatar-small(src= person.avatar, title= person.fullName)
+      
       //- if item.lists > 0
       //-   div.listedBy.grid-flex-cell
       //-     if item.listedBy.length = 1
