@@ -32,12 +32,12 @@ block body
       else 
         for item in items
           li
-            a(href= '/' + itemType + 's/' + item.slug)
+            a(href= item.url)
               img.avatar.avatar-large.avatar-rounded(src= item.image)
               h5= item.name
         for item in mine
           li
-            a(href= '/' + itemType + 's/' + item.slug)
+            a(href= item.url)
               img.avatar.avatar-large.avatar-rounded(src= item.image)
               h5= item.name
             

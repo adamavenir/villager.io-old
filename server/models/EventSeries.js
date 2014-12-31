@@ -43,10 +43,23 @@ var EventSeries = new dulcimer.Model(
         starredBy: {
             foreignKeys: 'user',
         },
+        listedBy: {
+            foreignKeys: 'user',
+        },
         stars: {
             required: true,
             derive: function () {
-                return this.starredBy.length || 0;
+                if (this.starredBy) {
+                    return this.starredBy.length || 0;
+                }
+            },
+        },
+        lists: {
+            required: true,
+            derive: function () {
+                if (this.listedBy) {
+                    return this.listedBy.length || 0;
+                }
             },
         },
         approved: {

@@ -22,6 +22,13 @@ var Event = new dulcimer.Model(
             index: true,
             private: false 
         },
+        url: {
+            derive: function () {
+                if (this.slug) {
+                    return '/events/' + this.slug
+                }
+            }
+        },
         email: {
             type: new type().isEmail(),
             required: false
@@ -72,7 +79,20 @@ var Event = new dulcimer.Model(
         stars: {
             required: true,
             derive: function () {
-                return this.starredBy.length || 0;
+                if (this.starredBy) {
+                    return this.starredBy.length || 0;
+                }
+            },
+        },
+        listedBy: {
+            foreignKeys: 'user',
+        },
+        lists: {
+            required: true,
+            derive: function () {
+                if (this.listedBy) {
+                    return this.listedBy.length || 0;
+                }
             },
         },
         approved: {

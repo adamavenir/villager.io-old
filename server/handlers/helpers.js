@@ -189,7 +189,7 @@ exports.makeGetHandler = function (modelNameTitle, modelName, modelNamePlural) {
 
                 // if I starred it
                 item.hasForeign('starredBy', session.userid, function (err, starredByMe) {
-                    reply.view('items/item', itemReply(modelName, item, session, thismod, starredByMe));
+                    reply.view('items/get' + modelNameTitle, itemReply(modelName, item, session, thismod, starredByMe));
                 });
 
             // if I don't have a session, give a standard page
@@ -288,19 +288,19 @@ exports.makeDeleteHandler = function (modelNameTitle, modelName, modelNamePlural
 exports.makeStarHandler = function (modelNameTitle, modelName, modelNamePlural) {
     var handler = function (request, reply) {
         var session = request.auth.credentials;
-        console.log('starHandler');
+
         models[modelNameTitle].get(request.params.key, function (err, item) {
             console.log(item.name + ' starredBy: ' + JSON.stringify(item.starredBy, null, 2));
             // get an array of the users which already starred the item
             item.hasForeign('starredBy', session.userid, function (err, starredByMe) {
                 console.log('starredByMe', starredByMe, session.userid, item.key);
+                // if the user has starred this item, remove them from starredBy
                 if (starredByMe) {
                     item.removeForeign('starredBy', session.userid, function (err) {
                         console.log("removed star------");
                         reply().code(200).redirect('/' + modelNamePlural + '/' + item.slug);
-                        //var thismod = session.userid == item.creator.key;
-                        //reply.view('items/item', itemReply(modelName, item, session, thismod, starredByMe));
                     });
+                // if the user hasn't starred it, add them to starredBy
                 } else {
                     item.addForeign('starredBy', session.userid, function (err) {
                         if (modelName === 'list') {
@@ -362,7 +362,7 @@ exports.makeListSelectHandler = function () {
 
             // console.log('lists', JSON.stringify(lists, null, 2));
 
-            reply.view('list/selectList', {
+            reply.view('items/selectList', {
                 itemType  : request.params.listType,
                 item      : context.item,
                 myLists   : lists,
@@ -410,21 +410,14 @@ exports.makeAddToListHandler = function () {
         }, function (err, context) {
             if (err) { throw err; }
 
-
-            // item.get √, item.fkfield.push(newthing), item.save
-
-            // update item: add the user as a lister of the item
-            //context.item.listedBy.push(context.user);
-            //TODO: you might want to re-add this functionality
-
-            // update list: add the item as a member of the list
-            context.list.addForeign(listType, context.item, function (err) {
-                console.log('updated context.list', JSON.stringify(context.list, null, 2));
-                reply().code(200).redirect('/lists/' + context.user.slug + '/' + context.list.slug);
-            });
-
-           // console.log('updated context.item', JSON.stringify(context.item, null, 2));
-
+            // add the user as a lister of the item
+            context.item.addForeign('listedBy', context.user, function (err) {
+                // add the item as a member of the list
+                context.list.addForeign(listType, context.item, function (err) {
+                    console.log('updated context.list', JSON.stringify(context.list, null, 2));
+                    reply().code(200).redirect('/lists/' + context.user.slug + '/' + context.list.slug);
+                });
+            })
         });
     }
     return handler;
