@@ -290,32 +290,20 @@ exports.makeStarHandler = function (modelNameTitle, modelName, modelNamePlural) 
         var session = request.auth.credentials;
         models[modelNameTitle].get(request.params.key, function (err, item) {
             // get an array of the users which already starred the item
-            var starredIds = item.starredBy.map(function (user) {
-                return user.key;
-            });
-            // if the user already starred it, remove their star
-            if (_.contains(starredIds, session.userid)) {
-                item.starredBy = _.without(item.starredBy, session.userid);
-                for (var i = 0; i < item.starredBy.length; i++) {
-                    if (item.starredBy[i].key === session.userid) {
-                        item.starredBy.splice(i, 1);
-                        break;
-                    }
-                }
-            }
-            // otherwise we add it
-            else {
-                item.starredBy.push(session.userid);
-            }
-            item.save(function () {
-
-                // redirect to starred item's page
-                if (modelName === 'list') {
-                    reply().code(201).redirect('/' + modelNamePlural + '/' + session.slug + '/' + item.slug);
+            item.hasForeign('starredBy', session.userid, function (err, isStarred) {
+                if (isStarred) {
+                    item.removeForeign('starredBy', session.userid, function (err) {
+                        reply.view('items/item', itemReply(modelName, item, session, thismod, isStarred));
+                    });
                 } else {
-                    reply().code(200).redirect('/' + modelNamePlural + '/' + item.slug);
+                    item.addForeign('starredBy', session.userid, function (err) {
+                        if (modelName === 'list') {
+                            reply().code(201).redirect('/' + modelNamePlural + '/' + session.slug + '/' + item.slug);
+                        } else {
+                            reply().code(200).redirect('/' + modelNamePlural + '/' + item.slug);
+                        }
+                    });
                 }
-                
             });
         });
     };
@@ -420,33 +408,18 @@ exports.makeAddToListHandler = function () {
 
             // item.get √, item.fkfield.push(newthing), item.save
 
-            // update item: add list to the item
-            context.item.onLists.push(context.list);
-
             // update item: add the user as a lister of the item
-            context.item.listedBy.push(context.user);
+            //context.item.listedBy.push(context.user);
+            //TODO: you might want to re-add this functionality
 
             // update list: add the item as a member of the list
-            context.list[listType].push(context.item);
-
-            console.log('updated context.list', JSON.stringify(context.list, null, 2));
-            console.log('updated context.item', JSON.stringify(context.item, null, 2));
-
-            async.parallel({
-                // save the item
-                saveItem: function (done) {
-                    console.log('saving item', JSON.stringify(context.item, null, 2));
-                    context.item.save(done);
-                },
-                // save the list
-                saveList: function (done) {
-                    console.log('saving list', JSON.stringify(context.list, null, 2));
-                    context.list.save(done);
-                }
-
-            }, function (err, result) {
+            context.list.addForeign(listType, context.item, function (err) {
+                console.log('updated context.list', JSON.stringify(context.list, null, 2));
                 reply().code(200).redirect('/lists/' + context.user.slug + '/' + context.list.slug);
             });
+
+           // console.log('updated context.item', JSON.stringify(context.item, null, 2));
+
         });
     }
     return handler;
@@ -483,10 +456,10 @@ exports.makeRemoveFromListHandler = function () {
                 list.removeForeign(type, context.item, done),
 
                 // remove the list to the item
-                item.removeForeign('onLists', context.list, done),
+                //item.removeForeign('onLists', context.list, done),
 
                 // remove the user as a lister of the item
-                item.removeForeign('listedBy', context.user, done)
+                //item.removeForeign('listedBy', context.user, done)
             ], function (list, item) {
                 reply.code(200).redirect('/lists/' + context.user.slug + '/' + context.list.slug);
             });
