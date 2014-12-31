@@ -100,6 +100,36 @@ function seedGroupCategories (done) {
 	}, done);
 }
 
+function seedActivityCategories (done) {
+    var activityCategories = [
+        {name: 'Fun'},
+        {name: 'Neat'},
+        {name: 'Family'},
+        {name: 'Cool'},
+        {name: 'Old'},
+        {name: 'Outdoors'},
+        {name: 'Travel'}
+    ];
+    async.each(activityCategories, function seedActivityCategory(cat, next) {
+        models.ActivityCategory.findByIndex('slug', slugger(cat.name), function (err, existingCat) {
+            var newCat = models.ActivityCategory.create(cat);
+            if (err || !existingCat) {
+                newCat.save( function (err) {
+                    console.log('Activity Category created', cat.name);
+                    next(err);
+                });
+            } else {
+                existingCat.loadData(newCat.toJSON());
+                existingCat.save(function (err) {
+                    console.log('Activity Category updated', cat.name);
+                    next(err);
+                });
+            }
+        });
+    }, done);
+}
+
+
 function seedEventCategories (done) {
 	var eventCategories = [
 		{name: 'Music'},
@@ -143,6 +173,8 @@ function seedAll (err) {
         	seedPlaceCategories(done);
         }, function (done) {
         	seedGroupCategories(done);
+        }, function (done) {
+        	seedActivityCategories(done);
         }
     ], function (err) {
         if (err) { throw err; }

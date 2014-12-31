@@ -1,0 +1,33 @@
+extends ../layout
+
+block body
+  body
+    include ../in/header
+
+    form(method="POST", action="/activities/add")
+      fieldset
+        legend Add an activity
+        .form-element
+          label(for="type") Type of activity:
+          select.form-input(name="type")
+            option(value="") -- Select a Category --
+            each cat in categories
+              option(value=cat.key) #{cat.name}
+        .form-element
+          label(for="name") Activity name
+          input.form-input(name="name", type="text", placeholder="Name of the activity")
+        .form-element
+          label(for="website") Website
+          input.form-input(name="website", type="text", placeholder="http://placewebsite.com")
+        .form-element
+          label(for="phone") Phone
+          input.form-input(name="phone", type="text", placeholder="(509) 555-1212")
+        .form-element
+          label(for="image") Link to image
+          input.form-input(name="image", type="text", placeholder="link to an image")
+        .form-element
+          label(for="about") Description
+          textarea.form-input(name="about", type="text", maxlength="160", placeholder="Describe this activity (160 characters max)")
+        button.button.button-primary(name="submit", type="submit") Add this activity
+
+    include ../in/footer

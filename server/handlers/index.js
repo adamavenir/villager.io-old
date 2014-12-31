@@ -5,7 +5,8 @@ module.exports = {
     events:     require('./items').events,
     groups:     require('./items').groups,
     lists:      require('./items').lists,
-    places:     require('./items').places,    
+    places:     require('./items').places,
+    activities: require('./items').activities,
     pages:      require('./pages'),
     people:     require('./people')
 };

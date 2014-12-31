@@ -1,0 +1,35 @@
+extends ../layout
+
+block body
+  body
+    include ../in/header
+    include headerEditItem
+
+    form(method="POST", action="/activities/update/" + item.key)
+      fieldset
+        legend Edit #{item.name}
+        .form-element
+          label(for="type") Type of activity:
+          select.form-input(name="type")
+            if item.type
+              option(value=item.type) #{item.type.name}
+            else
+              option(value="") -- Select a Category --
+            each cat in categories
+              if item.type.key !== cat.key
+                option(value=cat.key) #{cat.name}
+        .form-element
+          label(for="name") Activity name
+          input.form-input(name="name", type="text", placeholder="Name of the activity", value= item.name)
+        .form-element
+          label(for="website") Website
+          input.form-input(name="website", type="text", placeholder="http://placewebsite.com", value= item.website)
+        .form-element
+          label(for="image") Link to image
+          input.form-input(name="image", type="text", placeholder="link to an image", value= item.images)
+        .form-element
+          label(for="about") Description
+          textarea.form-input(name="about", type="text", maxlength="160", placeholder="Describe this activity (160 characters max)") #{item.about}
+        button.button.button-primary(name="submit", type="submit") Update
+
+    include ../in/footer
