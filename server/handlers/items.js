@@ -1,5 +1,3 @@
-var _ = require('underscore');
-var models = require('../models').models;
 var h = require('./helpers');
 
 //////////////////////////////////////////////  PLACES

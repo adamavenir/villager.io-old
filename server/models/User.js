@@ -70,7 +70,7 @@ var User = new dulcimer.Model(
         url: {
             derive: function () {
                 if (this.slug) {
-                    return '/people/' + this.urlSlug
+                    return '/people/' + this.urlSlug;
                 }
             }
         },

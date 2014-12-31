@@ -24,7 +24,7 @@ var Place = new dulcimer.Model (
         url: {
             derive: function () {
                 if (this.slug) {
-                    return '/places/' + this.slug
+                    return '/places/' + this.slug;
                 }
             }
         },

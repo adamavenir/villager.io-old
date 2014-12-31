@@ -1,5 +1,4 @@
 var models = require('../models').models;
-var _ = require('underscore');
 var async = require('async');
 
 

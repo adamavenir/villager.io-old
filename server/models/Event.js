@@ -3,6 +3,11 @@ var slugger = require('slugger');
 var dulcimer = require('dulcimer');
 var verymodel = require('verymodel');
 
+// using Sugar so it stops triggering jshint saying it's not used
+// Sugar overrides the native Date object, as I understand it,
+// and thus jshint doesn't see it used despite it being defined. argh.
+if (!sugar) { console.log ('not going to happen ever'); }
+
 var type = verymodel.VeryType;
 
 var Event = new dulcimer.Model(
@@ -25,7 +30,7 @@ var Event = new dulcimer.Model(
         url: {
             derive: function () {
                 if (this.slug) {
-                    return '/events/' + this.slug
+                    return '/events/' + this.slug;
                 }
             }
         },

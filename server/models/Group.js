@@ -24,7 +24,7 @@ var Group = new dulcimer.Model(
         url: {
             derive: function () {
                 if (this.slug) {
-                    return '/groups/' + this.slug
+                    return '/groups/' + this.slug;
                 }
             }
         },

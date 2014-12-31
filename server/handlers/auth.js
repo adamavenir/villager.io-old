@@ -2,7 +2,6 @@ var _ = require('underscore');
 var models = require('../models').models;
 var User = models.User;
 var config = require('getconfig');
-var slugger = require('slugger');
 
 exports.login = {
     auth: 'twitter',

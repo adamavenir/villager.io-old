@@ -6,7 +6,7 @@ var async = require('async');
 var itemReply, listReply;
 
 var getForm = function (request, modelName, create, next) {
-    var formMap, form;
+    var formMap;
     var form = request.payload;
 
     if (modelName === 'place') {
@@ -119,10 +119,11 @@ exports.listReply = listReply = function (itemType, items, session, mine) {
     return replyData;
 };
 
-exports.makeListHandler = function (modelNameTitle, modelName, modelNamePlural) {
+exports.makeListHandler = function (modelNameTitle, modelName) {
     var handler = function (request, reply) {
         var session = request.auth.credentials;
-        models[modelNameTitle].all(function (err, items, page) {
+        // TODO: add pagination (err, items, page)
+        models[modelNameTitle].all(function (err, items) {
             if (err) { throw err; }
 
             // show only items that have been approved
@@ -143,16 +144,19 @@ exports.makeListHandler = function (modelNameTitle, modelName, modelNamePlural) 
                 if(mine.length + approved.length === 0) {
                     reply.view('items/noItems', listReply(modelName, null, session));
                 }
+
                 // reply with approved and mine
                 else {
                     reply.view('items/listItems', listReply(modelName, approved, session, mine));
                 }
             }
             else {
+
                 // if there are no approved items
                 if (approved.length === 0) {
                     reply.view('items/noItems', listReply(modelName, null));
                 }
+
                 // else show the list of approved items
                 else {
                     reply.view('items/listItems', listReply(modelName, approved));
@@ -163,12 +167,12 @@ exports.makeListHandler = function (modelNameTitle, modelName, modelNamePlural) 
     return handler;
 };
 
-exports.makeGetHandler = function (modelNameTitle, modelName, modelNamePlural) {
+exports.makeGetHandler = function (modelNameTitle, modelName) {
     var handler = function (request, reply) {
         var session = request.auth.credentials;
 
         models[modelNameTitle].findByIndex('slug', request.params.slug, function(err, item) {
-            var thismod, starredByMe;
+            var thismod;
 
             // if there's no such item, return a 404
             if (err) { reply.view('404'); }
@@ -177,8 +181,6 @@ exports.makeGetHandler = function (modelNameTitle, modelName, modelNamePlural) {
             if (session.userid) {
 
                 if (err) { throw err; }
-
-                // console.log(JSON.stringify(item, null, 2));
 
                 // if I created this item, I'm a moderator of it.
                 if (item.creator.key === session.userid) { 
@@ -202,10 +204,11 @@ exports.makeGetHandler = function (modelNameTitle, modelName, modelNamePlural) {
     return handler;
 };
 
-exports.makeAddHandler = function (modelNameTitle, modelName, modelNamePlural) {
+exports.makeAddHandler = function (modelNameTitle, modelName) {
     var handler = function (request, reply) {
         var session = request.auth.credentials;
         var modelCategory = modelNameTitle + 'Category';
+
         // get categories
         models[modelCategory].all(function (err, categories) {
             // return the add item form
@@ -218,6 +221,7 @@ exports.makeAddHandler = function (modelNameTitle, modelName, modelNamePlural) {
 exports.makeCreateHandler = function (modelNameTitle, modelName, modelNamePlural) {
     var handler = function (request, reply) {
         var session = request.auth.credentials;
+
         // set up form
         getForm(request, modelName, true, function (form) {
             var item = models[modelNameTitle].create(form);
@@ -237,7 +241,7 @@ exports.makeCreateHandler = function (modelNameTitle, modelName, modelNamePlural
     return handler;
 };
 
-exports.makeEditHandler = function (modelNameTitle, modelName, modelNamePlural) {
+exports.makeEditHandler = function (modelNameTitle, modelName) {
     var handler = function (request, reply) {
         var session = request.auth.credentials;
         var modelCategory = modelNameTitle + 'Category';
@@ -290,19 +294,22 @@ exports.makeStarHandler = function (modelNameTitle, modelName, modelNamePlural) 
         var session = request.auth.credentials;
 
         models[modelNameTitle].get(request.params.key, function (err, item) {
-            console.log(item.name + ' starredBy: ' + JSON.stringify(item.starredBy, null, 2));
+
             // get an array of the users which already starred the item
             item.hasForeign('starredBy', session.userid, function (err, starredByMe) {
-                console.log('starredByMe', starredByMe, session.userid, item.key);
+                if (err) { throw err; }
+
                 // if the user has starred this item, remove them from starredBy
                 if (starredByMe) {
                     item.removeForeign('starredBy', session.userid, function (err) {
-                        console.log("removed star------");
+                        if (err) { throw err; }
                         reply().code(200).redirect('/' + modelNamePlural + '/' + item.slug);
                     });
+
                 // if the user hasn't starred it, add them to starredBy
                 } else {
                     item.addForeign('starredBy', session.userid, function (err) {
+                        if (err) { throw err; }
                         if (modelName === 'list') {
                             reply().code(201).redirect('/' + modelNamePlural + '/' + session.slug + '/' + item.slug);
                         } else {
@@ -316,7 +323,7 @@ exports.makeStarHandler = function (modelNameTitle, modelName, modelNamePlural) 
     return handler;
 };
 
-exports.makeApproveHandler = function (modelNameTitle, modelName, modelNamePlural) {
+exports.makeApproveHandler = function (modelNameTitle) {
     var handler = function (request, reply) {
         var session = request.auth.credentials;
         if (session.moderator) {
@@ -356,11 +363,8 @@ exports.makeListSelectHandler = function () {
             },
         }, function (err, context) {
 
-            // console.log('myLists', JSON.stringify(context.myLists[0], null, 2));
-
+            // from my lists, get the relevant lists
             var lists = _.where(context.myLists[0], { type: request.params.listType });
-
-            // console.log('lists', JSON.stringify(lists, null, 2));
 
             reply.view('items/selectList', {
                 itemType  : request.params.listType,
@@ -394,8 +398,6 @@ exports.makeAddToListHandler = function () {
             modelNameTitle = 'Group';
         }
 
-        // console.log(itemType);
-
         // get this instance of list, item, and user
         async.parallel({
             list: function (done) {
@@ -412,57 +414,59 @@ exports.makeAddToListHandler = function () {
 
             // add the user as a lister of the item
             context.item.addForeign('listedBy', context.user, function (err) {
+                if (err) { throw err; }
                 // add the item as a member of the list
                 context.list.addForeign(listType, context.item, function (err) {
-                    console.log('updated context.list', JSON.stringify(context.list, null, 2));
+                    if (err) { throw err; }
                     reply().code(200).redirect('/lists/' + context.user.slug + '/' + context.list.slug);
                 });
-            })
+            });
         });
-    }
+    };
     return handler;
 };
 
 // TODO: this is erroneously assuming a user only lists something once
 exports.makeRemoveFromListHandler = function () {
     var handler = function (request, reply) {
-        var session = request.auth.credentials;
+        var itemKey = request.params.itemKey;
+        var listKey = request.params.listKey;
+        var userKey = request.auth.credentials.userid;
+        var listType = request.params.listType;
         var modelNameTitle;
 
-        if (request.params.listType === 'places') {
+        // generate modelNameTitle by capitalizing itemType param
+        if (listType === 'places') {
             modelNameTitle = 'Place';
-        } else if (request.params.listType === 'groups') {
+        } else if (listType === 'groups') {
             modelNameTitle = 'Group';
         }
 
         // get this instance of list, item, and user
         async.parallel({
             list: function (done) {
-                models.List.get(request.params.listKey, done);
+                models.List.get(listKey, done);
             },
             item: function (done) {
-                models[modelNameTitle].get(request.params.itemKey, done);
+                models[modelNameTitle].get(itemKey, done);
             },
             user: function (done) {
-                models.User.get(session.userid, done);
+                models.User.get(userKey, done);
             }
         }, function (err, context) {
             if (err) { throw err; }
 
-            async.parallel([
+            // remove the user as a lister of the item
+            context.item.removeForeign('listedBy', context.user, function (err) {
+                if (err) { throw err; }
                 // remove the item as a member of the list
-                list.removeForeign(type, context.item, done),
-
-                // remove the list to the item
-                //item.removeForeign('onLists', context.list, done),
-
-                // remove the user as a lister of the item
-                //item.removeForeign('listedBy', context.user, done)
-            ], function (list, item) {
-                reply.code(200).redirect('/lists/' + context.user.slug + '/' + context.list.slug);
+                context.list.removeForeign(listType, context.item, function (err) {
+                    if (err) { throw err; }
+                    reply().code(200).redirect('/lists/' + context.user.slug + '/' + context.list.slug);
+                });
             });
         });
-    }
+    };
     return handler;
 };
 
