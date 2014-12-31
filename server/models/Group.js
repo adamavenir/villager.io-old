@@ -1,4 +1,4 @@
-var dulcimer = require('dulcimer');
+ var dulcimer = require('dulcimer');
 var verymodel = require('verymodel');
 var slugger = require('slugger');
 
@@ -37,9 +37,7 @@ var Group = new dulcimer.Model(
             type: new type().isAlphanumeric().len(0,160),
         },
         starredBy: {
-            default: [],
-            foreignCollection: 'user',
-            required: true
+            foreignKeys: 'user'
         },
         stars: {
             required: true,
