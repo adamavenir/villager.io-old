@@ -40,13 +40,12 @@ __Important note:__ I just realized this app *temporarily* requires a nlfpm acco
   - Places
   - Groups
   - Events
+  - Lists
 - Pending submissions, approve/delete submitted entries
+- Curated lists of places and groups
 
 ## Todos for 1.0 release (early January):
-- [ ] Curated lists of places and groups
-- [ ] Add a place/group to a list from its page
-- [ ] Show lists a place/group appears on
-- [ ] Add and list upcoming events
+- [ ] List upcoming events by date
 - [ ] Ability to be an admin of a group or place
 - [ ] Check whether you're an admin to edit it
 - [ ] Interface to add/remove admins to a group or place
