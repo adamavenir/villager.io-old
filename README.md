@@ -3,8 +3,8 @@
 > __“Cities have the capability of providing something for everybody, only because, and only when, they are created by everybody.”__ 
 > — Jane Jacobs
 
-villager.io (work in progress)
-==============================
+villager (work in progress)
+===========================
 __Forget massive corporate social networks. Let's build villages.__
 
 First implementation will be [triciti.es](http://triciti.es), successor to [WeCreate TC](http://wecreate.tc).
