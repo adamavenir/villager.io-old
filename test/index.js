@@ -1,6 +1,6 @@
-// var server;
-// var Lab = require('lab');
-// var Code = require('code');
+var server = require('../server');
+var Lab = require('lab');
+var Code = require('code');
 // var Hapi = require('hapi');
 // var Bell = require('bell');
 // var config = require('getconfig');
@@ -9,10 +9,10 @@
 // var Dulcimer = require('dulcimer');
 // Dulcimer.connect({type: 'level', path: './testdb'});
 
-// var lab = exports.lab = Lab.script();
-// var expect = Code.expect;
+var lab = exports.lab = Lab.script();
+var expect = Code.expect;
 
-// lab.experiment('main tests', function () {
+lab.experiment('main tests', function () {
 //     lab.before(function (done) {
 //         server = new Hapi.Server();
 
@@ -57,13 +57,13 @@
 
 //     });
 
-//     lab.test('load home page', function (done) {
-//         var options = { method: 'GET', url: '/' };
-//         server.inject(options, function (response) {
-//             expect(response.statusCode).to.equal(200);
-//             done();
-//         });
-//     });
+    lab.test('load home page', function (done) {
+        var options = { method: 'GET', url: '/' };
+        server.inject(options, function (response) {
+            expect(response.statusCode).to.equal(200);
+            done();
+        });
+    });
 
 //     lab.test('404 error', function (done) {
 //         var options = { method: 'GET', url: '/chumbawumba' };
@@ -129,4 +129,4 @@
 //     //     });
 //     // });
 
-// });    
+});    

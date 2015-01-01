@@ -45,6 +45,6 @@
     "build": "make build",
     "postinstall": "make -B build",
     "start": "node server",
-    "test": "make test"
+    "test": "GETCONFIG_ROOT=`pwd` make test"
   }
 }
