@@ -45,15 +45,16 @@ __Important note:__ I just realized this app *temporarily* requires a nlfpm acco
 - Curated lists of places and groups
 
 ## Todos for 1.0 release (early January):
+- [ ] Tests for all routes
+- [ ] Flesh out seed data
+- [ ] Log all the things
+- [ ] Add activities
 - [ ] List upcoming events by date
 - [ ] Ability to be an admin of a group or place
 - [ ] Check whether you're an admin to edit it
 - [ ] Interface to add/remove admins to a group or place
 - [ ] Pagination for all the things
-- [ ] Log all the things
 - [ ] Welcome page
-- [ ] Tests for all routes
-- [ ] Flesh out seed data
 - [ ] Log in with SMS or Twitter
 - [ ] Add Twitter or SMS to your account
 
