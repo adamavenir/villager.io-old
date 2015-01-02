@@ -207,13 +207,18 @@ exports.makeGetHandler = function (modelNameTitle, modelName) {
 exports.makeAddHandler = function (modelNameTitle, modelName) {
     var handler = function (request, reply) {
         var session = request.auth.credentials;
-        var modelCategory = modelNameTitle + 'Category';
 
-        // get categories
-        models[modelCategory].all(function (err, categories) {
-            // return the add item form
-            reply.view('items/add' + modelNameTitle, itemReply(modelName, null, session, null, null, categories));
-        });
+        if (modelName !== 'list') {
+            var modelCategory = modelNameTitle + 'Category';
+
+            // get categories
+            models[modelCategory].all(function (err, categories) {
+                // return the add item form
+                reply.view('items/add' + modelNameTitle, itemReply(modelName, null, session, null, null, categories));
+            });
+        } else {
+            reply.view('items/add' + modelNameTitle, itemReply(modelName, null, session, null, null, null));
+        }
     };
     return handler;
 };

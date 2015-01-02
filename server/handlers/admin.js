@@ -24,8 +24,9 @@ exports.pendingList = {
                 var pendingPeople = _.where(context.people[0], { approved: false });
                 var pendingPlaces = _.where(context.places[0], { approved: false });
                 var pendingGroups = _.where(context.groups[0], { approved: false });
+                var pendingEvents = _.where(context.events[0], { approved: false });
                 var pendingActivities = _.where(context.activities[0], { approved: false });
-                if(pendingPeople.length + pendingPlaces.length + pendingGroups.length === 0) {
+                if(pendingPeople.length + pendingPlaces.length + pendingGroups.length + pendingEvents.length + pendingActivities.length === 0) {
                     reply.view('admin/noPending', {
                         fullName  : session.fullName,
                         userid    : session.userid,

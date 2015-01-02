@@ -29,10 +29,10 @@ lab.experiment('page tests:', function () {
             one: 'list',
             all: 'lists'
         },
-        // activities: {
-        //     one: 'activity',
-        //     all: 'activities'
-        // }
+        activities: {
+            one: 'activity',
+            all: 'activities'
+        }
     };
 
     var users = {
@@ -112,7 +112,7 @@ lab.experiment('page tests:', function () {
         });
 
         _.each(users, function (user) {
-            lab.test(user.role + 'users can load add ' + item.all + ' form', function (done) {
+            lab.test(user.role + 's can load add ' + item.all + ' form', function (done) {
                 var request = { method: 'GET', url: '/' + item.all + '/add', credentials: user };
                 server.inject(request, function (response) {
                     expect(response.statusCode).to.equal(200);
