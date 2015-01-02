@@ -15,13 +15,18 @@ exports.pendingList = {
             },
             groups: function (done) {
                 models.Group.all(done);
+            },
+            activities: function (done) {
+                models.Activity.all(done);
             }
         }, function (err, context) {
             if (session.moderator === true) {
                 var pendingPeople = _.where(context.people[0], { approved: false });
                 var pendingPlaces = _.where(context.places[0], { approved: false });
                 var pendingGroups = _.where(context.groups[0], { approved: false });
-                if(pendingPeople.length + pendingPlaces.length + pendingGroups.length === 0) {
+                var pendingEvents = _.where(context.events[0], { approved: false });
+                var pendingActivities = _.where(context.activities[0], { approved: false });
+                if(pendingPeople.length + pendingPlaces.length + pendingGroups.length + pendingEvents.length + pendingActivities.length === 0) {
                     reply.view('admin/noPending', {
                         fullName  : session.fullName,
                         userid    : session.userid,
@@ -35,6 +40,8 @@ exports.pendingList = {
                         people    : pendingPeople,
                         places    : pendingPlaces,
                         groups    : pendingGroups,
+                        events    : pendingEvents,
+                        activities: pendingActivities,
                         fullName  : session.fullName,
                         avatar    : session.avatar,
                         userid    : session.userid,
@@ -57,6 +64,12 @@ exports.settings = {
                 models.GroupCategory.all(done);
             },
             placeCategories: function (done) {
+                models.PlaceCategory.all(done);
+            },
+            activityCategories: function (done) {
+                models.ActivityCategory.all(done);
+            },
+            eventCategories: function (done) {
                 models.PlaceCategory.all(done);
             }
         }, function (err, context) {

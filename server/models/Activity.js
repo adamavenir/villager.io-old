@@ -1,22 +1,22 @@
-var dulcimer = require('dulcimer');
+ var dulcimer = require('dulcimer');
 var verymodel = require('verymodel');
 var slugger = require('slugger');
 
 var type = verymodel.VeryType;
 
-var Place = new dulcimer.Model (
+var Activity = new dulcimer.Model(
     {
         type: {
-            foreignKey: 'place-category',
+            foreignKey: 'activity-category',
             private: false
         },
         name: {
-            required: true,
-            type: type().isAlphanumeric()
+            type: new type().isAlphanumeric().len(1,80),
+            required: true
         },
         slug: {
             derive: function () {
-                return slugger(this.name, {alsoAllow: '&'});
+                return slugger(this.name);
             },
             index: true,
             private: false
@@ -24,47 +24,23 @@ var Place = new dulcimer.Model (
         url: {
             derive: function () {
                 if (this.slug) {
-                    return '/places/' + this.slug;
+                    return '/groups/' + this.slug;
                 }
             }
         },
-        phone: {
-            required: false,
-            type: type().isAlphanumeric()
-        },
-        address: {
-            required: false,
-            type: type().isAlphanumeric()
-        },
-        city: {
-            required: false,
-            type: type().isAlphanumeric()
-        },
-        map: {
-            derive: function() {
-                if (this.address && this.address.length > 0) {
-                    return 'http://maps.google.com/?q=' + this.address + ' ' + this.city;
-                }
-                else {
-                    return '';
-                }
-            },
-            type: type().isUrl(),
-        },
         image: {
-            required: false,
+            required: true,
             type: type().isUrl()
         },
         website: {
-            type: type().isUrl(),
-            required: false
+            type: new type().isUrl(),
+            required: true
         },
         about: {
-            required: false,
-            type: type().isAlphanumeric().len(0,160)
+            type: new type().isAlphanumeric().len(0,160),
         },
         starredBy: {
-            foreignKeys: 'user',
+            foreignKeys: 'user'
         },
         listedBy: {
             foreignKeys: 'user',
@@ -98,9 +74,9 @@ var Place = new dulcimer.Model (
         }
     },
     {
-        name: 'place',
+        name: 'activity',
         saveKey: 'true'
     }
 );
 
-module.exports = Place;
+module.exports = Activity;

@@ -1,7 +1,7 @@
 include node_modules/make-better/core.inc
 include node_modules/make-better/frontend.inc
 
-STYLUS_DIR := ./styl
+STYLUS_DIR := ./client/styl
 
 # General targets
 build: css
@@ -12,7 +12,7 @@ public/css/main.css: $(STYLUS_FILES)
 	stylus -u yeticss \
 		   -u autoprefixer-stylus \
 		   -c \
-		   -o public/css styl/main.styl
+		   -o public/css client/styl/main.styl
 
 # Tests
 test-cov:

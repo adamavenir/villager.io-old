@@ -12,7 +12,10 @@ var List = new dulcimer.Model(
         type: {
             type: 'enum',
             values: ['groups', 'places'],
-            index: true
+            default: 'places',
+            private: false,
+            index: true,
+            required: true
         },
         slug: {
             derive: function () {
@@ -30,22 +33,20 @@ var List = new dulcimer.Model(
             type: type().isUrl()
         },
         groups: {
-            foreignCollection: 'group',
-            default: []
+            foreignKeys: 'group',
         },
         places: {
-            foreignCollection: 'place',
-            default: []
+            foreignKeys: 'place',
         },
         starredBy: {
-            default: [],
-            foreignCollection: 'user',
-            required: true
+            foreignKeys: 'user',
         },
         stars: {
             required: true,
             derive: function () {
-                return this.starredBy.length || 0;
+                if (this.starredBy) {
+                    return this.starredBy.length || 0;
+                }
             },
         },
         approved: {

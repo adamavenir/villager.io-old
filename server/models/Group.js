@@ -1,4 +1,4 @@
-var dulcimer = require('dulcimer');
+ var dulcimer = require('dulcimer');
 var verymodel = require('verymodel');
 var slugger = require('slugger');
 
@@ -21,6 +21,13 @@ var Group = new dulcimer.Model(
             index: true,
             private: false
         },
+        url: {
+            derive: function () {
+                if (this.slug) {
+                    return '/groups/' + this.slug;
+                }
+            }
+        },
         phone: {
             required: false,
             type: type().isAlphanumeric()
@@ -37,25 +44,26 @@ var Group = new dulcimer.Model(
             type: new type().isAlphanumeric().len(0,160),
         },
         starredBy: {
-            default: [],
-            foreignCollection: 'user',
-            required: true
+            foreignKeys: 'user'
+        },
+        listedBy: {
+            foreignKeys: 'user',
         },
         stars: {
             required: true,
             derive: function () {
-                return this.starredBy.length || 0;
+                if (this.starredBy) {
+                    return this.starredBy.length || 0;
+                }
             },
         },
-        onLists: {
-            default: [],
-            foreignCollection: 'list',
-            required: false
-        },
-        listedBy: {
-            default: [],
-            foreignCollection: 'user',
-            required: true
+        lists: {
+            required: true,
+            derive: function () {
+                if (this.listedBy) {
+                    return this.listedBy.length || 0;
+                }
+            },
         },
         approved: {
             default: false,

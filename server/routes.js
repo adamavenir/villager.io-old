@@ -1,4 +1,6 @@
 var auth = require('./handlers').auth;
+var authTwitter = require('./handlers').authTwitter;
+// var authTwilio = require('./handlers').authTwilio;
 var categories = require('./handlers').categories;
 var groups = require('./handlers').groups;
 var lists = require('./handlers').lists;
@@ -6,6 +8,7 @@ var pages = require('./handlers').pages;
 var admin = require('./handlers').admin;
 var people = require('./handlers').people;
 var places = require('./handlers').places;
+var activities = require('./handlers').activities;
 var events = require('./handlers').events;
 
 module.exports = function _routes() {
@@ -75,6 +78,18 @@ module.exports = function _routes() {
     { method: 'GET',  path: '/groups/star/{key}', config: groups.star },
     { method: 'GET',  path: '/groups/approve/{key}', config: groups.approve },
     { method: 'GET',  path: '/groups/delete/{key}', config: groups.delete },
+
+    ////////////////////////////////// ACTIVITIES
+
+    { method: 'GET',  path: '/activities', config: activities.list },
+    { method: 'GET',  path: '/activities/{slug}', config: activities.get },
+    { method: 'GET',  path: '/activities/add', config: activities.add },
+    { method: 'POST', path: '/activities/add', config: activities.create },
+    { method: 'GET',  path: '/activities/edit/{key}', config: activities.edit },
+    { method: 'POST', path: '/activities/update/{key}', config: activities.update },
+    { method: 'GET',  path: '/activities/star/{key}', config: activities.star },
+    { method: 'GET',  path: '/activities/approve/{key}', config: activities.approve },
+    { method: 'GET',  path: '/activities/delete/{key}', config: activities.delete },
 
     ////////////////////////////////// EVENTS
 

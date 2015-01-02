@@ -3,7 +3,7 @@ extends ../layout
 block body
   body
     include ../in/header
-    include ../in/itemHeader
+    include headerEditItem
 
     form(method="POST", action="/places/update/" + item.key)
       fieldset

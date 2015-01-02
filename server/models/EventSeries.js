@@ -32,9 +32,7 @@ var EventSeries = new dulcimer.Model(
             type: new type().isAlphanumeric().len(0,160),
         },
         events: {
-            default: [],
-            foreignCollection: 'event',
-            required: true
+            foreignKeys: 'event',
         },
         group: {
             foreignKey: 'group'
@@ -43,14 +41,25 @@ var EventSeries = new dulcimer.Model(
             foreignKey: 'place'
         },
         starredBy: {
-            default: [],
-            foreignCollection: 'user',
-            required: true
+            foreignKeys: 'user',
+        },
+        listedBy: {
+            foreignKeys: 'user',
         },
         stars: {
             required: true,
             derive: function () {
-                return this.starredBy.length || 0;
+                if (this.starredBy) {
+                    return this.starredBy.length || 0;
+                }
+            },
+        },
+        lists: {
+            required: true,
+            derive: function () {
+                if (this.listedBy) {
+                    return this.listedBy.length || 0;
+                }
             },
         },
         approved: {
@@ -60,9 +69,7 @@ var EventSeries = new dulcimer.Model(
             index: true
         },
         moderators: {
-            default: [],
-            foreignCollection: 'user',
-            required: true
+            foreignKeys: 'user',
         },
         creator: {
             foreignKey: 'user'

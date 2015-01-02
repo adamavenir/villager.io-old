@@ -66,6 +66,14 @@ var User = new dulcimer.Model(
             },
             index: true
         },
+
+        url: {
+            derive: function () {
+                if (this.slug) {
+                    return '/people/' + this.urlSlug;
+                }
+            }
+        },
         twitterId: {
             index: true
         },

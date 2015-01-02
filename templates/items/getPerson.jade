@@ -1,0 +1,15 @@
+extends ../layout
+
+block body
+  body
+    include ../in/header
+    include headerGetItem
+
+    section.content
+      .item.cf
+        img.item-image(src= item.image)
+        p: a(href= "item.website") #{item.website}
+        p= item.about
+        p TODO: add other fields
+
+    include ../in/footer

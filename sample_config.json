@@ -1,25 +1,40 @@
 {
     "hostname": "localhost",
-    "port": 7000,
+    "port": 5000,
     "auth": {
         "urls": {
-            "failureRedirect": "/login",
-            "successRedirect": "/on-login",
+            "failureRedirect": "/auth/twitter",
+            "successRedirect": "/",
             "failureFlash": true
         },
         "twitter": {
-            "consumerKey": "tweedlekey",
-            "consumerSecret": "tweedlesecret",
-            "callbackURL": "http://localhost:7000/auth/twitter/callback"
+            "provider": "twitter",
+            "password": "whatwhatwhat",
+            "isSecure": "false",
+            "clientId": "<twitter",
+            "clientSecret": "<secret>"
+        },
+        "superadmin": {
+            "twitter": ["15000002"],
+            "twilio": ["150955512121"]
         }
     },
     "api": { 
-        "googleMaps": ""
+        "googleMaps": "AIzaSyCdGQBKv9xT8ezA0uV9HHWdxsISLGGvfsw",
+        "twilio": {
+            "SID": "AC123c5d6cd007f791acad81b9add091c0",
+            "token": "1b29b8af7a969fa5d957deb79f9bfadd",
+            "number": "14045864404"
+        }
     },
     "session": {
         "cookieOptions": {
             "password": "cheshirecarp",
             "isSecure": false
         }
+    },
+    "db": {
+        "type": "level",
+        "path": "./db"
     }
 }
