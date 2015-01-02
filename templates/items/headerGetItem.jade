@@ -1,12 +1,12 @@
 .title-bar
   .stars
     if starredByMe
-      a.unstar-this(href= '/' + itemType + 's/star/' + item.key) ★ 
+      a.unstar-this(href= '/' + itemPlural + '/star/' + item.key) ★ 
     if !starredByMe
-      a.star-this(href= '/' + itemType + 's/star/' + item.key) ☆
+      a.star-this(href= '/' + itemPlural + '/star/' + item.key) ☆
   h1= item.name
   .action-menu
     if slug && itemType !== 'list' && itemType !== 'event'
-      a.button.add-to-list(href="/lists/" + slug + "/" + itemType + "s/add/" + item.key) Add to list
+      a.button.add-to-list(href="/lists/" + slug + "/" + itemPlural + "/add/" + item.key) Add to list
     if moderator
-      a.button.add-item(href="/" + itemType + "s/edit/" + item.key) Edit this #{itemType}
+      a.button.add-item(href="/" + itemPlural + "/edit/" + item.key) Edit this #{itemType}
