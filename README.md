@@ -7,6 +7,9 @@ villager (work in progress)
 ===========================
 __Forget massive corporate social networks. Let's build villages.__
 
+![](https://api.travis-ci.org/adambrault/villager.svg)
+![](https://img.shields.io/npm/l/express.svg)
+
 First implementation will be [triciti.es](http://triciti.es), successor to [WeCreate TC](http://wecreate.tc).
 
 The project takes its name from [Jane Jacobs](http://en.wikipedia.org/wiki/Jane_Jacobs) (above) and her work on the [urban village](http://en.wikipedia.org/wiki/Urban_village). The underlying thesis of this project is that our online connectedness can be a tool to help overcome the tragic disconnectedness of suburbia.
