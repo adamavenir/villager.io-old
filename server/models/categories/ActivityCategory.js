@@ -4,7 +4,7 @@ var slugger = require('slugger');
 
 var type = verymodel.VeryType;
 
-var ListCategory = new dulcimer.Model(
+var ActivityCategory = new dulcimer.Model(
     {
         name: {
             type: new type().isAlphanumeric().len(1,80),
@@ -23,9 +23,9 @@ var ListCategory = new dulcimer.Model(
         }
     },
     {
-        name: 'list-category',
+        name: 'group-category',
         saveKey: 'true'
     }
 );
 
-module.exports = ListCategory;
+module.exports = ActivityCategory;

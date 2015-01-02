@@ -57,7 +57,7 @@ var getForm = function (request, modelName, create, next) {
     next(form);
 };
 
-exports.itemReply = itemReply = function (itemType, item, session, thismod, starredByMe, categories) {
+exports.itemReply = itemReply = function (itemType, itemPlural, item, session, thismod, starredByMe, categories) {
     var replyData, gmapsApi;
     thismod = !!thismod;
     starredByMe = !!starredByMe;
@@ -69,12 +69,14 @@ exports.itemReply = itemReply = function (itemType, item, session, thismod, star
     if (typeof session === 'undefined') { 
         replyData = {
             itemType  : itemType,
+            itemPlural: itemPlural,
             item      : item,
             gmapsApi  : gmapsApi
         };
     } else {
         replyData = {
             itemType  : itemType,
+            itemPlural: itemPlural,
             item      : item,
             thismod   : thismod,
             userid    : session.userid,
@@ -91,7 +93,7 @@ exports.itemReply = itemReply = function (itemType, item, session, thismod, star
     return replyData;
 };
 
-exports.listReply = listReply = function (itemType, items, session, mine) {
+exports.listReply = listReply = function (itemType, itemPlural, items, session, mine) {
     var replyData;
     if (typeof mine === 'undefined') {
         mine = false;
@@ -100,12 +102,14 @@ exports.listReply = listReply = function (itemType, items, session, mine) {
     if (typeof session === 'undefined') { 
         replyData = {
             itemType  : itemType,
+            itemPlural: itemPlural,
             items     : items,
             mine      : mine
         };
     } else {
         replyData = {
             itemType  : itemType,
+            itemPlural: itemPlural,
             items     : items,
             mine      : mine,
             fullName  : session.fullName,
@@ -119,7 +123,7 @@ exports.listReply = listReply = function (itemType, items, session, mine) {
     return replyData;
 };
 
-exports.makeListHandler = function (modelNameTitle, modelName) {
+exports.makeListHandler = function (modelNameTitle, modelName, modelNamePlural) {
     var handler = function (request, reply) {
         var session = request.auth.credentials;
         // TODO: add pagination (err, items, page)
@@ -142,24 +146,24 @@ exports.makeListHandler = function (modelNameTitle, modelName) {
 
                 // if there are no approved item or my unapproved items
                 if(mine.length + approved.length === 0) {
-                    reply.view('items/noItems', listReply(modelName, null, session));
+                    reply.view('items/noItems', listReply(modelName, modelNamePlural, null, session));
                 }
 
                 // reply with approved and mine
                 else {
-                    reply.view('items/listItems', listReply(modelName, approved, session, mine));
+                    reply.view('items/listItems', listReply(modelName, modelNamePlural, approved, session, mine));
                 }
             }
             else {
 
                 // if there are no approved items
                 if (approved.length === 0) {
-                    reply.view('items/noItems', listReply(modelName, null));
+                    reply.view('items/noItems', listReply(modelName, modelNamePlural, null));
                 }
 
                 // else show the list of approved items
                 else {
-                    reply.view('items/listItems', listReply(modelName, approved));
+                    reply.view('items/listItems', listReply(modelName, modelNamePlural, approved));
                 }
             }
         });
@@ -167,7 +171,7 @@ exports.makeListHandler = function (modelNameTitle, modelName) {
     return handler;
 };
 
-exports.makeGetHandler = function (modelNameTitle, modelName) {
+exports.makeGetHandler = function (modelNameTitle, modelName, modelNamePlural) {
     var handler = function (request, reply) {
         var session = request.auth.credentials;
 
@@ -191,12 +195,12 @@ exports.makeGetHandler = function (modelNameTitle, modelName) {
 
                 // if I starred it
                 item.hasForeign('starredBy', session.userid, function (err, starredByMe) {
-                    reply.view('items/get' + modelNameTitle, itemReply(modelName, item, session, thismod, starredByMe));
+                    reply.view('items/get' + modelNameTitle, itemReply(modelName, modelNamePlural, item, session, thismod, starredByMe));
                 });
 
             // if I don't have a session, give a standard page
             } else {
-                reply.view('items/item', itemReply(modelName, item));
+                reply.view('items/item', itemReply(modelName, modelNamePlural, item));
             }
 
         });
@@ -204,16 +208,21 @@ exports.makeGetHandler = function (modelNameTitle, modelName) {
     return handler;
 };
 
-exports.makeAddHandler = function (modelNameTitle, modelName) {
+exports.makeAddHandler = function (modelNameTitle, modelName, modelNamePlural) {
     var handler = function (request, reply) {
         var session = request.auth.credentials;
-        var modelCategory = modelNameTitle + 'Category';
 
-        // get categories
-        models[modelCategory].all(function (err, categories) {
-            // return the add item form
-            reply.view('items/add' + modelNameTitle, itemReply(modelName, null, session, null, null, categories));
-        });
+        if (modelName !== 'list') {
+            var modelCategory = modelNameTitle + 'Category';
+
+            // get categories
+            models[modelCategory].all(function (err, categories) {
+                // return the add item form
+                reply.view('items/add' + modelNameTitle, itemReply(modelName, modelNamePlural, null, session, null, null, categories));
+            });
+        } else {
+            reply.view('items/add' + modelNameTitle, itemReply(modelName, modelNamePlural, null, session, null, null, null));
+        }
     };
     return handler;
 };
@@ -241,7 +250,7 @@ exports.makeCreateHandler = function (modelNameTitle, modelName, modelNamePlural
     return handler;
 };
 
-exports.makeEditHandler = function (modelNameTitle, modelName) {
+exports.makeEditHandler = function (modelNameTitle, modelName, modelNamePlural) {
     var handler = function (request, reply) {
         var session = request.auth.credentials;
         var modelCategory = modelNameTitle + 'Category';
@@ -249,7 +258,7 @@ exports.makeEditHandler = function (modelNameTitle, modelName) {
             if (err) { throw err; }
             models[modelCategory].all(function (err, categories) {
                 if (err) { throw err; }
-                reply.view('items/edit' + modelNameTitle, itemReply(modelName, item, session, null, null, categories));
+                reply.view('items/edit' + modelNameTitle, itemReply(modelName, modelNamePlural, item, session, null, null, categories));
             }); 
         });
     };
