@@ -32,7 +32,7 @@
     "lab": "^5.1.1",
     "make-better": "^0.4.1",
     "stylus": "^0.49.3",
-    "yeticss": "^4.2.0"
+    "yeticss": "git@github.com:andyet/yeti.css.git"
   },
   "homepage": "https://github.com/adambrault/villager.io",
   "license": "MIT",
