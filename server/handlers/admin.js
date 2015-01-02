@@ -67,7 +67,7 @@ exports.settings = {
                 models.PlaceCategory.all(done);
             },
             activityCategories: function (done) {
-                models.activityCategory.all(done);
+                models.ActivityCategory.all(done);
             },
             eventCategories: function (done) {
                 models.PlaceCategory.all(done);

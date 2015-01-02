@@ -5,8 +5,11 @@ var Cookie = require('hapi-auth-cookie');
 var BSS = require('building-static-server');
 var routes = require('./server/routes');
 var Dulcimer = require('dulcimer');
-Dulcimer.connect({type: 'level', path: './db'});
 
+Dulcimer.connect({ 
+    type: config.db.type, 
+    path: config.db.path 
+});
 
 var server = new Hapi.Server();
 

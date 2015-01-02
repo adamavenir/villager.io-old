@@ -32,5 +32,9 @@
             "password": "cheshirecarp",
             "isSecure": false
         }
+    },
+    "db": {
+        "type": "level",
+        "path": "./db"
     }
 }

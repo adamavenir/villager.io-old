@@ -217,6 +217,7 @@ exports.makeAddHandler = function (modelNameTitle, modelName, modelNamePlural) {
 
             // get categories
             models[modelCategory].all(function (err, categories) {
+                console.log(JSON.stringify(categories, null, 2));
                 // return the add item form
                 reply.view('items/add' + modelNameTitle, itemReply(modelName, modelNamePlural, null, session, null, null, categories));
             });

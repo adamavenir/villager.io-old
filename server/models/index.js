@@ -1,4 +1,3 @@
-
 var User = new require('./User');
 var List = new require('./List');
 var Place = new require('./Place');
