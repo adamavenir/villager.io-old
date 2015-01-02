@@ -40,15 +40,15 @@ __Important note:__ I just realized this app *temporarily* requires a nlfpm acco
   - Places
   - Groups
   - Events
+  - Activities
   - Lists
 - Pending submissions, approve/delete submitted entries
 - Curated lists of places and groups
 
 ## Todos for 1.0 release (early January):
-- [ ] Tests for all routes
-- [ ] Flesh out seed data
+- [ ] Travis CI
+- [ ] Basic tests for all routes
 - [ ] Log all the things
-- [ ] Add activities
 - [ ] List upcoming events by date
 - [ ] Ability to be an admin of a group or place
 - [ ] Check whether you're an admin to edit it
