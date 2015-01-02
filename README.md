@@ -8,6 +8,7 @@ villager (work in progress)
 __Forget massive corporate social networks. Let's build villages.__
 
 ![](https://img.shields.io/travis/adambrault/villager.svg)
+![](https://img.shields.io/david/adambrault/villager.svg)
 
 First implementation will be [triciti.es](http://triciti.es), successor to [WeCreate TC](http://wecreate.tc).
 
