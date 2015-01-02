@@ -63,7 +63,7 @@ exports.itemReply = itemReply = function (itemType, itemPlural, item, session, t
     starredByMe = !!starredByMe;
 
     if (itemType === 'place') {
-        gmapsApi = config.api.googleMaps;
+        gmapsApi = config.GOOGLEMAPSAPIKEY;
     } else { gmapsApi = null; }
 
     if (typeof session === 'undefined') { 

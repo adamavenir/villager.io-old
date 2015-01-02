@@ -1,40 +1,19 @@
 {
-    "hostname": "localhost",
-    "port": 5000,
-    "auth": {
-        "urls": {
-            "failureRedirect": "/auth/twitter",
-            "successRedirect": "/",
-            "failureFlash": true
-        },
-        "twitter": {
-            "provider": "twitter",
-            "password": "whatwhatwhat",
-            "isSecure": "false",
-            "clientId": "<twitter",
-            "clientSecret": "<secret>"
-        },
-        "superadmin": {
-            "twitter": ["15000002"],
-            "twilio": ["150955512121"]
-        }
-    },
-    "api": { 
-        "googleMaps": "AIzaSyCdGQBKv9xT8ezA0uV9HHWdxsISLGGvfsw",
-        "twilio": {
-            "SID": "AC123c5d6cd007f791acad81b9add091c0",
-            "token": "1b29b8af7a969fa5d957deb79f9bfadd",
-            "number": "14045864404"
-        }
-    },
-    "session": {
-        "cookieOptions": {
-            "password": "cheshirecarp",
-            "isSecure": false
-        }
-    },
-    "db": {
-        "type": "level",
-        "path": "./db"
-    }
+    "HOSTNAME": "localhost",
+    "PORT": 5000,
+    "REDIRECTLOGIN": "/auth/twitter",
+    "TWITTERPASSWORD": "whatwhatwhat",
+    "TWITTERSECURE": false,
+    "TWITTERID": "<YOURCLIENTID>",
+    "TWITTERSECRET": "<YOURCLIENTSECRET>",
+    "OPSTWITTER": ["15000002"],
+    "OPSTWILIO": ["150955512121"],
+    "GOOGLEMAPSAPIKEY": "<YOURAPIKEY>",
+    "TWILIOSID": "<YOURSID>",
+    "TWILIOTOKEN": "<YOURTOKEN>",
+    "TWILIONUMBER": "<YOURNUMBER>",
+    "COOKIEPASSWORD": "cheshirecarp",
+    "COOKIESECURE": false,
+    "DBTYPE": "level",
+    "DBPATH": "./db"
 }

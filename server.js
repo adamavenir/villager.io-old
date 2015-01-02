@@ -7,15 +7,15 @@ var routes = require('./server/routes');
 var Dulcimer = require('dulcimer');
 
 Dulcimer.connect({ 
-    type: config.db.type, 
-    path: config.db.path 
+    type: config.DBTYPE, 
+    path: config.DBPATH 
 });
 
 var server = new Hapi.Server();
 
 server.connection({ 
-    host: config.hostname, 
-    port: config.port 
+    host: config.HOSTNAME, 
+    port: config.PORT 
 });
 
 server.views({
@@ -29,18 +29,18 @@ server.register([Bell, Cookie], function (err) {
 
     server.auth.strategy('twitter', 'bell', {
         provider: 'twitter',
-        password: config.auth.twitter.password,
+        password: config.TWITTERPASSWORD,
         isSecure: false,
-        clientId: config.auth.twitter.clientId,
-        clientSecret: config.auth.twitter.clientSecret
+        clientId: config.TWITTERID,
+        clientSecret: config.TWITTERSECRET
     });
 
     server.auth.strategy('session', 'cookie', {
-        password: config.session.cookieOptions.password,
+        password: config.COOKIEPASSWORD,
         cookie: 'sid',
-        redirectTo: '/login',
+        redirectTo: config.REDIRECTLOGIN,
         redirectOnTry: false,
-        isSecure: false
+        isSecure: config.COOKIESECURE
     });
 
     server.route(routes(server));
