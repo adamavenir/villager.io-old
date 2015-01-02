@@ -20,15 +20,7 @@ server.views({
     path: __dirname + '/templates'
 });
 
-var plugins = [];
-
-plugins.push(Bell, Cookie);
-
-if (config.getconfig.env === 'dev') {
-    var build = BSS;
-} else { var build = null; }
-
-server.register([Bell,Cookie], function (err) {
+server.register([Bell, Cookie], function (err) {
 
     if (err) { throw err; }
 
@@ -49,17 +41,24 @@ server.register([Bell,Cookie], function (err) {
     });
 
     server.route(routes(server));
-});
 
-// have to register plugins twice to use BSS at the moment
-server.register(build, function (err) {
+    var init = function (err) {
+        if (err) { throw err; }
+        if (!module.parent) {
+            server.start(function (err) {
+                if (err) { console.log('error: ', err); }
+                console.log('triciti.es running at:', server.info.uri);
+            });
+        }
+    };
 
-    if (err) { throw err; }
+    if (config.getconfig.env === 'dev') {
+        server.register(BSS, init);
+    }
+    else {
+        init();
+    }
 
-    server.start(function (err) {
-        if (err) { console.log('error: ', err); }
-        console.log('triciti.es running at:', server.info.uri);
-    });
 });
 
 if (process.env.DEBUG) {
@@ -67,3 +66,5 @@ if (process.env.DEBUG) {
         console.log('um', event);
     });
 }
+
+module.exports = server;
