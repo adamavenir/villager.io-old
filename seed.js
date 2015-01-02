@@ -24,8 +24,7 @@ var users = [
         moderator: true, 
         admin: true,
     },
-    {
-        fullName: 'Nathan Fritz',
+    {        fullName: 'Nathan Fritz',
         twitter: 'fritzy',
         email: 'nathan@andyet.net',
         company: '&yet',
@@ -82,6 +81,36 @@ var items = [
     }
 ];
 
+// var placeData = [
+//     {
+
+//     }
+// ];
+
+// var eventData = [
+//     {
+
+//     }
+// ];
+
+// var groupData = [
+//     {
+
+//     }
+// ];
+
+// var listData = [
+//     {
+
+//     }
+// ];
+
+// var activityData = [
+//     {
+
+//     }
+// ];
+
 var seedUsers = function (users, done) {
     async.each(users, function (user, next) {
         models.User.findByIndex('slug', slugger(user.fullName), function (err, exists) {
@@ -101,6 +130,10 @@ var seedUsers = function (users, done) {
         });
     }, done);
 };
+
+// var seedItemData = function (items, done) {
+
+// }
 
 var seedCategories = function (items, done) {
     async.each(items, function (item, nextItem) {
@@ -125,6 +158,7 @@ var seedCategories = function (items, done) {
     }, done);
 };
 
+
 function seedAll (err) {
     if (err) { throw err; }
     async.series([
@@ -138,5 +172,7 @@ function seedAll (err) {
         if (err) { throw err; }
     });
 }
+
+// TODO: add function to delete all seeded data
 
 module.exports = seedAll();
