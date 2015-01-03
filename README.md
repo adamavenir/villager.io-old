@@ -54,8 +54,8 @@ __Important note:__ I just realized this app *temporarily* requires a nlfpm acco
 - [ ] Log all the things
 - [ ] List upcoming events by date
 - [ ] Ability to be an admin of a group or place
-- [ ] Check whether you're an admin to edit it
-- [ ] Interface to add/remove admins to a group or place
+- [ ] Check whether you're an admin or moderator to edit it
+- [ ] Interface to add/remove moderators to a group or place
 - [ ] Pagination for all the things
 - [ ] Welcome page
 - [ ] Log in with SMS or Twitter
