@@ -13,10 +13,10 @@ var getForm = function (request, modelName, create, next) {
         formMap = {
             type    : form.type,
             name    : form.name,
+            phone   : form.phone,
             address : form.address,
             city    : form.city,
             image   : form.image,
-            twitter : form.twitter,
             website : form.website,
             about   : form.about
         };
@@ -44,7 +44,6 @@ var getForm = function (request, modelName, create, next) {
             type    : form.type,
             name    : form.name,
             image   : form.image,
-            twitter : form.twitter,
             website : form.website,
             about   : form.about
         };
@@ -177,6 +176,8 @@ exports.makeGetHandler = function (modelNameTitle, modelName, modelNamePlural) {
 
         models[modelNameTitle].findByIndex('slug', request.params.slug, function(err, item) {
             var thismod;
+
+            console.log('item', request.params.slug);
 
             // if there's no such item, return a 404
             if (err) { reply.view('404'); }
