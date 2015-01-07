@@ -1,4 +1,4 @@
-var config = require('getconfig');
+var config = require('../../config-helper');
 var _ = require('underscore');
 var models = require('../models').models;
 var async = require('async');

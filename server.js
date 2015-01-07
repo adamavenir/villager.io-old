@@ -1,6 +1,6 @@
 var Hapi = require('hapi');
 var Bell = require('bell');
-var config = require('getconfig');
+var config = require('./config-helper');
 var Cookie = require('hapi-auth-cookie');
 var BSS = require('building-static-server');
 var routes = require('./server/routes');
