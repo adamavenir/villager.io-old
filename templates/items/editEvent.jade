@@ -5,7 +5,7 @@ block body
     include ../in/header
     include headerEditItem
 
-    form(method="POST", action="/events/update" + item.key)
+    form(method="POST", action="/events/update/" + item.key)
       fieldset
         legend Edit #{item.name}
         .form-element
