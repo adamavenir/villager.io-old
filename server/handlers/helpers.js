@@ -48,6 +48,15 @@ var getForm = function (request, modelName, create, next) {
             website : form.website,
             about   : form.about
         };
+    } else if (modelName === 'activity') {
+        formMap = {
+            type    : form.type,
+            name    : form.name,
+            image   : form.image,
+            website : form.website,
+            phone   : form.phone,
+            about   : form.about
+        };
     }
 
     if (create) {
