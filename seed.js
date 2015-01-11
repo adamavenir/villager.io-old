@@ -10,8 +10,8 @@ if (config.getconfig.env !== 'dev' && config.getconfig.env !== 'test') {
 }
 
 Dulcimer.connect({ 
-    type: config.db.type, 
-    path: config.db.path 
+    type: config.DBTYPE, 
+    path: config.DBPATH 
 });
 
 var users = [
