@@ -67,10 +67,12 @@ var Event = new dulcimer.Model(
             type: new type().isAlphanumeric().len(0,160),
         },
         group: {
-            foreignKey: 'group'
+            foreignKey: 'group',
+            index: true
         },
         place: {
-            foreignKey: 'place'
+            foreignKey: 'place',
+            index: true
         },
         organizers: {
             foreignKeys: 'user',

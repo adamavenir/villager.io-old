@@ -1,4 +1,5 @@
 var h = require('./helpers');
+var models = require('../models');
 
 //////////////////////////////////////////////  PLACES
 
@@ -202,6 +203,52 @@ exports.events = {
         auth: 'session',
         handler: h.makeApproveHandler('Event', 'event', 'events')
     },
+
+    at: {
+        auth: 'session',
+        handler: function (request, reply) {
+            models.Place.findByIndex('slug', request.params.slug, function (err, place) {
+                if (err) {
+                    reply.view('404');
+                    return;
+                }
+                models.Event.getByIndex('place', place.key, function (err, events) {
+                    //TODO: make this right
+                    if (err || events.length === 0) {
+                        reply('no events');
+                    } else {
+                        reply.view('eventsByPlace', {place: place, events: events});
+                    }
+                });
+            });
+        }
+    },
+
+    by: {
+        auth: 'session',
+        handler: function (request, reply) {
+            models.Group.findByIndex('slug', request.params.slug, function (err, group) {
+                if (err) {
+                    reply.view('404');
+                    return;
+                }
+                models.Event.getByIndex('group', group.key, function (err, events) {
+                    //TODO: make this right
+                    if (err || events.length === 0) {
+                        reply('no events');
+                    } else {
+                        reply.view('eventsByGroup', {group: group, events: events});
+                    }
+                });
+            });
+        }
+    },
+
+    atList: {
+    },
+
+    byList: {
+    }
 
 };
 
