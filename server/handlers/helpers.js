@@ -52,8 +52,6 @@ var getForm = function (request, modelName, create, next) {
         };
     }
 
-    console.log(formMap);
-
     if (create) {
         form = _.extend(formMap, {creator: request.auth.credentials.userid});
     } else { form = formMap; }

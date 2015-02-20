@@ -3,6 +3,7 @@ var slugger = require('slugger');
 var dulcimer = require('dulcimer');
 var verymodel = require('verymodel');
 var async = require('async');
+var _ = require('underscore');
 var Group = require('./group');
 var Place = require('./place');
 var EventCategory = require('./categories/EventCategory');
@@ -156,6 +157,40 @@ Event.getPossibleRelatedOptions = function (callback) {
         res.places = res.places[0];
 
         callback(null, res);
+    });
+};
+
+Event.getGroupedEvents = function (groupByKey, callback) {
+    Event.all({
+        filter: function (event) {
+            return !!event[groupByKey];
+        }
+    }, function (err, events) {
+        if (err) {
+            return callback(err);
+        }
+
+        var grouped = _.groupBy(events, function (event) {
+            return event[groupByKey].key;
+        });
+
+        // create our master list
+        var items = _.chain(events)
+            // extract related item data from each event
+            .map(function (event) {
+                return event[groupByKey];
+            })
+            // filter out dupes
+            .unique(function (item) {
+                return item.key;
+            })
+            // link back up to known events
+            .each(function (item) {
+                item.events = grouped[item.key];
+            })
+            .value();
+
+        callback(null, items);
     });
 };
 

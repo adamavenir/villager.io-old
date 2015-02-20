@@ -101,10 +101,10 @@ module.exports = function _routes() {
     { method: 'GET',  path: '/events/star/{key}', config: events.star },
     { method: 'GET',  path: '/events/approve/{key}', config: events.approve },
     { method: 'GET',  path: '/events/delete/{key}', config: events.delete },
-//    { method: 'GET',  path: '/events/at/{slug}', config: events.at },
+    { method: 'GET',  path: '/events/at/{slug}', config: events.at },
     { method: 'GET',  path: '/events/by/{slug}', config: events.by },
-//    { method: 'GET',  path: '/events/at', config: events.atList },
-//    { method: 'GET',  path: '/events/by', config: events.byList },
+    { method: 'GET',  path: '/events/at', config: events.atList },
+    { method: 'GET',  path: '/events/by', config: events.byList },
 
     ////////////////////////////////// LISTS
 

@@ -1,0 +1,25 @@
+extends ../layout
+
+block body
+  body
+    include ../in/header
+
+    .title-bar
+      h1 Places With Upcoming Events
+      .action-menu
+        if moderator
+          a.button.button-primary.add-item(href="/" + itemType + "s/add") Add a #{itemType}
+
+     ul.item-list.list-unstyled
+        for place in places
+          li
+            a(place.url)
+              h5= place.name
+            h5 Events: 
+            ul
+              for event in place.events
+                li
+                  a(href= event.url)
+                    h5= event.name
+            
+    include ../in/footer

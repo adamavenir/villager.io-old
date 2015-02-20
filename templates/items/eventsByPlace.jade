@@ -1,0 +1,16 @@
+extends ../layout
+
+block body
+  body
+    include ../in/header
+
+    .title-bar
+      h1 Events At #{place.name}
+
+    ul.item-list.list-unstyled
+      for event in events
+        li
+          a(href= '/' + eventType + 's/' + slug + '/' + event.slug)
+            h5= event.name
+            
+    include ../in/footer

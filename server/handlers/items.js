@@ -177,7 +177,6 @@ exports.events = {
                 if (err) { 
                     throw err; 
                 }
-                console.log(request.auth);
                 reply.view('items/addEvent', _.extend(result, request.auth.credentials));
             });
         }
@@ -243,7 +242,7 @@ exports.events = {
                     if (err || events.length === 0) {
                         reply('no events');
                     } else {
-                        reply.view('eventsByPlace', {place: place, events: events});
+                        reply.view('items/eventsByPlace', _.extend({place: place, events: events}, request.auth.credentials));
                     }
                 });
             });
@@ -267,7 +266,7 @@ exports.events = {
                     if (err || events.length === 0) {
                         reply('no events');
                     } else {
-                        reply.view('eventsByGroup', {group: group, events: events});
+                        reply.view('items/eventsByGroup', _.extend({group: group, events: events}, request.auth.credentials));
                     }
                 });
             });
@@ -275,9 +274,27 @@ exports.events = {
     },
 
     atList: {
+        auth: 'session',
+        handler: function (request, reply) {
+            models.Event.getGroupedEvents('place', function (err, places) {
+                if (err) {
+                    throw err;
+                }
+                reply.view('items/eventPlaces', _.extend({places: places}, request.auth.credentials));
+            });
+        }
     },
 
     byList: {
+        auth: 'session',
+        handler: function (request, reply) {
+            models.Event.getGroupedEvents('group', function (err, groups) {
+                if (err) {
+                    throw err;
+                }
+                reply.view('items/eventGroups', _.extend({groups: groups}, request.auth.credentials));
+            });
+        }
     }
 
 };
