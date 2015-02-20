@@ -1,5 +1,6 @@
 var h = require('./helpers');
-var models = require('../models');
+var _ = require('underscore');
+var models = require('../models').models;
 
 //////////////////////////////////////////////  PLACES
 
@@ -161,7 +162,7 @@ exports.events = {
 
     list: {
         auth: { strategy: 'session', mode: 'try' },
-        handler: h.makeListHandler('Event', 'event', 'events')
+        handler: h.makeListHandler('Event', 'event', 'events'),
     },
 
     get: {
@@ -171,7 +172,14 @@ exports.events = {
 
     add: {
         auth: 'session',
-        handler: h.makeAddHandler('Event', 'event', 'events')
+        handler: function (request, reply) {
+            models.Event.getPossibleRelatedOptions(function (err, result) {
+                if (err) { 
+                    throw err; 
+                }
+                reply.view('items/addEvent', _.extend(result, request.auth.credential));
+            });
+        }
     },
 
     create: {
@@ -181,7 +189,24 @@ exports.events = {
 
     edit: {
         auth: 'session',
-        handler: h.makeEditHandler('Event', 'event', 'events')
+        handler: function (request, reply) {
+            models.Event.get(request.params.key, function (err, event) {
+                if (err) { 
+                    throw err; 
+                }
+                if (!event) {
+                    return reply.view('404');
+                }
+                
+                // fetch all our available options
+                models.Event.getPossibleRelatedOptions(function (err, result) {
+                    if (err) { 
+                        throw err; 
+                    }
+                    reply.view('items/editEvent', _.extend(result, request.auth.credential, {item: event}));
+                });
+            });
+        }
     },
 
     update: {
@@ -229,9 +254,13 @@ exports.events = {
         handler: function (request, reply) {
             models.Group.findByIndex('slug', request.params.slug, function (err, group) {
                 if (err) {
-                    reply.view('404');
-                    return;
+                    throw err;
                 }
+
+                if (!group) {
+                    return reply.view('404');
+                }
+
                 models.Event.getByIndex('group', group.key, function (err, events) {
                     //TODO: make this right
                     if (err || events.length === 0) {

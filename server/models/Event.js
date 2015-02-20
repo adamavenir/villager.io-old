@@ -2,6 +2,11 @@ var sugar = require('sugar');
 var slugger = require('slugger');
 var dulcimer = require('dulcimer');
 var verymodel = require('verymodel');
+var async = require('async');
+var Group = require('./group');
+var Place = require('./place');
+var EventCategory = require('./categories/EventCategory');
+
 
 // using Sugar so it stops triggering jshint saying it's not used
 // Sugar overrides the native Date object, as I understand it,
@@ -124,5 +129,34 @@ var Event = new dulcimer.Model(
         saveKey: 'true'
     }
 );
+
+
+// helper for fetching all possible related 
+// data for add/edit forms
+Event.getPossibleRelatedOptions = function (callback) {
+    // fetch all our related data
+    // in parallel
+    async.parallel({
+        categories: function (cb) {
+            EventCategory.all(cb);
+        },
+        groups: function (cb) {
+            Group.all(cb);
+        },
+        places: function (cb) {
+            Place.all(cb);
+        }
+    }, function (err, res) {
+        if (err) {
+            return callback(err);
+        }
+
+        res.categories = res.categories[0];
+        res.groups = res.groups[0];
+        res.places = res.places[0];
+
+        callback(null, res);
+    });
+};
 
 module.exports = Event;

@@ -14,6 +14,18 @@ block body
             each cat in categories
               option(value=cat.key) #{cat.name}
         .form-element
+          label(for="place") Place:
+          select.form-input(name="place")
+            option(value="") -- Select a Place --
+            each place in places
+              option(value=place.key) #{place.name}
+        .form-element
+          label(for="group") Group:
+          select.form-input(name="group")
+            option(value="") -- Select a Group --
+            each group in groups
+              option(value=group.key) #{group.name}
+        .form-element
           label(for="name") Event title
           input.form-input(name="name", type="text", placeholder="Name of the place")
         .form-element

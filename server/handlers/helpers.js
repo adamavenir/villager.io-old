@@ -30,6 +30,8 @@ var getForm = function (request, modelName, create, next) {
     } else if (modelName === 'event') {
         formMap = {
             type    : form.type,
+            place   : form.place,
+            group   : form.group,
             name    : form.name,
             email   : form.email,
             phone   : form.phone,
@@ -37,7 +39,7 @@ var getForm = function (request, modelName, create, next) {
             time    : form.time,
             image   : form.image,
             website : form.website,
-            about   : form.about
+            about   : form.about,
         };
     } else if (modelName === 'group') {
         formMap = {
@@ -49,6 +51,8 @@ var getForm = function (request, modelName, create, next) {
             about   : form.about
         };
     }
+
+    console.log(formMap);
 
     if (create) {
         form = _.extend(formMap, {creator: request.auth.credentials.userid});
