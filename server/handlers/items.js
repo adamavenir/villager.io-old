@@ -177,7 +177,8 @@ exports.events = {
                 if (err) { 
                     throw err; 
                 }
-                reply.view('items/addEvent', _.extend(result, request.auth.credential));
+                console.log(request.auth);
+                reply.view('items/addEvent', _.extend(result, request.auth.credentials));
             });
         }
     },
@@ -203,7 +204,7 @@ exports.events = {
                     if (err) { 
                         throw err; 
                     }
-                    reply.view('items/editEvent', _.extend(result, request.auth.credential, {item: event}));
+                    reply.view('items/editEvent', _.extend(result, request.auth.credentials, {item: event}));
                 });
             });
         }
