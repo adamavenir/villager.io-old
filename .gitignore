@@ -14,7 +14,7 @@ results
 
 npm-debug.log
 node_modules
-db
+deprecated/db
 dev_config.json
 test_config.json
-testdb
+deprecated/testdb
