@@ -1,6 +1,6 @@
 [![](http://upload.wikimedia.org/wikipedia/commons/1/14/Jane_Jacobs.jpg)](http://en.wikipedia.org/wiki/Jane_Jacobs)
 
-> __“Cities have the capability of providing something for everybody, only because, and only when, they are created by everybody.”__ 
+> __“Cities have the capability of providing something for everybody, only because, and only when, they are created by everybody.”__
 > — Jane Jacobs
 
 villager (work in progress)
@@ -10,9 +10,11 @@ __Forget massive corporate social networks. Let's build villages.__
 ![](https://img.shields.io/travis/adambrault/villager.svg)
 ![](https://img.shields.io/david/adambrault/villager.svg)
 
-First implementation will be [triciti.es](http://triciti.es), successor to [WeCreate TC](http://wecreate.tc).
-
 The project takes its name from [Jane Jacobs](http://en.wikipedia.org/wiki/Jane_Jacobs) (above) and her work on the [urban village](http://en.wikipedia.org/wiki/Urban_village). The underlying thesis of this project is that our online connectedness can be a tool to help overcome the tragic disconnectedness of suburbia.
+
+__This project is being rebuilt from a full-stack application into an API. See the *api* folder for current work in progress.__
+
+# Deprecated
 
 ## Setup
 
@@ -22,7 +24,7 @@ Want to contribute? Here's what you need to do to run this app locally.
 
   - Make sure to check *Allow this application to be used to Sign in with Twitter*
   - It doesn't matter what you put in the callback URL.
-  
+
 2. Copy ``sample_config.json`` to ``dev_config.json`` and edit accordingly:
 
   - Grab the *Consumer Key (API Key)* and set it as ``ClientId``
@@ -65,7 +67,7 @@ __Important note:__ I just realized this app *temporarily* requires a nlfpm acco
 - Basic RSVPs for events
 - Request to join a group as a member, have requests be moderated
 - Show people who are members of groups
-- Links 
+- Links
 - Posts
 - Fallback avatars
 - Custom avatars, upload images

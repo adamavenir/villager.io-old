@@ -1,0 +1,39 @@
+{
+  "name": "villager-api",
+  "version": "1.0.0",
+  "description": "api for villager.io",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "knex": "knex",
+    "migrate": "knex migrate:latest",
+    "dropdb": "./npm-scripts/dropdb",
+    "resetdb": "npm run dropdb && npm run createdb && npm run migrate",
+    "dummy-data": "node dummy-data.js",
+    "createdb": "./npm-scripts/createdb",
+    "dbrepl": "mr $(node -e 'console.log(require(\"getconfig\").db.connection.database)')"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adambrault/villager-api.git"
+  },
+  "author": "Adam Brault",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/adambrault/villager-api/issues"
+  },
+  "homepage": "https://github.com/adambrault/villager-api#readme",
+  "dependencies": {
+    "boom": "^3.1.2",
+    "getconfig": "^2.2.0",
+    "good": "^6.6.0",
+    "good-console": "^5.3.1",
+    "hapi": "^13.2.1",
+    "joi": "^8.0.4",
+    "knex": "^0.10.0",
+    "muckraker": "^3.2.1",
+    "pg": "^4.5.1",
+    "slug": "^0.9.1"
+  }
+}

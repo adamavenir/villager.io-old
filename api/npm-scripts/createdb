@@ -1,0 +1,15 @@
+#!/usr/bin/env node
+
+var Exec = require('child_process').execSync;
+var Config = require('getconfig');
+
+var database = Config.db.connection.database;
+var user = Config.db.connection.user;
+var password = Config.db.connection.password;
+
+console.log('creating database ' + database);
+
+// commands
+Exec(`psql -d postgres -c "CREATE ROLE ${user} WITH PASSWORD '${password}' NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN"`);
+Exec(`createdb ${database} -O ${user}`)
+Exec(`psql -d ${database} -c 'CREATE EXTENSION "uuid-ossp"'`);

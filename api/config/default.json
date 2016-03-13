@@ -1,0 +1,48 @@
+{
+  "db": {
+    "client": "postgresql",
+    "connection": {
+      "database": "villager",
+      "user": "villager",
+      "password": "password"
+    }
+  },
+  "dex": {
+    "provider": "https://dex.anyet.net",
+    "cookiePassword": "cooki3monster!",
+    "clientId": "RiSDHlWW3ITckDAwgKsbVAx2U-t9ox1-Saz5Rzn4QyQ=@127.0.0.1",
+    "clientSecret": "aLk2xJYqmHiKEeb2gr_Xql_zqji75L7DNmmCFc0rZ-XgpkwB67fIrYoct5SppejF9R7ZRg543HXLimCMfDVMlklDYKuggd37",
+    "isSecure": false,
+    "enableBell": true
+  },
+  "hapi": {
+    "connections": {
+      "routes": {
+        "cors": {
+          "origin": ["http://localhost:*"],
+          "credentials": true
+        }
+      }
+    }
+  },
+  "connection": {
+    "public": {
+      "port": 5000,
+      "labels": "public"
+    }
+  },
+  "good": {
+    "reporters": [{
+      "reporter": "good-console",
+      "events": {
+        "log": "*",
+        "response": "*",
+        "request": "*",
+        "error": "*"
+      }
+    }]
+  },
+  "client": {
+    "url": "http://localhost:3000"
+  }
+}

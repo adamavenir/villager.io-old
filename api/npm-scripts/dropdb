@@ -1,0 +1,13 @@
+#!/usr/bin/env node
+
+var Exec = require('child_process').execSync;
+var Config = require('getconfig');
+
+var database = Config.db.connection.database;
+var user = Config.db.connection.user;
+
+console.log('dropping database ' + database);
+
+// commands
+Exec(`dropdb --if-exists ${database}`);
+Exec(`psql -d postgres -c 'DROP ROLE IF EXISTS ${user}'`);

@@ -1,0 +1,16 @@
+{
+  "db": {
+    "client": "postgresql",
+    "connection": {
+      "database": "villager_test",
+      "user": "villager_test",
+      "password": "password"
+    }
+  },
+  "dex": {
+    "provider": "https://dex.anyet.net",
+    "enableBell": false,
+    "clientId": "RiSDHlWW3ITckDAwgKsbVAx2U-t9ox1-Saz5Rzn4QyQ=@127.0.0.1",
+    "clientSecret": "aLk2xJYqmHiKEeb2gr_Xql_zqji75L7DNmmCFc0rZ-XgpkwB67fIrYoct5SppejF9R7ZRg543HXLimCMfDVMlklDYKuggd37"
+  }
+}
