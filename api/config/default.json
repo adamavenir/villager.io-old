@@ -7,13 +7,10 @@
       "password": "password"
     }
   },
-  "dex": {
-    "provider": "https://dex.anyet.net",
-    "cookiePassword": "cooki3monster!",
-    "clientId": "RiSDHlWW3ITckDAwgKsbVAx2U-t9ox1-Saz5Rzn4QyQ=@127.0.0.1",
-    "clientSecret": "aLk2xJYqmHiKEeb2gr_Xql_zqji75L7DNmmCFc0rZ-XgpkwB67fIrYoct5SppejF9R7ZRg543HXLimCMfDVMlklDYKuggd37",
-    "isSecure": false,
-    "enableBell": true
+  "auth0": {
+    "clientId": "cIHEXMp5gFYet7VaQA2nCxBYLn3IoeR2",
+    "clientSecret": "A-B253SKobcjcAv2_1qw8x_5ndOXsZQSIG_mxRy_laqDSfsiwJzwT_uGYaBT6wSp",
+    "algorithm": "HS256"
   },
   "hapi": {
     "connections": {
