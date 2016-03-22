@@ -27,15 +27,15 @@ server.register([{
 
     server.bind({ db : db });
 
-    server.route({ method: 'POST', path: '/api/users', config: Controllers.users.create });
-    // server.route({ method: 'GET', path: '/api/users/{id}', config: Controllers.users.get });
-    // server.route({ method: 'DELETE', path: '/api/users/{id}', config: Controllers.users.delete });
+    server.route({ method: 'POST', path: '/api/users', config: Controllers.users.createUser });
+    // server.route({ method: 'GET', path: '/api/users/{id}', config: Controllers.users.getUser });
+    // server.route({ method: 'DELETE', path: '/api/users/{id}', config: Controllers.users.deleteUser });
 
-    server.route({ method: 'GET', path: '/api/places', config: Controllers.places.list });
-    server.route({ method: 'GET', path: '/api/places/{id}', config: Controllers.places.get });
-    server.route({ method: 'POST', path: '/api/places/new', config: Controllers.places.create });
-    server.route({ method: 'PUT', path: '/api/places/{id}', config: Controllers.places.update });
-    server.route({ method: 'DELETE', path: '/api/places/{id}', config: Controllers.places.delete });
+    server.route({ method: 'GET', path: '/api/places', config: Controllers.places.listPlaces });
+    server.route({ method: 'GET', path: '/api/places/{id}', config: Controllers.places.getPlace });
+    server.route({ method: 'POST', path: '/api/places/new', config: Controllers.places.createPlace });
+    server.route({ method: 'PUT', path: '/api/places/{id}', config: Controllers.places.updatePlace });
+    server.route({ method: 'DELETE', path: '/api/places/{id}', config: Controllers.places.deletePlace });
 
     if (module.parent) {
         return;
